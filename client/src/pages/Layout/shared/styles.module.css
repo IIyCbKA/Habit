@@ -1,0 +1,18 @@
+.layoutContainer {
+  height: var(--header-height);
+  position: relative;
+  z-index: 4;
+  display: flex;
+  justify-content: center;
+  background-color: var(--body-layout-background-color);
+  flex-shrink: 0;
+}
+
+.layoutContent {
+  width: 100%;
+  max-width: var(--max-content-width);
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}

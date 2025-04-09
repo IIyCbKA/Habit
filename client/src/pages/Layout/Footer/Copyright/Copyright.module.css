@@ -1,0 +1,11 @@
+.copyrightWrap {
+  display: flex;
+  margin-right: 12px;
+  color: var(--text-secondary);
+}
+
+@media (max-width: 600px) {
+  .copyrightWrap {
+    margin-right: 0;
+  }
+}

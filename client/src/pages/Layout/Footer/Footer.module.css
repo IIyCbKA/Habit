@@ -1,0 +1,20 @@
+.footerContainer {
+  height: var(--footer-height);
+}
+
+.footerContent {
+
+}
+
+@media (max-width: 600px) {
+  .footerContainer {
+    height: auto;
+  }
+
+  .footerContent {
+    flex-direction: column;
+    align-items: start;
+    padding-top: 15px;
+    padding-bottom: 15px;
+  }
+}

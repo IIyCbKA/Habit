@@ -1,0 +1,1 @@
+export const COPYRIGHT_TEXT = "Copyright © 2025 Habit";
