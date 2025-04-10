@@ -1,0 +1,27 @@
+.input {
+  padding: 8px 14px;
+  font-size: var(--default-font-size);
+  font-weight: 300;
+  border-radius: 3px;
+  color: var(--text-secondary);
+  border: 1px solid #cfd8dc;
+  text-overflow: ellipsis;
+  transition: 0.4s all;
+  height: 40px;
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+.input:hover {
+  color: var(--text-primary);
+  border-color: var(--text-primary);
+}
+
+.input:focus {
+  color: var(--text-primary);
+  border-color: var(--text-primary);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(255, 36, 0, 0.4);
+}

@@ -3,10 +3,12 @@
   --footer-height: 50px;
   --max-content-width: 1200px;
   --body-root-background-color: #eceff1;
-  --body-layout-background-color: #ffffff;
+  --component-background-color: #ffffff;
   --root-font-family: "Roboto Mono", monospace;
   --text-primary: #1a1a1a;
   --text-secondary: #737373;
+  --default-font-size: 14px;
+  --lower-font-size: 12px;
 }
 
 * {
