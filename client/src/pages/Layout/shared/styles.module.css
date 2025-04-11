@@ -4,7 +4,7 @@
   z-index: 4;
   display: flex;
   justify-content: center;
-  background-color: var(--component-background-color);
+  background-color: var(--variant-secondary-bgColor);
   flex-shrink: 0;
 }
 

@@ -2,13 +2,35 @@
   --header-height: 50px;
   --footer-height: 50px;
   --max-content-width: 1200px;
-  --body-root-background-color: #eceff1;
-  --component-background-color: #ffffff;
   --root-font-family: "Roboto Mono", monospace;
   --text-primary: #1a1a1a;
   --text-secondary: #737373;
   --default-font-size: 14px;
   --lower-font-size: 12px;
+
+  --variant-primary-bgColor: #eceff1;
+  --variant-secondary-bgColor: #ffffff;
+  --variant-text-bgColor: transparent;
+  --variant-textHover-bgColor: #4CAF5014;
+  --variant-textActive-bgColor: #4CAF5026;
+  --variant-text-color: #4CAF50;
+  --varaint-textDisabled-color: #B0B0B0;
+  --variant-contained-bgColor: #4CAF50;
+  --variant-containedHover-bgColor: #43A047;
+  --variant-containedActive-bgColor: #388E3C;
+  --variant-containedDisabled-bgColor: #C8E6C9;
+  --variant-contained-color: #FFFFFF;
+  --variant-containedDisabled-color: #FFFFFF99;
+  --variant-outlined-bgColor: transparent;
+  --variant-outlinedHover-bgColor: #4CAF5014;
+  --variant-outlinedActive-bgColor: #4CAF5026;
+  --variant-outlined-bColor: #4CAF50;
+  --variant-outlinedActive-bColor: #43A047;
+  --variant-outlinedDisabled-bColor: #B0B0B0;
+  --variant-outlined-color: #4CAF50;
+  --variant-outlinedDisabled-color: #B0B0B0;
+  --commonDefault-bColor: #CFD8DC;
+  --commonDefault-bsColor: #4CAF5040;
 }
 
 * {
@@ -17,6 +39,6 @@
 
 body {
   margin: 0;
-  background-color: var(--body-root-background-color);
+  background-color: var(--variant-primary-bgColor);
   min-width: 320px;
 }

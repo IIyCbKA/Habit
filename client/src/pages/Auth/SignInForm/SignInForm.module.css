@@ -1,6 +1,6 @@
 .signInWrap {
   display: flex;
-  background-color: var(--component-background-color);
+  background-color: var(--variant-secondary-bgColor);
   padding: 40px 0 30px;
   justify-content: center;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
