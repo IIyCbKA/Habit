@@ -23,4 +23,5 @@
 
 .divider {
   height: 20px;
+  border-color: transparent !important;
 }

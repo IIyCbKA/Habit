@@ -1,0 +1,7 @@
+.actionBarContainer {
+  display: flex;
+  width: 100%;
+  margin-top: 20px;
+  justify-content: space-between;
+  align-items: center;
+}

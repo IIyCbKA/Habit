@@ -1,13 +1,12 @@
 .rootButton {
   height: 40px;
-  font-size: var(--default-font-size);
-  line-height: 20px;
   outline: none;
   cursor: pointer;
   transition: 0.18s all ease-in-out;
   border-radius: 3px;
   padding: 0 12px;
   user-select: none;
+  text-align: center;
 }
 
 .rootButton:disabled {
@@ -55,7 +54,7 @@
 }
 
 .textButton:disabled {
-  color: var(--varaint-textDisabled-color);
+  color: var(--variant-textDisabled-color);
 }
 
 .outlinedButton {

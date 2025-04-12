@@ -1,7 +1,7 @@
 .defaultText {
   font-weight: 400;
   font-size: var(--default-font-size);
-  line-height: 28px;
+  line-height: var(--default-line-height);
   text-align: left;
   font-family: var(--root-font-family), monospace;
 }
@@ -9,7 +9,7 @@
 .lowerText {
   font-weight: 400;
   font-size: var(--lower-font-size);
-  line-height: 24px;
+  line-height: var(--lower-line-height);
   text-align: left;
   font-family: var(--root-font-family), monospace;
 }

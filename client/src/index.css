@@ -3,18 +3,20 @@
   --footer-height: 50px;
   --max-content-width: 1200px;
   --root-font-family: "Roboto Mono", monospace;
-  --text-primary: #1a1a1a;
+  --text-primary: #1A1A1A;
   --text-secondary: #737373;
   --default-font-size: 14px;
+  --default-line-height: 20px;
   --lower-font-size: 12px;
+  --lower-line-height: 16px;
 
-  --variant-primary-bgColor: #eceff1;
-  --variant-secondary-bgColor: #ffffff;
+  --variant-primary-bgColor: #ECEFF1;
+  --variant-secondary-bgColor: #FFFFFF;
   --variant-text-bgColor: transparent;
   --variant-textHover-bgColor: #4CAF5014;
   --variant-textActive-bgColor: #4CAF5026;
   --variant-text-color: #4CAF50;
-  --varaint-textDisabled-color: #B0B0B0;
+  --variant-textDisabled-color: #B0B0B0;
   --variant-contained-bgColor: #4CAF50;
   --variant-containedHover-bgColor: #43A047;
   --variant-containedActive-bgColor: #388E3C;
@@ -29,7 +31,7 @@
   --variant-outlinedDisabled-bColor: #B0B0B0;
   --variant-outlined-color: #4CAF50;
   --variant-outlinedDisabled-color: #B0B0B0;
-  --commonDefault-bColor: #CFD8DC;
+  --commonDefault-bColor: #DEDEDE;
   --commonDefault-bsColor: #4CAF5040;
 }
 

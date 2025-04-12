@@ -1,5 +1,5 @@
 import React from "react";
-import style from "./SignInForm.module.css";
+import styles from "./SignInForm.module.css";
 import Logotype from "@/assets/icons/heart_with_text_148x180.svg?react";
 import InputLine from "@/components/InputLine/InputLine";
 import {
@@ -10,6 +10,9 @@ import {
 } from "./SignInForm.constants";
 import Button from "@/components/Button/Button";
 import { BUTTON_TYPE } from "@/components/Button/Button.constants";
+import ActionBar from "./ActionBar/ActionBar";
+import SignInWith from "./SignInWith/SignInWith";
+import Divider from "@/components/Divider/Divider";
 
 export default function SignInForm(): React.ReactElement {
   const [login, setLogin] = React.useState(EMPTY_STRING);
@@ -34,31 +37,33 @@ export default function SignInForm(): React.ReactElement {
   ): void => {};
 
   return (
-    <div className={style.signInWrap}>
-      <div className={style.signInContainer}>
-        <Logotype className={style.signInLogotype} />
+    <div className={styles.signInWrap}>
+      <div className={styles.signInContainer}>
+        <Logotype className={styles.signInLogotype} />
         <InputLine
           fullWidth
           value={login}
           onChange={handleLoginChange}
           placeholder={FIRST_LINE_PLACEHOLDER}
         />
-        <div className={style.divider} />
+        <Divider className={styles.divider} flexItem />
         <InputLine
           fullWidth
           value={password}
           onChange={handlePasswordChange}
           placeholder={SECOND_LINE_PLACEHOLDER}
         />
-        <div className={style.divider} />
+        <Divider className={styles.divider} flexItem />
         <Button
           fullWidth
           disabled={signInButtonDisabled}
-          variant={BUTTON_TYPE.CONTAINED}
+          variant={BUTTON_TYPE.contained}
           onClick={handleSignInClick}
         >
           {SIGN_IN_BTN_TEXT}
         </Button>
+        <ActionBar />
+        <SignInWith />
       </div>
     </div>
   );
