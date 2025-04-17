@@ -5,7 +5,7 @@
 
 ## 📦 Assets Attribution
 - Flags: [Rene Herrmann Figma files](https://www.figma.com/community/plugin/749888869584535589/flags) under [Community Free Resource License](https://www.figma.com/legal/community-free-resource-license) (Cropped original images).
-- Social Media Icons: [Mads Egmose Figma files](https://www.figma.com/community/file/839558611085349133) under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) (Repainted original images).
+- Social Media Icons: [Mads Egmose Figma files](https://www.figma.com/community/file/839558611085349133) under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) (Repainted original images, Google icon was copied, and components were merged into a single entity.).
 
 ## 📄 Licence
 - Project: [MIT licensed](https://github.com/IIyCbKA/Habit/blob/main/LICENSE).

@@ -1,21 +1,16 @@
 /*
---------------ButtonData Interface--------------
-children    - text in button
+--------------IconButtonData Interface--------------
+children    - icon for button
 disabled    - flag is button is disabled
-fullWidth   - flag is full parent width
-variant     - variant of button style
 className   - other styles
 onClick     - callback for click to button
 */
 
 import React from "react";
-import { ButtonType } from "./Button.enums";
 
-export interface ButtonData {
+export interface IconButtonData {
   children: React.ReactNode;
   disabled?: boolean;
-  fullWidth?: boolean;
-  variant?: ButtonType;
 
   className?: string;
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;

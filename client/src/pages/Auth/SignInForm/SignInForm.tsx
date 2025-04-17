@@ -7,9 +7,10 @@ import {
   FIRST_LINE_PLACEHOLDER,
   SECOND_LINE_PLACEHOLDER,
   SIGN_IN_BTN_TEXT,
+  EMPTY_STRING_LENGTH,
 } from "./SignInForm.constants";
 import Button from "@/components/Button/Button";
-import { BUTTON_TYPE } from "@/components/Button/Button.constants";
+import { ButtonType } from "@/components/Button/Button.enums";
 import ActionBar from "./ActionBar/ActionBar";
 import SignInWith from "./SignInWith/SignInWith";
 import Divider from "@/components/Divider/Divider";
@@ -18,7 +19,8 @@ export default function SignInForm(): React.ReactElement {
   const [login, setLogin] = React.useState(EMPTY_STRING);
   const [password, setPassword] = React.useState(EMPTY_STRING);
   const signInButtonDisabled: boolean =
-    login.length == 0 || password.length == 0;
+    login.length === EMPTY_STRING_LENGTH ||
+    password.length === EMPTY_STRING_LENGTH;
 
   const handleLoginChange: (e: React.ChangeEvent<HTMLInputElement>) => void = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -57,7 +59,7 @@ export default function SignInForm(): React.ReactElement {
         <Button
           fullWidth
           disabled={signInButtonDisabled}
-          variant={BUTTON_TYPE.contained}
+          variant={ButtonType.Contained}
           onClick={handleSignInClick}
         >
           {SIGN_IN_BTN_TEXT}

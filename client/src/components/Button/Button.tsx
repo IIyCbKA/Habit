@@ -3,13 +3,13 @@ import styles from "./Button.module.css";
 import sharedStyles from "@/shared/styles.module.css";
 import classNames from "classnames";
 import { ButtonData } from "./Button.interface";
-import { BUTTON_TYPE } from "./Button.constants";
+import { ButtonType } from "./Button.enums";
 
 export default function Button({
   children,
   disabled,
   fullWidth,
-  variant = BUTTON_TYPE.text,
+  variant = ButtonType.Text,
   className,
   onClick,
 }: ButtonData): React.ReactElement {
@@ -19,9 +19,9 @@ export default function Button({
     className,
     {
       [styles.fullWidth]: fullWidth,
-      [styles.containedButton]: variant === BUTTON_TYPE.contained,
-      [styles.textButton]: variant === BUTTON_TYPE.text,
-      [styles.outlinedButton]: variant === BUTTON_TYPE.outlined,
+      [styles.containedButton]: variant === ButtonType.Contained,
+      [styles.textButton]: variant === ButtonType.Text,
+      [styles.outlinedButton]: variant === ButtonType.Outlined,
     },
   );
 
