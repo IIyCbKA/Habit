@@ -3,27 +3,24 @@ import styles from "./Auth.module.css";
 import SignInForm from "./SignInForm/SignInForm";
 import SignUpForm from "./SignUpForm/SignUpForm";
 import { FormType } from "./Auth.enums";
+import { FormProps } from "./shared/shared.interfaces";
 
 export default function Auth(): React.ReactElement {
-  const [formType, setFormType] = React.useState(FormType.SignIn);
+  const [formType, setFormType] = React.useState<FormType>(FormType.SignIn);
 
-  // mb refactor?
-  const onClickChangeFormSignIn: () => void = () => {
-    setFormType(FormType.SignUp);
-  };
+  const toggleFormType: () => void = React.useCallback((): void => {
+    setFormType(
+      (prev: FormType): FormType =>
+        prev === FormType.SignIn ? FormType.SignUp : FormType.SignIn,
+    );
+  }, []);
 
-  const onClickChangeFormSignUp: () => void = () => {
-    setFormType(FormType.SignIn);
-  };
+  const FormComponent: ({ toggleFormType }: FormProps) => React.ReactElement =
+    formType === FormType.SignIn ? SignInForm : SignUpForm;
 
   return (
     <div className={styles.authContentWrap}>
-      {formType === FormType.SignIn && (
-        <SignInForm onClickChangeForm={onClickChangeFormSignIn} />
-      )}
-      {formType === FormType.SignUp && (
-        <SignUpForm onClickChangeForm={onClickChangeFormSignUp} />
-      )}
+      <FormComponent toggleFormType={toggleFormType} />
     </div>
   );
 }

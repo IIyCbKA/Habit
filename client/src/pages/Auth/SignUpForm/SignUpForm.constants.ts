@@ -1,5 +1,22 @@
-export const FIRST_LINE_PLACEHOLDER = "Username";
-export const SECOND_LINE_PLACEHOLDER = "Password";
-export const THIRD_LINE_PLACEHOLDER = "Confirm password";
-export const FOURTH_LINE_PLACEHOLDER = "E-mail address";
+import { FormFieldType } from "./SignUpForm.enums";
+
+export const INPUT_ELEMENTS = {
+  [FormFieldType.Username]: {
+    placeholder: "Username",
+    inputName: "username",
+  },
+  [FormFieldType.Password]: {
+    placeholder: "Password",
+    inputName: "password",
+  },
+  [FormFieldType.PasswordConfirmation]: {
+    placeholder: "Confirm password",
+    inputName: "passwordConfirmation",
+  },
+  [FormFieldType.Email]: {
+    placeholder: "E-mail address",
+    inputName: "email",
+  },
+};
+
 export const SIGN_UP_BUTTON_TEXT = "Sign Up";

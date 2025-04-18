@@ -2,7 +2,7 @@ import React from "react";
 import styles from "./ButtonsBlock.module.css";
 import IconButton from "@/components/IconButton/IconButton";
 import { ELEMENTS_LIST } from "./ButtonsBlock.constants";
-import { ButtonElement } from "./ButtonsBlock.types";
+import { ButtonElement } from "./ButtonsBlock.interface";
 import classNames from "classnames";
 
 export default function ButtonsBlock(): React.ReactElement {

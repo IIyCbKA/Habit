@@ -1,26 +1,29 @@
 import React from "react";
 import sharedAuthStyles from "../shared/shared.module.css";
 import Logotype from "@/assets/icons/heart_with_text_148x180.svg?react";
-import InputLine from "@/components/InputLine/InputLine";
+import TextField from "@/components/TextField/TextField";
 import {
-  EMPTY_STRING,
-  FIRST_LINE_PLACEHOLDER,
-  SECOND_LINE_PLACEHOLDER,
+  LOGIN_PLACEHOLDER,
+  PASSWORD_PLACEHOLDER,
   SIGN_IN_BTN_TEXT,
-  EMPTY_STRING_LENGTH,
 } from "./SignInForm.constants";
+import { EMPTY_STRING, EMPTY_STRING_LENGTH } from "../shared/shared.constants";
 import Button from "@/components/Button/Button";
 import { ButtonType } from "@/components/Button/Button.enums";
 import ActionBar from "./ActionBar/ActionBar";
-import SignInWith from "./SignInWith/SignInWith";
+import SignInWith from "../shared/SignInWith/SignInWith";
 import Divider from "@/components/Divider/Divider";
-import { FormData } from "../shared/shared.interface";
+import { FormProps } from "../shared/shared.interfaces";
+import {
+  AutoCompleteMode,
+  TextFieldType,
+} from "@/components/TextField/TextField.enums";
 
 export default function SignInForm({
-  onClickChangeForm,
-}: FormData): React.ReactElement {
-  const [login, setLogin] = React.useState(EMPTY_STRING);
-  const [password, setPassword] = React.useState(EMPTY_STRING);
+  toggleFormType,
+}: FormProps): React.ReactElement {
+  const [login, setLogin] = React.useState<string>(EMPTY_STRING);
+  const [password, setPassword] = React.useState<string>(EMPTY_STRING);
   const signInButtonDisabled: boolean =
     login.length === EMPTY_STRING_LENGTH ||
     password.length === EMPTY_STRING_LENGTH;
@@ -40,21 +43,23 @@ export default function SignInForm({
   const handleSignInClick: () => void = (): void => {};
 
   return (
-    <div className={sharedAuthStyles.formWrap}>
+    <form className={sharedAuthStyles.formWrap}>
       <div className={sharedAuthStyles.formContainer}>
         <Logotype className={sharedAuthStyles.formLogotype} />
-        <InputLine
+        <TextField
           fullWidth
           value={login}
           onChange={handleLoginChange}
-          placeholder={FIRST_LINE_PLACEHOLDER}
+          placeholder={LOGIN_PLACEHOLDER}
         />
         <Divider className={sharedAuthStyles.formDivider} flexItem />
-        <InputLine
+        <TextField
           fullWidth
+          type={TextFieldType.Password}
+          autoComplete={AutoCompleteMode.CurrentPassword}
           value={password}
           onChange={handlePasswordChange}
-          placeholder={SECOND_LINE_PLACEHOLDER}
+          placeholder={PASSWORD_PLACEHOLDER}
         />
         <Divider className={sharedAuthStyles.formDivider} flexItem />
         <Button
@@ -65,9 +70,9 @@ export default function SignInForm({
         >
           {SIGN_IN_BTN_TEXT}
         </Button>
-        <ActionBar onClickSignUpButton={onClickChangeForm} />
+        <ActionBar toggleFormType={toggleFormType} />
         <SignInWith />
       </div>
-    </div>
+    </form>
   );
 }

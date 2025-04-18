@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./Divider.module.css";
-import { DividerData } from "./Divider.interface";
+import { DividerProps } from "./Divider.interface";
 import classNames from "classnames";
 import {
   DIV_ELEMENT,
@@ -14,7 +14,7 @@ export default function Divider({
   orientation = DIVIDER_ORIENTATIONS.horizontal,
   variant = DIVIDER_VARIANTS.fullWidth,
   className,
-}: DividerData): React.ReactElement {
+}: DividerProps): React.ReactElement {
   const Component: React.ElementType =
     orientation === DIVIDER_ORIENTATIONS.horizontal ? HR_ELEMENT : DIV_ELEMENT;
 

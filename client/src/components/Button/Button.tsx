@@ -2,7 +2,7 @@ import React from "react";
 import styles from "./Button.module.css";
 import sharedStyles from "@/shared/styles.module.css";
 import classNames from "classnames";
-import { ButtonData } from "./Button.interface";
+import { ButtonProps } from "./Button.interface";
 import { ButtonType } from "./Button.enums";
 
 export default function Button({
@@ -12,7 +12,7 @@ export default function Button({
   variant = ButtonType.Text,
   className,
   onClick,
-}: ButtonData): React.ReactElement {
+}: ButtonProps): React.ReactElement {
   const buttonStyles = classNames(
     styles.rootButton,
     sharedStyles.defaultText,

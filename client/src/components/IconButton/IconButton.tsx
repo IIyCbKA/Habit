@@ -1,5 +1,5 @@
 import React from "react";
-import { IconButtonData } from "./IconButton.interface";
+import { IconButtonProps } from "./IconButton.interface";
 import styles from "./IconButton.module.css";
 import classNames from "classnames";
 
@@ -8,7 +8,7 @@ export default function IconButton({
   disabled,
   className,
   onClick,
-}: IconButtonData): React.ReactElement {
+}: IconButtonProps): React.ReactElement {
   const buttonStyles = classNames(styles.iconButtonRoot, className);
 
   return (

@@ -1,5 +1,5 @@
 /*
---------------LinkToData Interface--------------
+--------------LinkToProps Interface--------------
 children    - text in button
 path        - path for link
 className   - other styles
@@ -7,7 +7,7 @@ className   - other styles
 
 import React from "react";
 
-export interface LinkToData {
+export interface LinkToProps {
   children: React.ReactNode;
   path: string;
 

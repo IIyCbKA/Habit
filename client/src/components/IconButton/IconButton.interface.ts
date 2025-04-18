@@ -1,5 +1,5 @@
 /*
---------------IconButtonData Interface--------------
+--------------IconButtonProps Interface--------------
 children    - icon for button
 disabled    - flag is button is disabled
 className   - other styles
@@ -8,7 +8,7 @@ onClick     - callback for click to button
 
 import React from "react";
 
-export interface IconButtonData {
+export interface IconButtonProps {
   children: React.ReactNode;
   disabled?: boolean;
 

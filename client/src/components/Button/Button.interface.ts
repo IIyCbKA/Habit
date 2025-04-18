@@ -1,5 +1,5 @@
 /*
---------------ButtonData Interface--------------
+--------------ButtonProps Interface--------------
 children    - text in button
 disabled    - flag is button is disabled
 fullWidth   - flag is full parent width
@@ -11,7 +11,7 @@ onClick     - callback for click to button
 import React from "react";
 import { ButtonType } from "./Button.enums";
 
-export interface ButtonData {
+export interface ButtonProps {
   children: React.ReactNode;
   disabled?: boolean;
   fullWidth?: boolean;
