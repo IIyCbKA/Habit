@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "./SignInForm.module.css";
+import sharedAuthStyles from "../shared/shared.module.css";
 import Logotype from "@/assets/icons/heart_with_text_148x180.svg?react";
 import InputLine from "@/components/InputLine/InputLine";
 import {
@@ -14,8 +14,11 @@ import { ButtonType } from "@/components/Button/Button.enums";
 import ActionBar from "./ActionBar/ActionBar";
 import SignInWith from "./SignInWith/SignInWith";
 import Divider from "@/components/Divider/Divider";
+import { FormData } from "../shared/shared.interface";
 
-export default function SignInForm(): React.ReactElement {
+export default function SignInForm({
+  onClickChangeForm,
+}: FormData): React.ReactElement {
   const [login, setLogin] = React.useState(EMPTY_STRING);
   const [password, setPassword] = React.useState(EMPTY_STRING);
   const signInButtonDisabled: boolean =
@@ -34,28 +37,26 @@ export default function SignInForm(): React.ReactElement {
     setPassword(e.target.value);
   };
 
-  const handleSignInClick: (e: React.MouseEvent<HTMLElement>) => void = (
-    e: React.MouseEvent<HTMLElement>,
-  ): void => {};
+  const handleSignInClick: () => void = (): void => {};
 
   return (
-    <div className={styles.signInWrap}>
-      <div className={styles.signInContainer}>
-        <Logotype className={styles.signInLogotype} />
+    <div className={sharedAuthStyles.formWrap}>
+      <div className={sharedAuthStyles.formContainer}>
+        <Logotype className={sharedAuthStyles.formLogotype} />
         <InputLine
           fullWidth
           value={login}
           onChange={handleLoginChange}
           placeholder={FIRST_LINE_PLACEHOLDER}
         />
-        <Divider className={styles.divider} flexItem />
+        <Divider className={sharedAuthStyles.formDivider} flexItem />
         <InputLine
           fullWidth
           value={password}
           onChange={handlePasswordChange}
           placeholder={SECOND_LINE_PLACEHOLDER}
         />
-        <Divider className={styles.divider} flexItem />
+        <Divider className={sharedAuthStyles.formDivider} flexItem />
         <Button
           fullWidth
           disabled={signInButtonDisabled}
@@ -64,7 +65,7 @@ export default function SignInForm(): React.ReactElement {
         >
           {SIGN_IN_BTN_TEXT}
         </Button>
-        <ActionBar />
+        <ActionBar onClickSignUpButton={onClickChangeForm} />
         <SignInWith />
       </div>
     </div>
