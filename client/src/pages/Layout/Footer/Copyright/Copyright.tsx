@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./Copyright.module.css";
-import sharedStyles from "@/shared/styles.module.css";
+import sharedStyles from "@/shared/shared.module.css";
 import classNames from "classnames";
 import { COPYRIGHT_TEXT } from "./Copyright.constants";
 

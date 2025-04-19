@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { LinkToProps } from "@/components/Link/LinkTo.interface";
 import styles from "./LinkTo.module.css";
-import sharedStyles from "@/shared/styles.module.css";
+import sharedStyles from "@/shared/shared.module.css";
 import classNames from "classnames";
 
 export default function LinkTo({

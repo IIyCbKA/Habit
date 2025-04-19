@@ -1,7 +1,7 @@
 import React from "react";
 import UnitedKingdom from "@/assets/icons/united_kingdom_64x64.svg?react";
 import styles from "./Country.module.css";
-import sharedStyles from "@/shared/styles.module.css";
+import sharedStyles from "@/shared/shared.module.css";
 import classNames from "classnames";
 import { COUNTRY_TEXT } from "./Country.constants";
 

@@ -3,7 +3,7 @@ import styles from "./ActionBar.module.css";
 import LinkTo from "@/components/Link/LinkTo";
 import { FORGOT_PASSWORD_TEXT, SIGN_UP_TEXT } from "./ActionBar.constants";
 import { PUBLIC_PATHS } from "@/routes/PublicRoutes.constants";
-import Button from "@/components/Button/Button";
+import Button from "@/components/Buttons/DefaultButton/Button";
 import { ActionBarProps } from "../../shared/shared.interfaces";
 
 export default function ActionBar({

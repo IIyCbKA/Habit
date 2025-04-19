@@ -1,7 +1,7 @@
 import React from "react";
 import { TITLE_TEXT } from "./Title.constants";
 import styles from "./Title.module.css";
-import sharedStyles from "@/shared/styles.module.css";
+import sharedStyles from "@/shared/shared.module.css";
 import classNames from "classnames";
 
 export default function Title(): React.ReactElement {

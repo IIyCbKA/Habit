@@ -1,22 +1,25 @@
 /*
 --------------ButtonProps Interface--------------
-children    - text in button
 disabled    - flag is button is disabled
 fullWidth   - flag is full parent width
-variant     - variant of button style
+children    - text in button
 className   - other styles
 onClick     - callback for click to button
+type        - html-type of button
+variant     - variant of button style
 */
 
 import React from "react";
-import { ButtonType } from "./Button.enums";
+import { ButtonVariant } from "./Button.enums";
+import { ButtonType } from "../shared.enums";
 
 export interface ButtonProps {
-  children: React.ReactNode;
   disabled?: boolean;
   fullWidth?: boolean;
-  variant?: ButtonType;
 
+  children: React.ReactNode;
   className?: string;
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  type?: ButtonType;
+  variant?: ButtonVariant;
 }

@@ -1,9 +1,9 @@
 /*
---------------TextFieldType enum--------------
-The enum TextFieldType specifies type of text field.
+--------------InputType enum--------------
+The enum InputType specifies type of input.
 By default, type is Text.
 */
-export const enum TextFieldType {
+export const enum InputType {
   Text = "text",
   Email = "email",
   Password = "password",
@@ -12,7 +12,7 @@ export const enum TextFieldType {
 
 /*
 --------------AutoCompleteMode enum--------------
-The enum AutoCompleteMode specifies mode of text field.
+The enum AutoCompleteMode specifies mode of input.
 By default, mode is Off.
 */
 export const enum AutoCompleteMode {

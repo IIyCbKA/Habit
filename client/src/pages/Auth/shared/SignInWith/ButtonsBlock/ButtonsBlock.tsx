@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./ButtonsBlock.module.css";
-import IconButton from "@/components/IconButton/IconButton";
+import IconButton from "@/components/Buttons/IconButton/IconButton";
 import { ELEMENTS_LIST } from "./ButtonsBlock.constants";
 import { ButtonElement } from "./ButtonsBlock.interface";
 import classNames from "classnames";
