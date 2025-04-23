@@ -6,7 +6,7 @@ variant     - ratio of divider length to total length
 className   - other styles
 */
 
-import { DIVIDER_ORIENTATIONS, DIVIDER_VARIANTS } from "./Divider.constants";
+import { DIVIDER_ORIENTATIONS, DIVIDER_VARIANTS } from "./divider.constants";
 
 export interface DividerProps {
   flexItem?: boolean;

@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { LinkToProps } from "@/components/Link/LinkTo.interface";
-import styles from "./LinkTo.module.css";
+import styles from "./linkTo.module.css";
 import sharedStyles from "@/shared/shared.module.css";
 import classNames from "classnames";
 

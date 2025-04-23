@@ -10,7 +10,7 @@ variant     - variant of button style
 */
 
 import React from "react";
-import { ButtonVariant } from "./Button.enums";
+import { ButtonVariant } from "./button.enums";
 import { ButtonType } from "../shared.enums";
 
 export interface ButtonProps {

@@ -1,6 +1,6 @@
 import React from "react";
 import { IconButtonProps } from "./IconButton.interface";
-import styles from "./IconButton.module.css";
+import styles from "./iconButton.module.css";
 import classNames from "classnames";
 import { ButtonType } from "@/components/Buttons/shared.enums";
 

@@ -1,9 +1,9 @@
 import React from "react";
-import styles from "./Button.module.css";
+import styles from "./button.module.css";
 import sharedStyles from "@/shared/shared.module.css";
 import classNames from "classnames";
 import { ButtonProps } from "./Button.interface";
-import { ButtonVariant } from "./Button.enums";
+import { ButtonVariant } from "./button.enums";
 import { ButtonType } from "../shared.enums";
 
 export default function Button({

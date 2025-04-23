@@ -12,7 +12,7 @@ type           - type of input field
 */
 
 import React from "react";
-import { AutoCompleteMode, InputType } from "./Input.enums";
+import { AutoCompleteMode, InputType } from "./input.enums";
 
 export interface InputProps {
   fullWidth?: boolean;

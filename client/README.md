@@ -2,9 +2,14 @@
 
 ## Installation and setup
 
-Install all packages
+1. Install all packages
 ```bash
 npm install
+```
+
+2. Create `.env` file in the client root with the following variables:
+```
+VITE_API_BASE_URL=your_server_url
 ```
 
 ## Running the client

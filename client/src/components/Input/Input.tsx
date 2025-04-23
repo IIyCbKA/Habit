@@ -1,8 +1,8 @@
 import React from "react";
-import styles from "./Input.module.css";
+import styles from "./input.module.css";
 import { InputProps } from "./Input.interface";
 import classNames from "classnames";
-import { InputType, AutoCompleteMode } from "./Input.enums";
+import { InputType, AutoCompleteMode } from "./input.enums";
 
 export default function Input({
   fullWidth,

@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "./Divider.module.css";
+import styles from "./divider.module.css";
 import { DividerProps } from "./Divider.interface";
 import classNames from "classnames";
 import {
@@ -7,7 +7,7 @@ import {
   DIVIDER_ORIENTATIONS,
   DIVIDER_VARIANTS,
   HR_ELEMENT,
-} from "./Divider.constants";
+} from "./divider.constants";
 
 export default function Divider({
   flexItem,
