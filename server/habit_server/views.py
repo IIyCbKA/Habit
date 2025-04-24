@@ -24,7 +24,7 @@ def login(request):
 
 
 @api_view(['POST'])
-def signup(request):
+def register(request):
     serializer = UserSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()

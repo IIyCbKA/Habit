@@ -3,6 +3,6 @@ from habit_server import views
 
 urlpatterns = [
     path('login/', views.login),
-    path('signup/', views.signup),
+    path('register/', views.register),
     path('test_token/', views.test_token),
 ]
