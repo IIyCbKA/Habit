@@ -18,6 +18,7 @@ import IconButton from "@/components/Buttons/IconButton/IconButton";
 import OpenEye from "@/assets/icons/open_eye_24x24.svg?react";
 import CloseEye from "@/assets/icons/close_eye_24x24.svg?react";
 import { registerUser } from "@/features/Auth/auth.slice";
+import { useAppDispatch } from "@/store/hooks";
 
 export default function SignUpForm({
   toggleFormType,
@@ -29,6 +30,7 @@ export default function SignUpForm({
     email: EMPTY_STRING,
   });
 
+  const dispatch = useAppDispatch();
   const [showPassword, setShowPassword] = React.useState<boolean>(false);
   const [showPasswordConfirmation, setShowPasswordConfirmation] =
     React.useState<boolean>(false);
@@ -54,11 +56,13 @@ export default function SignUpForm({
 
   const onSubmit: (e: React.FormEvent) => void = (e: React.FormEvent): void => {
     e.preventDefault();
-    registerUser({
-      username: form.username,
-      password: form.password,
-      email: form.email,
-    });
+    dispatch(
+      registerUser({
+        username: form.username,
+        password: form.password,
+        email: form.email,
+      }),
+    );
   };
 
   return (

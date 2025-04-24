@@ -20,10 +20,12 @@ import OpenEye from "@/assets/icons/open_eye_24x24.svg?react";
 import CloseEye from "@/assets/icons/close_eye_24x24.svg?react";
 import { ButtonType } from "@/components/Buttons/shared.enums";
 import { loginUser } from "../auth.slice";
+import { useAppDispatch } from "@/store/hooks";
 
 export default function SignInForm({
   toggleFormType,
 }: FormProps): React.ReactElement {
+  const dispatch = useAppDispatch();
   const [username, setUsername] = React.useState<string>(EMPTY_STRING);
   const [password, setPassword] = React.useState<string>(EMPTY_STRING);
   const [showPassword, setShowPassword] = React.useState<boolean>(false);
@@ -49,7 +51,7 @@ export default function SignInForm({
 
   const onSubmit: (e: React.FormEvent) => void = (e: React.FormEvent): void => {
     e.preventDefault();
-    loginUser({username, password});
+    dispatch(loginUser({ username, password }));
   };
 
   return (
