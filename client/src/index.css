@@ -5,6 +5,8 @@
   --root-font-family: "Roboto Mono", monospace;
   --text-primary: #1A1A1A;
   --text-secondary: #737373;
+  --text-error: #C62928;
+  --text-warning: #FFCF48;
   --default-font-size: 14px;
   --default-line-height: 20px;
   --lower-font-size: 12px;

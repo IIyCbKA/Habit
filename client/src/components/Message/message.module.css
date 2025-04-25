@@ -1,0 +1,15 @@
+.messageRoot {
+  margin: 10px 0 20px;
+}
+
+.successVariant {
+  color: var(--variant-text-color);
+}
+
+.errorVariant {
+  color: var(--text-error);
+}
+
+.warningVariant {
+  color: var(--text-warning);
+}
