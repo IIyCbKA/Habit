@@ -21,4 +21,5 @@ export const enum AutoCompleteMode {
   Email = "email",
   Name = "name",
   Off = "off",
+  Username = "username",
 }

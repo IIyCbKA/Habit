@@ -1,15 +1,10 @@
 /*
 --------------LinkToProps Interface--------------
-children    - text in button
-path        - path for link
 className   - other styles
 */
 
-import React from "react";
+import { LinkProps } from "react-router-dom";
 
-export interface LinkToProps {
-  children: React.ReactNode;
-  path: string;
-
+export interface LinkToProps extends LinkProps {
   className?: string;
 }

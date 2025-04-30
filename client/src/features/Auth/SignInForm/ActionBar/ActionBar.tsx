@@ -11,7 +11,7 @@ export default function ActionBar({
 }: ActionBarProps): React.ReactElement {
   return (
     <div className={styles.actionBarContainer}>
-      <LinkTo path={PUBLIC_PATHS.RESET_PASSWORD}>{FORGOT_PASSWORD_TEXT}</LinkTo>
+      <LinkTo to={PUBLIC_PATHS.RESET_PASSWORD}>{FORGOT_PASSWORD_TEXT}</LinkTo>
       <Button onClick={toggleFormType}>{SIGN_UP_TEXT}</Button>
     </div>
   );

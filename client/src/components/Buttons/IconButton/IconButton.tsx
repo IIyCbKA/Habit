@@ -5,22 +5,11 @@ import classNames from "classnames";
 import { ButtonType } from "@/components/Buttons/shared.enums";
 
 export default function IconButton({
-  children,
-  disabled,
   className,
-  onClick,
   type = ButtonType.Button,
+  ...other
 }: IconButtonProps): React.ReactElement {
   const buttonStyles = classNames(styles.iconButtonRoot, className);
 
-  return (
-    <button
-      type={type}
-      className={buttonStyles}
-      disabled={disabled}
-      onClick={onClick}
-    >
-      {children}
-    </button>
-  );
+  return <button {...other} type={type} className={buttonStyles} />;
 }

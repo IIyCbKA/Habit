@@ -6,9 +6,9 @@ import classNames from "classnames";
 import { MessageVariant } from "./message.enums";
 
 export default function Message({
-  children,
   variant,
   className,
+  ...other
 }: MessageProps): React.ReactElement {
   const messageStyles = classNames(
     styles.messageRoot,
@@ -21,5 +21,5 @@ export default function Message({
     },
   );
 
-  return <div className={messageStyles}>{children}</div>;
+  return <div {...other} className={messageStyles} />;
 }

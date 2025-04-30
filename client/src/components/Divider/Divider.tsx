@@ -14,6 +14,7 @@ export default function Divider({
   orientation = DIVIDER_ORIENTATIONS.horizontal,
   variant = DIVIDER_VARIANTS.fullWidth,
   className,
+  ...other
 }: DividerProps): React.ReactElement {
   const Component: React.ElementType =
     orientation === DIVIDER_ORIENTATIONS.horizontal ? HR_ELEMENT : DIV_ELEMENT;
@@ -41,5 +42,5 @@ export default function Divider({
     className,
   );
 
-  return <Component className={dividerStyles} />;
+  return <Component {...other} className={dividerStyles} />;
 }

@@ -6,14 +6,9 @@ import { InputType, AutoCompleteMode } from "./input.enums";
 
 export default function Input({
   fullWidth,
-  name,
-  placeholder,
-  value,
-  autoComplete = AutoCompleteMode.Off,
   className,
   inputAdornment,
-  onChange,
-  type = InputType.Text,
+  ...other
 }: InputProps): React.ReactElement {
   const inputWrapperStyles = classNames(styles.inputWrapper, {
     [styles.fullWidth]: fullWidth,
@@ -25,15 +20,7 @@ export default function Input({
 
   return (
     <span className={inputWrapperStyles}>
-      <input
-        autoComplete={autoComplete}
-        name={name}
-        type={type}
-        value={value}
-        onChange={onChange}
-        placeholder={placeholder}
-        className={inputStyles}
-      />
+      <input {...other} className={inputStyles} />
       {inputAdornment && (
         <div className={styles.adornmentWrap}>{inputAdornment}</div>
       )}

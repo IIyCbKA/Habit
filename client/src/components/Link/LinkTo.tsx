@@ -1,14 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { LinkToProps } from "@/components/Link/LinkTo.interface";
+import { LinkToProps } from "./LinkTo.interface";
 import styles from "./linkTo.module.css";
 import sharedStyles from "@/shared/shared.module.css";
 import classNames from "classnames";
 
 export default function LinkTo({
-  children,
-  path,
   className,
+  ...other
 }: LinkToProps): React.ReactElement {
   const linkStyles = classNames(
     styles.linkToRoot,
@@ -16,9 +15,5 @@ export default function LinkTo({
     className,
   );
 
-  return (
-    <Link to={path} className={linkStyles}>
-      {children}
-    </Link>
-  );
+  return <Link {...other} className={linkStyles} />;
 }

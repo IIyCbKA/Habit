@@ -7,13 +7,11 @@ import { ButtonVariant } from "./button.enums";
 import { ButtonType } from "../shared.enums";
 
 export default function Button({
-  disabled,
   fullWidth,
-  children,
   className,
-  onClick,
   type = ButtonType.Button,
   variant = ButtonVariant.Text,
+  ...other
 }: ButtonProps): React.ReactElement {
   const buttonStyles = classNames(
     styles.rootButton,
@@ -27,14 +25,5 @@ export default function Button({
     },
   );
 
-  return (
-    <button
-      type={type}
-      className={buttonStyles}
-      onClick={onClick}
-      disabled={disabled}
-    >
-      {children}
-    </button>
-  );
+  return <button {...other} type={type} className={buttonStyles} />;
 }
