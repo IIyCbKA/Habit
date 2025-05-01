@@ -26,13 +26,15 @@ export interface RegisterCreds {
 --------------AuthState type--------------
 This type is used in AuthSlice for initialState
 
-user     - user data
-isAuth   - trivial flag is user is auth user
-status   - status of authorization
-error    - error authorization log
+user           - user data
+accessToken    - access token of auth user
+isAuth         - trivial flag is user is auth user
+status         - status of authorization
+error          - error authorization log
 */
 export interface AuthState {
   user: User | null;
+  accessToken: string | null;
   isAuth: boolean;
   status: AuthStatus;
   error?: string;
@@ -53,22 +55,32 @@ export interface User {
 --------------LoginResponse type--------------
 This type is used in AuthSlice for response of loginAPI
 
-user     - user data
-token    - token of auth user
+user           - user data
+accessToken    - access token of auth user
 */
 export interface LoginResponse {
   user: User;
-  token: string;
+  accessToken: string;
 }
 
 /*
 --------------RegisterResponse type--------------
 This type is used in AuthSlice for response of registerAPI
 
-user     - user data
-token    - token of auth user
+user           - user data
+accessToken    - access token of auth user
 */
 export interface RegisterResponse {
   user: User;
-  token: string;
+  accessToken: string;
+}
+
+/*
+--------------RefreshAuthResponse type--------------
+This type is used in AuthSlice for response of refreshAPI
+
+accessToken    - access token of auth user
+*/
+export interface RefreshResponse {
+  accessToken: string;
 }

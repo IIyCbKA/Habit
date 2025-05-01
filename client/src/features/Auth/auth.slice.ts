@@ -1,10 +1,14 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { login as loginAPI, register as registerAPI } from "./auth.api";
-import { clearToken, setToken } from "@/api/TokenService/tokenService";
+import {
+  login as loginAPI,
+  register as registerAPI,
+  refresh as refreshAPI,
+} from "./auth.api";
 import {
   AuthState,
   LoginCreds,
   LoginResponse,
+  RefreshResponse,
   RegisterCreds,
   RegisterResponse,
   User,
@@ -27,18 +31,26 @@ export const registerUser = createAsyncThunk<RegisterResponse, RegisterCreds>(
   },
 );
 
+export const refreshAuth = createAsyncThunk<RefreshResponse>(
+  `${SLISE_NAME}/refresh`,
+  async (): Promise<any> => {
+    return await refreshAPI();
+  },
+);
+
 const authSlice = createSlice({
   name: SLISE_NAME,
   initialState: {
     user: null,
+    accessToken: null,
     isAuth: false,
     status: AuthStatus.IDLE,
   } as AuthState,
   reducers: {
     logout: (state): void => {
       state.user = null;
+      state.accessToken = null;
       state.isAuth = false;
-      clearToken();
     },
   },
   extraReducers: (builder): void => {
@@ -48,9 +60,9 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.fulfilled, (state, action): void => {
         state.user = action.payload.user;
+        state.accessToken = action.payload.accessToken;
         state.isAuth = true;
         state.status = AuthStatus.SUCCEEDED;
-        setToken(action.payload.token);
       })
       .addCase(loginUser.rejected, (state, action): void => {
         state.status = AuthStatus.FAILED;
@@ -61,12 +73,18 @@ const authSlice = createSlice({
       })
       .addCase(registerUser.fulfilled, (state, action): void => {
         state.user = action.payload.user;
+        state.accessToken = action.payload.accessToken;
         state.isAuth = true;
         state.status = AuthStatus.SUCCEEDED;
-        setToken(action.payload.token);
       })
       .addCase(registerUser.rejected, (state, action): void => {
         state.status = AuthStatus.FAILED;
+        state.error = action.error.message;
+      })
+      .addCase(refreshAuth.fulfilled, (state, action): void => {
+        state.accessToken = action.payload.accessToken;
+      })
+      .addCase(refreshAuth.rejected, (state, action): void => {
         state.error = action.error.message;
       });
   },
@@ -74,6 +92,8 @@ const authSlice = createSlice({
 
 export const selectIsAuth = (state: RootState): boolean => state.auth.isAuth;
 export const selectUser = (state: RootState): User | null => state.auth.user;
+export const selectAccessToken = (state: RootState): string | null =>
+  state.auth.accessToken;
 export const selectAuthStatus = (state: RootState): AuthStatus =>
   state.auth.status;
 
