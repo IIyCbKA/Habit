@@ -2,11 +2,11 @@ import { AuthStatus } from "./auth.enums";
 
 /*
 --------------LoginCreds type--------------
-username - name of user
-password - password of user
+identifier - identifier of user (email or username)
+password   - password of user
 */
 export interface LoginCreds {
-  username: string;
+  identifier: string;
   password: string;
 }
 

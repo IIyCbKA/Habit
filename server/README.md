@@ -9,6 +9,8 @@ pip install -r requirements.txt
 
 2. Create `.env` file in the project root with the following variables:
 ```
+DJANGO_ADMIN_URL=your_url
+DJANGO_ADMIN_IP=public_ip_of_admin_for_django_admin/
 DB_NAME=name_of_your_db
 DB_USER=your_user
 DB_PASSWORD=your_password

@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("SECRET_KEY")
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -58,10 +58,10 @@ REST_FRAMEWORK = {
     )
 }
 
-'''
+"""
 ROTATE_REFRESH_TOKENS and BLACKLIST_AFTER_ROTATION is False 
 because these actions are prescribed manually
-'''
+"""
 SIMPLE_JWT = {
     'REFRESH_COOKIE': 'refresh_token',
     'AUTH_COOKIE': 'access_token',
@@ -85,6 +85,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'server.middleware.AdminIPRestrictionMiddleware',
 ]
 
 ROOT_URLCONF = 'server.urls'
@@ -111,13 +112,13 @@ WSGI_APPLICATION = 'server.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.environ.get("DB_NAME"),
-        "USER": os.environ.get("DB_USER"),
-        "PASSWORD": os.environ.get("DB_PASSWORD"),
-        "HOST": os.environ.get("DB_HOST"),
-        "PORT": os.environ.get("DB_PORT"),
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('DB_NAME'),
+        'USER': os.environ.get('DB_USER'),
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'HOST': os.environ.get('DB_HOST'),
+        'PORT': os.environ.get('DB_PORT'),
     }
 }
 
@@ -143,9 +144,7 @@ AUTH_PASSWORD_VALIDATORS = [
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',
-]
+ALLOWED_ADMIN_IPS = [os.environ.get('DJANGO_ADMIN_IP')]
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/

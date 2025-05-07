@@ -31,18 +31,18 @@ export default function SignInForm({
 }: FormProps): React.ReactElement {
   const dispatch = useAppDispatch();
   const authStatus = useAppSelector(selectAuthStatus);
-  const [username, setUsername] = React.useState<string>(EMPTY_STRING);
+  const [identifier, setIdentifier] = React.useState<string>(EMPTY_STRING);
   const [password, setPassword] = React.useState<string>(EMPTY_STRING);
   const [showPassword, setShowPassword] = React.useState<boolean>(false);
   const [showLoginError, setShowLoginError] = React.useState<boolean>(false);
   const signInButtonDisabled: boolean =
-    username.length === EMPTY_STRING_LENGTH ||
+    identifier.length === EMPTY_STRING_LENGTH ||
     password.length === EMPTY_STRING_LENGTH;
 
   const onLoginChange: (e: React.ChangeEvent<HTMLInputElement>) => void = (
     e: React.ChangeEvent<HTMLInputElement>,
   ): void => {
-    setUsername(e.target.value);
+    setIdentifier(e.target.value);
   };
 
   const onPasswordChange: (e: React.ChangeEvent<HTMLInputElement>) => void = (
@@ -57,7 +57,7 @@ export default function SignInForm({
 
   const onSubmit: (e: React.FormEvent) => void = (e: React.FormEvent): void => {
     e.preventDefault();
-    dispatch(loginUser({ username, password }));
+    dispatch(loginUser({ identifier, password }));
   };
 
   React.useEffect((): void => {
@@ -71,7 +71,7 @@ export default function SignInForm({
         <Input
           fullWidth
           autoComplete={AutoCompleteMode.Username}
-          value={username}
+          value={identifier}
           onChange={onLoginChange}
           placeholder={LOGIN_PLACEHOLDER}
         />

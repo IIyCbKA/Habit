@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model
 
 from rest_framework import status
 from rest_framework.response import Response
+from rest_framework.request import Request
 from rest_framework.views import APIView
 
 from rest_framework_simplejwt.token_blacklist.models import (
@@ -26,19 +27,33 @@ from typing import Optional
 
 User = get_user_model()
 
-def resetAllUserToken(user: User) -> None:
-  for ot in OutstandingToken.objects.filter(user=user):
-    BlacklistedToken.objects.get_or_create(token=ot)
-
-
 def getTokensForUser(user: User) -> tuple[RefreshToken, AccessToken]:
   refresh: RefreshToken = RefreshToken.for_user(user)
   access: AccessToken = refresh.access_token
   return refresh, access
 
 
-def createResponse(user: User, httpStatus: int) -> Response:
-  resetAllUserToken(user)
+def resetTokenFromRequest(request: Request) -> None:
+  cookieName: str = settings.SIMPLE_JWT['AUTH_COOKIE']
+  rawRefresh: Optional[str] = request.COOKIES.get(cookieName)
+
+  if rawRefresh:
+    try:
+      refresh: RefreshToken = RefreshToken(rawRefresh)
+      jti: str = refresh["jti"]
+      ot = OutstandingToken.objects.filter(jti=jti).first()
+
+      if not ot:
+        return
+
+      BlacklistedToken.objects.get_or_create(token=ot)
+
+    except TokenError:
+      return
+
+
+def createResponse(request: Request, user: User, httpStatus: int) -> Response:
+  resetTokenFromRequest(request)
 
   refresh, access = getTokensForUser(user)
   data: AuthResponseData = {
@@ -71,9 +86,7 @@ class RegisterView(APIView):
     serializer.is_valid(raise_exception=True)
     user = serializer.save()
 
-    resetAllUserToken(user)
-
-    response: Response = createResponse(user, status.HTTP_201_CREATED)
+    response: Response = createResponse(request, user, status.HTTP_201_CREATED)
     return response
 
 
@@ -81,7 +94,7 @@ class LoginView(APIView):
   permission_classes = [AllowAny]
 
   def post(self, request) -> Response:
-    identifier: str = request.data.get('username')
+    identifier: str = request.data.get('identifier')
     password: str = request.data.get('password')
 
     try:
@@ -92,11 +105,10 @@ class LoginView(APIView):
     if not user.check_password(password):
       return Response(status=status.HTTP_401_UNAUTHORIZED)
 
-    resetAllUserToken(user)
     user.last_login = timezone.now()
     user.save(update_fields=['last_login'])
 
-    response: Response = createResponse(user, status.HTTP_200_OK)
+    response: Response = createResponse(request, user, status.HTTP_200_OK)
     return response
 
 
@@ -124,7 +136,12 @@ class RefreshView(APIView):
       return Response({'detail': 'User not found'},
         status=status.HTTP_401_UNAUTHORIZED)
 
-    resetAllUserToken(user)
-
-    response: Response = createResponse(user, status.HTTP_200_OK)
+    response: Response = createResponse(request, user, status.HTTP_200_OK)
     return response
+
+
+class LogoutView(APIView):
+  def post(self, request) -> Response:
+    resetTokenFromRequest(request)
+
+    return Response(status=status.HTTP_200_OK)
