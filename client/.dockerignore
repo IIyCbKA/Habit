@@ -1,0 +1,21 @@
+# dependencies
+node_modules
+
+# build of Vite
+dist
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# config & ignore
+Dockerfile
+.dockerignore
+
+# git-metadata
+.gitignore
+.git
+
+# environment variables
+.env*

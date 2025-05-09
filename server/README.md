@@ -4,7 +4,7 @@
 
 1. Install all requirements
 ```bash
-pip install -r requirements.txt
+pip install -r requirements-base.txt
 ```
 
 2. Create `.env` file in the project root with the following variables:
