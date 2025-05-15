@@ -19,12 +19,12 @@ Copy the template and fill only the variables relevant to your environment:
 #                                   GENERAL
 # ==============================================================================
 SECRET_KEY=your_secret_key
-DJANGO_ADMIN_URL=your_admin_url
-DB_NAME=your_db_name_for_server
-DB_USER=your_db_user_for_server
-DB_PASSWORD=your_db_password_for_server
-DB_HOST=your_db_host_from_for_server
-DB_PORT=your_db_port_from_for_server
+DJANGO_ADMIN_URL=your_admin_url/
+POSTGRES_DB=your_postgres_name
+POSTGRES_USER=your_postgres_user
+POSTGRES_PASSWORD=your_postgres_password
+POSTGRES_HOST=your_postgres_host
+POSTGRES_PORT=your_postgres_port
 
 
 # ==============================================================================
@@ -36,11 +36,6 @@ DEBUG=True
 # ==============================================================================
 #                                     PROD
 # ==============================================================================
-POSTGRES_NAME=your_postgres_name
-POSTGRES_USER=your_postgres_user
-POSTGRES_PASSWORD=your_postgres_password
-POSTGRES_HOST=your_postgres_host
-POSTGRES_PORT=your_postgres_port
 DJANGO_HOST_URL=your_server_host
 DJANGO_ADMIN_IP=your_ip_for_django_admin
    ```
