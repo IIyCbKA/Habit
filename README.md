@@ -3,6 +3,48 @@
 ## 🌿 Description
 **Habit** is a web app that helps users set health-related goals, track daily progress, leave notes, and visualize achievements. Your health matters most!
 
+## 🛠️ Pre-setup
+
+#### 1. **Prepare environment file**
+Copy the template and fill only the variables relevant to your environment:
+
+   ```bash
+   cp .env.example .env
+   ```
+
+#### 2. **Configure `.env`**
+
+   ```dotenv
+   # ==============================================================================
+#                                   GENERAL
+# ==============================================================================
+SECRET_KEY=your_secret_key
+DJANGO_ADMIN_URL=your_admin_url
+DB_NAME=your_db_name_for_server
+DB_USER=your_db_user_for_server
+DB_PASSWORD=your_db_password_for_server
+DB_HOST=your_db_host_from_for_server
+DB_PORT=your_db_port_from_for_server
+
+
+# ==============================================================================
+#                                     LOCAL
+# ==============================================================================
+DEBUG=True
+
+
+# ==============================================================================
+#                                     PROD
+# ==============================================================================
+POSTGRES_NAME=your_postgres_name
+POSTGRES_USER=your_postgres_user
+POSTGRES_PASSWORD=your_postgres_password
+POSTGRES_HOST=your_postgres_host
+POSTGRES_PORT=your_postgres_port
+DJANGO_HOST_URL=your_server_host
+DJANGO_ADMIN_IP=your_ip_for_django_admin
+   ```
+
 ## 📦 Assets Attribution
 - Flags: [Rene Herrmann Figma files](https://www.figma.com/community/plugin/749888869584535589/flags) under [Community Free Resource License](https://www.figma.com/legal/community-free-resource-license) (Cropped original images).
 - Utils Icons: [Ahmad Al Haddad Figma files](https://www.figma.com/community/plugin/775671607185029020/material-design-icons-community) under [Community Free Resource License](https://www.figma.com/legal/community-free-resource-license) (Repainted original images).

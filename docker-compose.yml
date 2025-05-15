@@ -4,8 +4,12 @@ services:
   db:
     image: postgres:15
     restart: unless-stopped
-    env_file:
-      - server/.env
+    environment:
+      POSTGRES_NAME: ${POSTGRES_NAME}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_PORT: ${POSTGRES_PORT}
     volumes:
       - postgres_data:/var/lib/postgresql/data:rw
     networks:
@@ -19,8 +23,17 @@ services:
   server:
     image: denistred/habit_server:latest
     restart: unless-stopped
-    env_file:
-      - server/.env
+    environment:
+      DEBUG: False
+      SECRET_KEY: ${SECRET_KEY}
+      DJANGO_ADMIN_URL: ${DJANGO_ADMIN_URL}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DJANGO_HOST_URL: ${DJANGO_HOST_URL}
+      DJANGO_ADMIN_IP: ${DJANGO_ADMIN_IP}
     networks:
       - backend
       - frontend
@@ -36,8 +49,8 @@ services:
   client:
     image: denistred/habit_client:latest
     restart: unless-stopped
-    env_file:
-      - client/.env
+    environment:
+      DJANGO_HOST_URL: ${DJANGO_HOST_URL}
     networks:
       - frontend
     depends_on:
