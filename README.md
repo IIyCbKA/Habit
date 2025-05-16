@@ -15,19 +15,6 @@ Copy the template and fill only the variables relevant to your environment:
 #### 2. **Configure `.env`**
 
    ```dotenv
-   # ==============================================================================
-#                                   GENERAL
-# ==============================================================================
-SECRET_KEY=your_secret_key
-DJANGO_ADMIN_URL=your_admin_url/
-POSTGRES_DB=your_postgres_name
-POSTGRES_USER=your_postgres_user
-POSTGRES_PASSWORD=your_postgres_password
-POSTGRES_HOST=your_postgres_host
-POSTGRES_PORT=your_postgres_port
-VITE_API_URL=your_api_server_url
-
-
 # ==============================================================================
 #                                     LOCAL
 # ==============================================================================
@@ -39,6 +26,19 @@ DEBUG=True
 # ==============================================================================
 DJANGO_HOST_URL=your_server_host
 DJANGO_ADMIN_IP=your_ip_for_django_admin
+
+
+# ==============================================================================
+#                                   GENERAL
+# ==============================================================================
+SECRET_KEY=your_secret_key
+DJANGO_ADMIN_URL=your_admin_url/
+POSTGRES_DB=your_postgres_name
+POSTGRES_USER=your_postgres_user
+POSTGRES_PASSWORD=your_postgres_password
+POSTGRES_HOST=your_postgres_host
+POSTGRES_PORT=your_postgres_port
+VITE_API_URL=your_api_server_url
    ```
 
 ## 📦 Assets Attribution
