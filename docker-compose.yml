@@ -50,7 +50,7 @@ services:
     image: denistred/habit_client:latest
     restart: unless-stopped
     environment:
-      DJANGO_HOST_URL: ${DJANGO_HOST_URL}
+      VITE_API_URL: ${VITE_API_URL}
     networks:
       - frontend
     depends_on:

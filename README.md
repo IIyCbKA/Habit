@@ -25,6 +25,7 @@ POSTGRES_USER=your_postgres_user
 POSTGRES_PASSWORD=your_postgres_password
 POSTGRES_HOST=your_postgres_host
 POSTGRES_PORT=your_postgres_port
+VITE_API_URL=your_api_server_url
 
 
 # ==============================================================================
