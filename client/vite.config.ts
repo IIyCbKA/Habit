@@ -14,5 +14,5 @@ export default defineConfig({
       "@": resolve(__dirname, "./src"),
     },
   },
-  envDir: "../" /* in proj root */,
+  envDir: "../" /* in proj root; for local dev */,
 });

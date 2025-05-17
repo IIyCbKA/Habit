@@ -49,8 +49,6 @@ services:
   client:
     image: denistred/habit_client:latest
     restart: unless-stopped
-    environment:
-      VITE_API_URL: ${VITE_API_URL}
     networks:
       - frontend
     depends_on:
