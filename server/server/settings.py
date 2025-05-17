@@ -30,10 +30,27 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
+ADMIN_URL = os.environ.get('DJANGO_ADMIN_URL', 'admin/')
+ADMIN_IPS = []
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
 ]
+
+if not DEBUG:
+    PRODUCTION_HOST = os.environ.get('DJANGO_HOST_URL')
+
+    if not PRODUCTION_HOST:
+        raise ValueError("DJANGO_HOST_URL is not set in environment")
+
+    ALLOWED_HOSTS.append(PRODUCTION_HOST.strip())
+    ADMIN_IPS.append(os.environ.get('DJANGO_ADMIN_IP', ''))
+
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SECURE_SSL_REDIRECT = False # off-load to Nginx
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = True
+
 
 # Application definition
 
@@ -167,21 +184,3 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-ADMIN_URL = os.environ.get('DJANGO_ADMIN_URL', 'admin/')
-ADMIN_IPS = []
-
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-
-if not DEBUG:
-    PRODUCTION_HOST = os.environ.get('DJANGO_HOST_URL')
-
-    if not PRODUCTION_HOST:
-        raise ValueError("DJANGO_HOST_URL is not set in environment")
-
-    ALLOWED_HOSTS.append(PRODUCTION_HOST.strip())
-    ADMIN_IPS.append(os.environ.get('DJANGO_ADMIN_IP', ''))
-
-    SECURE_SSL_REDIRECT = False # this is work of nginx
-    CSRF_COOKIE_SECURE = True
-    SESSION_COOKIE_SECURE = True
