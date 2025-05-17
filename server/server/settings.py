@@ -171,6 +171,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 ADMIN_URL = os.environ.get('DJANGO_ADMIN_URL', 'admin/')
 ADMIN_IPS = []
 
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 if not DEBUG:
     PRODUCTION_HOST = os.environ.get('DJANGO_HOST_URL')
 
@@ -180,6 +182,6 @@ if not DEBUG:
     ALLOWED_HOSTS.append(PRODUCTION_HOST.strip())
     ADMIN_IPS.append(os.environ.get('DJANGO_ADMIN_IP', ''))
 
-    SECURE_SSL_REDIRECT = True
+    SECURE_SSL_REDIRECT = False # this is work of nginx
     CSRF_COOKIE_SECURE = True
     SESSION_COOKIE_SECURE = True
