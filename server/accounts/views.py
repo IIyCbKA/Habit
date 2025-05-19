@@ -116,7 +116,7 @@ class RefreshView(APIView):
   permission_classes = [AllowAny]
 
   def post(self, request) -> Response:
-    cookieName: str = settings.SIMPLE_JWT['AUTH_COOKIE']
+    cookieName: str = settings.SIMPLE_JWT['REFRESH_COOKIE']
     rawRefresh: Optional[str] = request.COOKIES.get(cookieName)
 
     if rawRefresh is None:
