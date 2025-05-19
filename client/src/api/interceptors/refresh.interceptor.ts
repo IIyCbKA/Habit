@@ -7,6 +7,7 @@ import { store } from "@/store/store";
 import { apiClient } from "../client";
 import { InternalAxiosRequestConfig } from "axios";
 import { RefreshSubscriber } from "./interceptors.types";
+import { MISSING_TOKEN_ERROR } from "./interceptors.constants";
 
 let isRefreshing: boolean = false;
 let subscribers: RefreshSubscriber[] = [];
@@ -65,7 +66,7 @@ export const refreshInterceptor: (
       const accessToken: string | null = selectAccessToken(store.getState());
 
       if (!accessToken) {
-        return rejectedPromise(new Error("Token is missing!"));
+        return rejectedPromise(new Error(MISSING_TOKEN_ERROR));
       }
 
       onRefreshed(accessToken);

@@ -72,9 +72,9 @@ def setRefresh2Cookie(response: Response, refresh: RefreshToken) -> None:
     key=settings.SIMPLE_JWT['REFRESH_COOKIE'],
     value=str(refresh),
     max_age=settings.SIMPLE_JWT['REFRESH_TOKEN_LIFETIME'].total_seconds(),
-    httponly=settings.SIMPLE_JWT['AUTH_COOKIE_HTTP_ONLY'],
-    secure=settings.SIMPLE_JWT['AUTH_COOKIE_SECURE'],
-    samesite=settings.SIMPLE_JWT['AUTH_COOKIE_SAMESITE'],
+    httponly=settings.SIMPLE_JWT['REFRESH_COOKIE_HTTP_ONLY'],
+    secure=settings.SIMPLE_JWT['REFRESH_COOKIE_SECURE'],
+    samesite=settings.SIMPLE_JWT['REFRESH_COOKIE_SAMESITE'],
   )
 
 

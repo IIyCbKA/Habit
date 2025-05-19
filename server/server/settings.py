@@ -28,28 +28,38 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+DEBUG = os.environ.get('DEBUG') == 'True'
 
-ADMIN_URL = os.environ.get('DJANGO_ADMIN_URL', 'admin/')
+ADMIN_URL = os.environ.get('DJANGO_ADMIN_URL')
 ADMIN_IPS = []
 ALLOWED_HOSTS = [
-    'localhost',
-    '127.0.0.1',
+    'localhost', # for dev
+    '127.0.0.1', # for dev
+]
+
+CORS_ALLOW_ALL_ORIGINS = False
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000', # for dev
+]
+CORS_ALLOW_CREDENTIALS = True
+
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:3000', # for dev
 ]
 
 if not DEBUG:
-    PRODUCTION_HOST = os.environ.get('DJANGO_HOST_URL')
+    CORS_ALLOWED_ORIGINS.append(os.environ.get('CLIENT_URL'))
+    CSRF_TRUSTED_ORIGINS.append(os.environ.get('CLIENT_URL'))
 
-    if not PRODUCTION_HOST:
-        raise ValueError("DJANGO_HOST_URL is not set in environment")
-
-    ALLOWED_HOSTS.append(PRODUCTION_HOST.strip())
-    ADMIN_IPS.append(os.environ.get('DJANGO_ADMIN_IP', ''))
+    ALLOWED_HOSTS.append(os.environ.get('DJANGO_HOST'))
+    ADMIN_IPS.append(os.environ.get('DJANGO_ADMIN_IP'))
 
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     SECURE_SSL_REDIRECT = False # off-load to Nginx
     CSRF_COOKIE_SECURE = True
+    CSRF_COOKIE_SAMESITE = 'None'
     SESSION_COOKIE_SECURE = True
+    SESSION_COOKIE_SAMESITE = 'None'
 
 
 # Application definition
@@ -84,9 +94,9 @@ because these actions are prescribed manually
 SIMPLE_JWT = {
     'REFRESH_COOKIE': 'refresh_token',
     'AUTH_COOKIE': 'access_token',
-    'AUTH_COOKIE_HTTP_ONLY': True,
-    'AUTH_COOKIE_SAMESITE': 'Lax',
-    'AUTH_COOKIE_SECURE': True,
+    'REFRESH_COOKIE_HTTP_ONLY': True,
+    'REFRESH_COOKIE_SAMESITE': 'None',
+    'REFRESH_COOKIE_SECURE': True,
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=10),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=14),
     'ROTATE_REFRESH_TOKENS': False,
@@ -158,10 +168,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
-
-CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOW_CREDENTIALS = True
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/

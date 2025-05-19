@@ -24,8 +24,10 @@ DEBUG=True
 # ==============================================================================
 #                                     PROD
 # ==============================================================================
-DJANGO_HOST_URL=your_server_host
+HOST=your_main_domain
+DJANGO_HOST=your_server_host
 DJANGO_ADMIN_IP=your_ip_for_django_admin
+CLIENT_URL=url_of_your_frontend_server
 
 
 # ==============================================================================

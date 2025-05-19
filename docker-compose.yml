@@ -32,8 +32,9 @@ services:
       DB_PASSWORD: ${POSTGRES_PASSWORD}
       DB_HOST: ${POSTGRES_HOST}
       DB_PORT: ${POSTGRES_PORT}
-      DJANGO_HOST_URL: ${DJANGO_HOST_URL}
+      DJANGO_HOST: ${DJANGO_HOST}
       DJANGO_ADMIN_IP: ${DJANGO_ADMIN_IP}
+      CLIENT_URL: ${CLIENT_URL}
     networks:
       - backend
       - frontend
