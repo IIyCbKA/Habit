@@ -57,12 +57,10 @@ export default function SignInForm({
 
   const onSubmit: (e: React.FormEvent) => void = (e: React.FormEvent): void => {
     e.preventDefault();
-    dispatch(loginUser({ identifier, password }));
+    dispatch(loginUser({ identifier, password })).finally((): void =>
+      setShowLoginError(authStatus === AuthStatus.FAILED),
+    );
   };
-
-  React.useEffect((): void => {
-    setShowLoginError(authStatus === AuthStatus.FAILED);
-  }, [authStatus]);
 
   return (
     <form className={sharedAuthStyles.formWrap} onSubmit={onSubmit}>

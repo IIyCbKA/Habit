@@ -82,9 +82,16 @@ const authSlice = createSlice({
         state.error = action.error.message;
       })
       .addCase(refreshAuth.fulfilled, (state, action): void => {
+        state.user = action.payload.user;
         state.accessToken = action.payload.accessToken;
+        state.isAuth = true;
+        state.status = AuthStatus.SUCCEEDED;
       })
       .addCase(refreshAuth.rejected, (state, action): void => {
+        state.user = null;
+        state.accessToken = null;
+        state.isAuth = false;
+        state.status = AuthStatus.FAILED;
         state.error = action.error.message;
       });
   },

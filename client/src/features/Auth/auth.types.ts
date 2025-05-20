@@ -42,13 +42,14 @@ export interface AuthState {
 
 /*
 --------------User type--------------
-------------!!!PATTERN!!!------------
 This type is used in AuthSlice in initialState for storing user information
 
 username - name of user
 */
 export interface User {
+  id: number;
   username: string;
+  email: string;
 }
 
 /*
@@ -82,5 +83,6 @@ This type is used in AuthSlice for response of refreshAPI
 accessToken    - access token of auth user
 */
 export interface RefreshResponse {
+  user: User;
   accessToken: string;
 }
