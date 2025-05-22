@@ -6,24 +6,31 @@ import { ButtonProps } from "./Button.interface";
 import { ButtonVariant } from "./button.enums";
 import { ButtonType } from "../shared.enums";
 
-export default function Button({
-  fullWidth,
-  className,
-  type = ButtonType.Button,
-  variant = ButtonVariant.Text,
-  ...other
-}: ButtonProps): React.ReactElement {
-  const buttonStyles = classNames(
-    styles.rootButton,
-    sharedStyles.defaultText,
-    className,
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  (
     {
-      [styles.fullWidth]: fullWidth,
-      [styles.containedButton]: variant === ButtonVariant.Contained,
-      [styles.textButton]: variant === ButtonVariant.Text,
-      [styles.outlinedButton]: variant === ButtonVariant.Outlined,
-    },
-  );
+      fullWidth,
+      className,
+      type = ButtonType.Button,
+      variant = ButtonVariant.Text,
+      ...other
+    }: ButtonProps,
+    ref: React.ForwardedRef<HTMLButtonElement>,
+  ): React.ReactElement => {
+    const buttonStyles = classNames(
+      styles.rootButton,
+      sharedStyles.defaultText,
+      className,
+      {
+        [styles.fullWidth]: fullWidth,
+        [styles.containedButton]: variant === ButtonVariant.Contained,
+        [styles.textButton]: variant === ButtonVariant.Text,
+        [styles.outlinedButton]: variant === ButtonVariant.Outlined,
+      },
+    );
 
-  return <button {...other} type={type} className={buttonStyles} />;
-}
+    return <button {...other} ref={ref} type={type} className={buttonStyles} />;
+  },
+);
+
+export default Button;

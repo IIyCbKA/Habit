@@ -4,19 +4,22 @@ import sharedStyles from "@/shared/shared.module.css";
 import { DropdownProps } from "./Dropdown.interface";
 import classNames from "classnames";
 
-export default function Dropdown({
-  show,
-  className,
-  ...other
-}: DropdownProps): React.ReactElement {
-  const wrapStyles = classNames(styles.dropdownWrap, className, {
-    [sharedStyles.show]: show,
-    [sharedStyles.hidden]: !show,
-  });
+const Dropdown = React.forwardRef<HTMLDivElement, DropdownProps>(
+  (
+    { show, className, ...other }: DropdownProps,
+    ref: React.ForwardedRef<HTMLDivElement>,
+  ): React.ReactElement => {
+    const wrapStyles = classNames(styles.dropdownWrap, className, {
+      [sharedStyles.show]: show,
+      [sharedStyles.hidden]: !show,
+    });
 
-  return (
-    <div {...other} className={wrapStyles}>
-      <div className={styles.dropdownContainer}>Text</div>
-    </div>
-  );
-}
+    return (
+      <div {...other} ref={ref} className={wrapStyles}>
+        <div className={styles.dropdownContainer}>Text</div>
+      </div>
+    );
+  },
+);
+
+export default Dropdown;

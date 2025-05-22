@@ -9,8 +9,10 @@ touchEventType  - type of touch event listener
 import React from "react";
 import { ClickType, TouchType } from "./clickAwayListener.enums";
 
-export interface ClickAwayListenerProps {
-  children: (ref: React.Ref<HTMLElement>) => React.ReactNode;
+export interface ClickAwayListenerProps<
+  RefElType extends HTMLElement = HTMLElement,
+> {
+  children: (ref: React.Ref<RefElType>) => React.ReactNode;
   onClickAway: () => void;
   clickEventType?: ClickType;
   touchEventType?: TouchType;
