@@ -1,0 +1,17 @@
+.dropdownWrap {
+  position: relative;
+}
+
+.dropdownContainer {
+  max-height: calc(100dvh - 80px);
+  overflow-y: auto;
+  min-width: 300px;
+  z-index: 1000;
+  margin-top: 4px;
+  position: absolute;
+  top: 12px;
+  right: -12px;
+  border-radius: 12px;
+  background-color: var(--variant-secondary-bgColor);
+  padding: 16px;
+}
