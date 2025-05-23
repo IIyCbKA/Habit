@@ -34,7 +34,7 @@ def getTokensForUser(user: User) -> tuple[RefreshToken, AccessToken]:
 
 
 def resetTokenFromRequest(request: Request) -> None:
-  cookieName: str = settings.SIMPLE_JWT['AUTH_COOKIE']
+  cookieName: str = settings.SIMPLE_JWT['REFRESH_COOKIE']
   rawRefresh: Optional[str] = request.COOKIES.get(cookieName)
 
   if rawRefresh:
@@ -141,6 +141,8 @@ class RefreshView(APIView):
 
 
 class LogoutView(APIView):
+  permission_classes = [AllowAny]
+
   def post(self, request) -> Response:
     resetTokenFromRequest(request)
 

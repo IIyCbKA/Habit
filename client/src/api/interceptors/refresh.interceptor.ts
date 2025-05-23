@@ -1,5 +1,5 @@
 import {
-  logout,
+  forcedLogout,
   refreshAuth,
   selectAccessToken,
 } from "@/features/Auth/auth.slice";
@@ -32,7 +32,7 @@ function onRefreshedFailed(error: any): void {
 const rejectedPromise: (error: any) => Promise<never> = (
   error: any,
 ): Promise<never> => {
-  store.dispatch(logout());
+  store.dispatch(forcedLogout());
   onRefreshedFailed(error);
   return Promise.reject(error);
 };

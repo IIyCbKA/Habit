@@ -6,7 +6,7 @@ import classNames from "classnames";
 
 const Dropdown = React.forwardRef<HTMLDivElement, DropdownProps>(
   (
-    { show, className, ...other }: DropdownProps,
+    { show, children, className, ...other }: DropdownProps,
     ref: React.ForwardedRef<HTMLDivElement>,
   ): React.ReactElement => {
     const wrapStyles = classNames(styles.dropdownWrap, className, {
@@ -16,7 +16,7 @@ const Dropdown = React.forwardRef<HTMLDivElement, DropdownProps>(
 
     return (
       <div {...other} ref={ref} className={wrapStyles}>
-        <div className={styles.dropdownContainer}>Text</div>
+        <div className={styles.dropdownContainer}>{children}</div>
       </div>
     );
   },

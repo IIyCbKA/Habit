@@ -19,6 +19,7 @@ const ClickAwayListener = <RefElType extends HTMLElement = HTMLElement>(
       if (nodeRef.current?.contains(event.target as Node)) return;
       onClickAway();
     };
+
     document.addEventListener(clickEventType, handle);
     document.addEventListener(touchEventType, handle);
     return (): void => {

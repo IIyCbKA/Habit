@@ -3,9 +3,24 @@
   margin-left: 6px;
 }
 
-.iconContainer {
+.iconBtnContainer {
   position: relative;
   border-radius: 100px;
   width: 100%;
   height: 100%;
+}
+
+.profileInfoContainer {
+  display: flex;
+  padding: 0 0 16px;
+}
+
+.profileIconContainer {
+  border-radius: 100px;
+  width: 56px;
+  height: 56px;
+}
+
+.profileUsername {
+  margin-left: 12px;
 }

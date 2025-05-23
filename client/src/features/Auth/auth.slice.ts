@@ -3,6 +3,7 @@ import {
   login as loginAPI,
   register as registerAPI,
   refresh as refreshAPI,
+  logout as logoutAPI,
 } from "./auth.api";
 import {
   AuthState,
@@ -20,21 +21,32 @@ import { RootState } from "@/store/store";
 export const loginUser = createAsyncThunk<LoginResponse, LoginCreds>(
   `${SLISE_NAME}/login`,
   async (creds: LoginCreds): Promise<any> => {
-    return await loginAPI(creds);
+    const response = await loginAPI(creds);
+    return response.data;
   },
 );
 
 export const registerUser = createAsyncThunk<RegisterResponse, RegisterCreds>(
   `${SLISE_NAME}/register`,
   async (creds: RegisterCreds): Promise<any> => {
-    return await registerAPI(creds);
+    const response = await registerAPI(creds);
+    return response.data;
   },
 );
 
 export const refreshAuth = createAsyncThunk<RefreshResponse>(
   `${SLISE_NAME}/refresh`,
   async (): Promise<any> => {
-    return await refreshAPI();
+    const response = await refreshAPI();
+    return response.data;
+  },
+);
+
+export const logout = createAsyncThunk(
+  `${SLISE_NAME}/logout`,
+  async (): Promise<any> => {
+    const response = await logoutAPI();
+    return response.data;
   },
 );
 
@@ -47,7 +59,7 @@ const authSlice = createSlice({
     status: AuthStatus.IDLE,
   } as AuthState,
   reducers: {
-    logout: (state): void => {
+    forcedLogout: (state): void => {
       state.user = null;
       state.accessToken = null;
       state.isAuth = false;
@@ -93,6 +105,11 @@ const authSlice = createSlice({
         state.isAuth = false;
         state.status = AuthStatus.FAILED;
         state.error = action.error.message;
+      })
+      .addCase(logout.fulfilled, (state): void => {
+        state.user = null;
+        state.accessToken = null;
+        state.isAuth = false;
       });
   },
 });
@@ -104,5 +121,5 @@ export const selectAccessToken = (state: RootState): string | null =>
 export const selectAuthStatus = (state: RootState): AuthStatus =>
   state.auth.status;
 
-export const { logout } = authSlice.actions;
+export const { forcedLogout } = authSlice.actions;
 export default authSlice.reducer;

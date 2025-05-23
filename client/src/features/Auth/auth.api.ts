@@ -16,3 +16,8 @@ export async function refresh(): Promise<any> {
   const { data } = await apiClient.post(ENDPOINT.REFRESH);
   return { data };
 }
+
+export async function logout(): Promise<any> {
+  const { data } = await apiClient.post(ENDPOINT.LOGOUT);
+  return { data };
+}

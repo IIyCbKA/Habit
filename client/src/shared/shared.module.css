@@ -11,7 +11,15 @@
   font-size: var(--lower-font-size);
   line-height: var(--lower-line-height);
   text-align: left;
-  font-family: var(--root-font-family), monospace;
+  font-family: var(--root-font-family), sans-serif;
+}
+
+.upperText {
+  font-weight: 500;
+  font-size: var(--upper-font-size);
+  line-height: var(--upper-line-height);
+  text-align: left;
+  font-family: var(--root-font-family), sans-serif;
 }
 
 .hidden {
