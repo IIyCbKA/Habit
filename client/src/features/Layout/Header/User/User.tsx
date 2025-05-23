@@ -9,7 +9,8 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { logout, selectUser } from "@/features/Auth/auth.slice";
 import classNames from "classnames";
 import Button from "@/components/Buttons/DefaultButton/Button";
-import { SIGN_OUT_BTN } from "@/features/Layout/Header/User/user.constants";
+import { SIGN_OUT_BTN } from "./user.constants";
+import Logout from "@/assets/icons/logout_64x64.svg?react";
 
 export default function User(): React.ReactElement {
   const [menuIsOpen, setMenuIsOpen] = React.useState<boolean>(false);
@@ -46,7 +47,12 @@ export default function User(): React.ReactElement {
                 <DefaultAvatar className={styles.profileIconContainer} />
                 <div className={usernameStyles}>{username}</div>
               </div>
-              <Button fullWidth onClick={onSignOut}>
+              <Button
+                fullWidth
+                className={styles.profileButtons}
+                onClick={onSignOut}
+                adornment={<Logout />}
+              >
                 {SIGN_OUT_BTN}
               </Button>
             </Dropdown>

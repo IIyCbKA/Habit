@@ -14,10 +14,10 @@ export async function register(creds: RegisterCreds): Promise<any> {
 
 export async function refresh(): Promise<any> {
   const { data } = await apiClient.post(ENDPOINT.REFRESH);
-  return { data };
+  return data;
 }
 
 export async function logout(): Promise<any> {
   const { data } = await apiClient.post(ENDPOINT.LOGOUT);
-  return { data };
+  return data;
 }

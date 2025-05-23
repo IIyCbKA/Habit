@@ -24,3 +24,8 @@
 .profileUsername {
   margin-left: 12px;
 }
+
+.profileButtons {
+  justify-content: flex-start !important;
+  padding: 0 8px !important;
+}

@@ -7,6 +7,9 @@
   padding: 0 12px;
   user-select: none;
   text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .rootButton:disabled {
@@ -76,4 +79,14 @@
 .outlinedButton:disabled {
   border-color: var(--variant-outlinedDisabled-bColor);
   color: var(--variant-outlinedDisabled-color);
+}
+
+.adornmentContainer {
+  height: 50%;
+  margin-right: 12px;
+}
+
+.adornmentContainer svg {
+  height: 100%;
+  width: 100%;
 }

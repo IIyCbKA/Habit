@@ -4,15 +4,17 @@ import styles from "./iconButton.module.css";
 import classNames from "classnames";
 import { ButtonType } from "@/components/Buttons/shared.enums";
 
-const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
-  (
-    { className, type = ButtonType.Button, ...other }: IconButtonProps,
-    ref: React.ForwardedRef<HTMLButtonElement>,
-  ): React.ReactElement => {
-    const buttonStyles = classNames(styles.iconButtonRoot, className);
+function IconButtonInner(
+  { className, type = ButtonType.Button, ...other }: IconButtonProps,
+  ref: React.ForwardedRef<HTMLButtonElement>,
+): React.ReactElement {
+  const buttonStyles = classNames(styles.iconButtonRoot, className);
 
-    return <button {...other} ref={ref} type={type} className={buttonStyles} />;
-  },
+  return <button {...other} ref={ref} type={type} className={buttonStyles} />;
+}
+
+const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
+  IconButtonInner,
 );
 
 export default IconButton;

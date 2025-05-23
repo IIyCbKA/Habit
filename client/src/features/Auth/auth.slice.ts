@@ -21,32 +21,28 @@ import { RootState } from "@/store/store";
 export const loginUser = createAsyncThunk<LoginResponse, LoginCreds>(
   `${SLISE_NAME}/login`,
   async (creds: LoginCreds): Promise<any> => {
-    const response = await loginAPI(creds);
-    return response.data;
+    return await loginAPI(creds);
   },
 );
 
 export const registerUser = createAsyncThunk<RegisterResponse, RegisterCreds>(
   `${SLISE_NAME}/register`,
   async (creds: RegisterCreds): Promise<any> => {
-    const response = await registerAPI(creds);
-    return response.data;
+    return await registerAPI(creds);
   },
 );
 
 export const refreshAuth = createAsyncThunk<RefreshResponse>(
   `${SLISE_NAME}/refresh`,
   async (): Promise<any> => {
-    const response = await refreshAPI();
-    return response.data;
+    return await refreshAPI();
   },
 );
 
 export const logout = createAsyncThunk(
   `${SLISE_NAME}/logout`,
   async (): Promise<any> => {
-    const response = await logoutAPI();
-    return response.data;
+    return await logoutAPI();
   },
 );
 
