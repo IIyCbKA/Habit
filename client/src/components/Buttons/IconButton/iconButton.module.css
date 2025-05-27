@@ -1,28 +1,30 @@
-.iconButtonRoot {
-  height: 24px;
-  width: 24px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  background-color: transparent;
-  cursor: pointer;
-  user-select: none;
-  vertical-align: middle;
-  outline: none;
-  border: none;
-  border-radius: 100px;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  color: var(--text-secondary);
-  padding: 0;
-}
+@layer components {
+  .iconButtonRoot {
+    height: 24px;
+    width: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    background-color: transparent;
+    cursor: pointer;
+    user-select: none;
+    vertical-align: middle;
+    outline: none;
+    border: none;
+    border-radius: 100px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    color: var(--text-secondary);
+    padding: 0;
+  }
 
-.iconButtonRoot svg {
-  width: 24px;
-  height: 24px;
-  fill: currentColor;
-}
+  .iconButtonRoot svg {
+    width: 24px;
+    height: 24px;
+    fill: currentColor;
+  }
 
-.iconButtonRoot:hover {
-  color: #4CAF50;
+  .iconButtonRoot:hover {
+    color: #4CAF50;
+  }
 }

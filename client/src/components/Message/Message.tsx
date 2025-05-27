@@ -5,11 +5,10 @@ import { MessageProps } from "./Message.interface";
 import classNames from "classnames";
 import { MessageVariant } from "./message.enums";
 
-export default function Message({
-  variant,
-  className,
-  ...other
-}: MessageProps): React.ReactElement {
+function MessageInner(
+  { variant, className, ...other }: MessageProps,
+  ref: React.ForwardedRef<HTMLDivElement>,
+): React.ReactElement {
   const messageStyles = classNames(
     styles.messageRoot,
     sharedStyles.lowerText,
@@ -21,5 +20,9 @@ export default function Message({
     },
   );
 
-  return <div {...other} className={messageStyles} />;
+  return <div ref={ref} {...other} className={messageStyles} />;
 }
+
+const Message = React.forwardRef<HTMLDivElement, MessageProps>(MessageInner);
+
+export default Message;

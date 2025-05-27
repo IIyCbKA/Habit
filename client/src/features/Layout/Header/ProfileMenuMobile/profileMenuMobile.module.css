@@ -1,0 +1,11 @@
+@layer utils {
+  .menuContainer {
+    display: none;
+  }
+
+  @media (max-width: 600px) {
+    .menuContainer {
+      display: flex;
+    }
+  }
+}

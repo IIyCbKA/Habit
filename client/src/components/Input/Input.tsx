@@ -4,12 +4,10 @@ import { InputProps } from "./Input.interface";
 import classNames from "classnames";
 import { InputType, AutoCompleteMode } from "./input.enums";
 
-export default function Input({
-  fullWidth,
-  className,
-  inputAdornment,
-  ...other
-}: InputProps): React.ReactElement {
+function InputInner(
+  { fullWidth, className, inputAdornment, ...other }: InputProps,
+  ref: React.ForwardedRef<HTMLInputElement>,
+): React.ReactElement {
   const inputWrapperStyles = classNames(styles.inputWrapper, {
     [styles.fullWidth]: fullWidth,
   });
@@ -19,7 +17,7 @@ export default function Input({
   });
 
   return (
-    <span className={inputWrapperStyles}>
+    <span className={inputWrapperStyles} ref={ref}>
       <input {...other} className={inputStyles} />
       {inputAdornment && (
         <div className={styles.adornmentWrap}>{inputAdornment}</div>
@@ -27,3 +25,7 @@ export default function Input({
     </span>
   );
 }
+
+const Input = React.forwardRef<HTMLInputElement, InputProps>(InputInner);
+
+export default Input;

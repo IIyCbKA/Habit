@@ -1,47 +1,49 @@
-.dividerRoot {
-  flex-shrink: 0;
-  border-style: solid;
-  border-color: var(--commonDefault-bColor);
-}
+@layer components {
+  .dividerRoot {
+    flex-shrink: 0;
+    border-style: solid;
+    border-color: var(--commonDefault-bColor);
+  }
 
-.dividerHorizontal {
-  margin: 0;
-  border-width: 0 0 thin 0;
-}
+  .dividerHorizontal {
+    margin: 0;
+    border-width: 0 0 thin 0;
+  }
 
-.dividerHorizontalMiddle {
-  margin-right: 16px;
-  margin-left: 16px;
-}
+  .dividerHorizontalMiddle {
+    margin-right: 16px;
+    margin-left: 16px;
+  }
 
-.dividerHorizontalInset {
-  margin-left: 72px;
-}
+  .dividerHorizontalInset {
+    margin-left: 72px;
+  }
 
-.dividerHorizontalFlex {
-  align-self: stretch;
-}
+  .dividerHorizontalFlex {
+    align-self: stretch;
+  }
 
-.dividerVertical {
-  margin-right: 4px;
-  margin-left: 4px;
-  border-width: 0 thin 0 0;
-  height: 100%;
-}
+  .dividerVertical {
+    margin-right: 4px;
+    margin-left: 4px;
+    border-width: 0 thin 0 0;
+    height: 100%;
+  }
 
-.dividerVerticalFullWidth {
-  margin: 0;
-}
+  .dividerVerticalFullWidth {
+    margin: 0;
+  }
 
-.dividerVerticalMiddle {
-  margin: 8px 0;
-}
+  .dividerVerticalMiddle {
+    margin: 8px 0;
+  }
 
-.dividerVerticalInset {
-  margin: 0 0 0 72px;
-}
+  .dividerVerticalInset {
+    margin: 0 0 0 72px;
+  }
 
-.dividerVerticalFlex {
-  height: auto;
-  align-self: stretch;
+  .dividerVerticalFlex {
+    height: auto;
+    align-self: stretch;
+  }
 }

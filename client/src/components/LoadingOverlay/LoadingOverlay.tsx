@@ -5,19 +5,28 @@ import styles from "./loadingOverlay.module.css";
 import classNames from "classnames";
 import { LoadingOverlayVariant } from "./loadingOverlay.enums";
 
-export default function LoadingOverlay({
-  overlayType = LoadingOverlayVariant.FullParent,
-  className,
-  ...other
-}: LoadingOverlayProps): React.ReactElement {
+function LoadingOverlayInner(
+  {
+    overlayType = LoadingOverlayVariant.FullParent,
+    className,
+    ...other
+  }: LoadingOverlayProps,
+  ref: React.ForwardedRef<HTMLDivElement>,
+): React.ReactElement {
   const overlayStyles = classNames(styles.loadingOverlayRoot, className, {
     [styles.fullParent]: overlayType === LoadingOverlayVariant.FullParent,
     [styles.fullPage]: overlayType === LoadingOverlayVariant.FullPage,
   });
 
   return (
-    <div {...other} className={overlayStyles}>
+    <div ref={ref} {...other} className={overlayStyles}>
       <CircularProgress />
     </div>
   );
 }
+
+const LoadingOverlay = React.forwardRef<HTMLDivElement, LoadingOverlayProps>(
+  LoadingOverlayInner,
+);
+
+export default LoadingOverlay;

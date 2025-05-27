@@ -1,3 +1,8 @@
+@layer base, components, utils;
+/* base - basic themes */
+/* components - component modules */
+/* utils - custom classes-redefinitions */
+
 :root {
   --header-height: 50px;
   --footer-height: 50px;
@@ -13,6 +18,8 @@
   --lower-line-height: 16px;
   --upper-font-size: 20px;
   --upper-line-height: 28px;
+  --overlay-layer-zIndex: 10000;
+  --overlay-elem-zIndex: 10001;
 
   --variant-primary-bgColor: #ECEFF1;
   --variant-secondary-bgColor: #FFFFFF;

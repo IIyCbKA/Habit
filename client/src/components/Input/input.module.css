@@ -1,44 +1,46 @@
-.inputWrapper {
-  display: inline-block;
-  position: relative;
-  min-width: 64px;
-}
+@layer components {
+  .inputWrapper {
+    display: inline-block;
+    position: relative;
+    min-width: 64px;
+  }
 
-.input {
-  padding: 8px 14px;
-  font-size: var(--default-font-size);
-  font-weight: 300;
-  border-radius: 3px;
-  color: var(--text-secondary);
-  border: 1px solid var(--commonDefault-bColor);
-  text-overflow: ellipsis;
-  transition: 0.4s all;
-  height: 40px;
-  width: 100%;
-}
+  .input {
+    padding: 8px 14px;
+    font-size: var(--default-font-size);
+    font-weight: 300;
+    border-radius: 3px;
+    color: var(--text-secondary);
+    border: 1px solid var(--commonDefault-bColor);
+    text-overflow: ellipsis;
+    transition: 0.4s all;
+    height: 40px;
+    width: 100%;
+  }
 
-.inputWithAdornmentEnd {
-  padding: 8px 40px 8px 14px;
-}
+  .inputWithAdornmentEnd {
+    padding: 8px 40px 8px 14px;
+  }
 
-.fullWidth {
-  width: 100%;
-}
+  .fullWidth {
+    width: 100%;
+  }
 
-.input:hover {
-  color: var(--text-primary);
-  border-color: var(--text-primary);
-}
+  .input:hover {
+    color: var(--text-primary);
+    border-color: var(--text-primary);
+  }
 
-.input:focus {
-  color: var(--text-primary);
-  border-color: var(--text-primary);
-  outline: none;
-  box-shadow: 0 0 0 2px var(--commonDefault-bsColor);
-}
+  .input:focus {
+    color: var(--text-primary);
+    border-color: var(--text-primary);
+    outline: none;
+    box-shadow: 0 0 0 2px var(--commonDefault-bsColor);
+  }
 
-.adornmentWrap {
-  position: absolute;
-  right: 12px;
-  top: 8px;
+  .adornmentWrap {
+    position: absolute;
+    right: 12px;
+    top: 8px;
+  }
 }

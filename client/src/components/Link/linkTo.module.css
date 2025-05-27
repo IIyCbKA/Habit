@@ -1,6 +1,8 @@
-.linkToRoot {
-  text-decoration: none;
-  cursor: pointer;
-  outline: none;
-  color: var(--variant-text-color);
+@layer components {
+  .linkToRoot {
+    text-decoration: none;
+    cursor: pointer;
+    outline: none;
+    color: var(--variant-text-color);
+  }
 }

@@ -1,17 +1,18 @@
-.layoutContainer {
-  position: relative;
-  z-index: 4;
-  display: flex;
-  justify-content: center;
-  background-color: var(--variant-secondary-bgColor);
-  flex-shrink: 0;
-}
+@layer base {
+  .layoutContainer {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    background-color: var(--variant-secondary-bgColor);
+    flex-shrink: 0;
+  }
 
-.layoutContent {
-  width: 100%;
-  max-width: var(--max-content-width);
-  padding: 0 24px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  .layoutContent {
+    width: 100%;
+    max-width: var(--max-content-width);
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
 }

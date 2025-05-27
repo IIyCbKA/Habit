@@ -1,0 +1,30 @@
+@layer components {
+  .menuContainer {
+    height: 100%;
+    width: 100%;
+    overflow-y: auto;
+    z-index: var(--overlay-layer-zIndex);
+    background: var(--variant-primary-bgColor);
+    position: fixed;
+    top: 0;
+    right: 0;
+  }
+
+  .slideIn {
+    animation: slideIn 0.2s ease-out forwards;
+  }
+
+  .slideOut {
+    animation: slideOut 0.2s ease-in forwards;
+  }
+
+  @keyframes slideIn {
+    from { transform: translateY(-2%); opacity: 0; }
+    to   { transform: translateY(0);   opacity: 1; }
+  }
+
+  @keyframes slideOut {
+    from { transform: translateY(0);   opacity: 1; }
+    to   { transform: translateY(-2%); opacity: 0; }
+  }
+}

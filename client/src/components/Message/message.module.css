@@ -1,15 +1,17 @@
-.messageRoot {
-  margin: 10px 0 20px;
-}
+@layer components {
+  .messageRoot {
+    margin: 10px 0 20px;
+  }
 
-.successVariant {
-  color: var(--variant-text-color);
-}
+  .successVariant {
+    color: var(--variant-text-color);
+  }
 
-.errorVariant {
-  color: var(--text-error);
-}
+  .errorVariant {
+    color: var(--text-error);
+  }
 
-.warningVariant {
-  color: var(--text-warning);
+  .warningVariant {
+    color: var(--text-warning);
+  }
 }

@@ -1,4 +1,7 @@
-.headerContainer {
-  height: var(--header-height);
-  border-bottom: 1px solid var(--commonDefault-bColor);
+@layer utils {
+  .headerContainer {
+    height: var(--header-height);
+    border-bottom: 1px solid var(--commonDefault-bColor);
+    z-index: 4;
+  }
 }

@@ -1,14 +1,16 @@
-.loadingOverlayRoot {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+@layer components {
+  .loadingOverlayRoot {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 
-.fullParent {
-  flex: 1 0 auto;
-}
+  .fullParent {
+    flex: 1 0 auto;
+  }
 
-.fullPage {
-  min-height: 100dvh;
-  width: 100%;
+  .fullPage {
+    min-height: 100dvh;
+    width: 100%;
+  }
 }

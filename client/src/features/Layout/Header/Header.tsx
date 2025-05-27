@@ -5,7 +5,8 @@ import Logotype from "./Logotype/Logotype";
 import classNames from "classnames";
 import { useAppSelector } from "@/store/hooks";
 import { selectIsAuth } from "@/features/Auth/auth.slice";
-import User from "./User/User";
+import ProfileMenuDesktop from "@/features/Layout/Header/ProfileMenuDesktop/ProfileMenuDesktop";
+import ProfileMenuMobile from "@/features/Layout/Header/ProfileMenuMobile/ProfileMenuMobile";
 
 export default function Header(): React.ReactElement {
   const isAuth = useAppSelector(selectIsAuth);
@@ -19,7 +20,12 @@ export default function Header(): React.ReactElement {
     <div className={containerStyles}>
       <div className={sharedLayoutStyles.layoutContent}>
         <Logotype />
-        {isAuth && <User />}
+        {isAuth && (
+          <>
+            <ProfileMenuDesktop />
+            <ProfileMenuMobile />
+          </>
+        )}
       </div>
     </div>
   );

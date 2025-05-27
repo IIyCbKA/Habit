@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "./user.module.css";
+import styles from "./profileMenuDesktop.module.css";
 import sharedStyles from "@/shared/shared.module.css";
 import IconButton from "@/components/Buttons/IconButton/IconButton";
 import DefaultAvatar from "@/assets/icons/default_avatar_64x64.svg?react";
@@ -9,10 +9,10 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { logout, selectUser } from "@/features/Auth/auth.slice";
 import classNames from "classnames";
 import Button from "@/components/Buttons/DefaultButton/Button";
-import { SIGN_OUT_BTN } from "./user.constants";
+import { SIGN_OUT_BTN } from "./profileMenuDesktop.constants";
 import Logout from "@/assets/icons/logout_64x64.svg?react";
 
-export default function User(): React.ReactElement {
+export default function ProfileMenuDesktop(): React.ReactElement {
   const [menuIsOpen, setMenuIsOpen] = React.useState<boolean>(false);
   const username = useAppSelector(selectUser)?.username;
   const dispatch = useAppDispatch();
@@ -42,7 +42,7 @@ export default function User(): React.ReactElement {
             <DefaultAvatar className={styles.iconBtnContainer} />
           </IconButton>
           {menuIsOpen && (
-            <Dropdown show={menuIsOpen}>
+            <Dropdown show={menuIsOpen} className={styles.dropdownProfile}>
               <div className={styles.profileInfoContainer}>
                 <DefaultAvatar className={styles.profileIconContainer} />
                 <div className={usernameStyles}>{username}</div>
