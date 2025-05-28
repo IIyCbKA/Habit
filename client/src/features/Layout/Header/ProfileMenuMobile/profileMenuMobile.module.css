@@ -1,11 +1,26 @@
 @layer utils {
-  .menuContainer {
-    display: none;
+  .dividerWrap {
+    margin: 10px 12px;
   }
+}
 
-  @media (max-width: 600px) {
-    .menuContainer {
-      display: flex;
-    }
+.menu {
+  display: none;
+}
+
+.menuContainer {
+  padding: 16px 0;
+  overflow-y: auto;
+  background-color: var(--variant-secondary-bgColor);
+  box-shadow: var(--common-bs);
+}
+
+.btnsBlockContainer {
+  padding: 0 16px;
+}
+
+@media (max-width: 600px) {
+  .menu {
+    display: flex;
   }
 }

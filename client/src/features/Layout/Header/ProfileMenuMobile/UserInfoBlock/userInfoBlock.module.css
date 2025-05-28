@@ -1,0 +1,14 @@
+.blockContainer {
+  display: flex;
+  padding: 4px 16px 16px;
+}
+
+.profileIcon {
+  border-radius: 100px;
+  width: 56px;
+  height: 56px;
+}
+
+.usernameWrap {
+  padding: 4px 0 0 12px;
+}

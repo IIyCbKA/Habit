@@ -1,22 +1,35 @@
 import React from "react";
 import styles from "./dropdown.module.css";
-import sharedStyles from "@/shared/shared.module.css";
 import { DropdownProps } from "./Dropdown.interface";
+import { CSSTransition } from "react-transition-group";
 import classNames from "classnames";
 
 function DropdownInner(
-  { show, children, className, ...other }: DropdownProps,
+  { isOpen, animationDuration = 200, className, ...other }: DropdownProps,
   ref: React.ForwardedRef<HTMLDivElement>,
 ): React.ReactElement {
-  const wrapStyles = classNames(styles.dropdownWrap, className, {
-    [sharedStyles.show]: show,
-    [sharedStyles.hidden]: !show,
-  });
+  const innerRef = React.useRef<HTMLDivElement>(null);
+
+  const containerStyles = classNames(styles.dropdownContainer, className);
+
+  React.useImperativeHandle(
+    ref,
+    (): HTMLDivElement => innerRef.current as HTMLDivElement,
+  );
 
   return (
-    <div {...other} ref={ref} className={wrapStyles}>
-      <div className={styles.dropdownContainer}>{children}</div>
-    </div>
+    <CSSTransition
+      nodeRef={innerRef}
+      in={isOpen}
+      timeout={animationDuration}
+      classNames={{
+        enterActive: styles.slideIn,
+        exitActive: styles.slideOut,
+      }}
+      unmountOnExit
+    >
+      <div ref={innerRef} {...other} className={containerStyles} />
+    </CSSTransition>
   );
 }
 

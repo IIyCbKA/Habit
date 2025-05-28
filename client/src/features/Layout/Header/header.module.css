@@ -4,4 +4,16 @@
     border-bottom: 1px solid var(--commonDefault-bColor);
     z-index: 4;
   }
+
+  .headerContent {}
+
+  @media (max-width: 600px) {
+    .headerContent {
+      padding: 0 12px;
+    }
+  }
+}
+
+.defaultMenuBtn {
+  justify-content: flex-start;
 }

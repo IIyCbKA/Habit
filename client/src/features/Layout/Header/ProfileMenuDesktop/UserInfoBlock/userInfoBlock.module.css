@@ -1,0 +1,14 @@
+.profileInfoContainer {
+  display: flex;
+  padding: 0 0 16px;
+}
+
+.profileIcon {
+  border-radius: 100px;
+  width: 56px;
+  height: 56px;
+}
+
+.profileUsername {
+  margin-left: 12px;
+}

@@ -17,6 +17,10 @@
     cursor: not-allowed;
   }
 
+  .buttonWithAdornment {
+    padding: 0 8px;
+  }
+
   .fullWidth {
     width: 100%;
   }

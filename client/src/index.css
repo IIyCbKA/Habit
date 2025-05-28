@@ -14,6 +14,7 @@
   --text-warning: #FFCF48;
   --default-font-size: 14px;
   --default-line-height: 20px;
+  --default-font-weight: 400;
   --lower-font-size: 12px;
   --lower-line-height: 16px;
   --upper-font-size: 20px;
@@ -44,6 +45,12 @@
   --variant-outlinedDisabled-color: #B0B0B0;
   --commonDefault-bColor: #EBEBEB;
   --commonDefault-bsColor: #4CAF5040;
+
+  --common-bs:
+    rgba(0, 0, 0, 0) 0 0 0 0,
+    rgba(0, 0, 0, 0) 0 0 0 0,
+    rgba(0, 0, 0, 0.03) 0 1px 3px 0,
+    rgba(0, 0, 0, 0.13) 0 6px 16px 0;
 }
 
 * {
@@ -54,4 +61,8 @@ body {
   margin: 0;
   background-color: var(--variant-primary-bgColor);
   min-width: 320px;
+  font-family: var(--root-font-family), "sans-serif";
+  font-size: var(--default-font-size);
+  line-height: var(--default-line-height);
+  font-weight: var(--default-font-weight);
 }

@@ -27,6 +27,7 @@ function ButtonInner(
       [styles.containedButton]: variant === ButtonVariant.Contained,
       [styles.textButton]: variant === ButtonVariant.Text,
       [styles.outlinedButton]: variant === ButtonVariant.Outlined,
+      [styles.buttonWithAdornment]: adornment,
     },
   );
 

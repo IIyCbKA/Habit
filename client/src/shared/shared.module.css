@@ -1,14 +1,14 @@
 @layer base {
   .defaultText {
-    font-weight: 400;
+    font-weight: var(--default-font-weight);
     font-size: var(--default-font-size);
     line-height: var(--default-line-height);
     text-align: left;
-    font-family: var(--root-font-family), monospace;
+    font-family: var(--root-font-family), sans-serif;
   }
 
   .lowerText {
-    font-weight: 400;
+    font-weight: var(--default-font-weight);
     font-size: var(--lower-font-size);
     line-height: var(--lower-line-height);
     text-align: left;
@@ -21,6 +21,7 @@
     line-height: var(--upper-line-height);
     text-align: left;
     font-family: var(--root-font-family), sans-serif;
+    letter-spacing: 0.025em;
   }
 
   .hidden {

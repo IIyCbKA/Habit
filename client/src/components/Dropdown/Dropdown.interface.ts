@@ -1,13 +1,12 @@
 /*
 --------------DropdownProps Interface--------------
-show      - dropdown is show flag
-children  - content for dropdown
+isOpen             - dropdown is show flag
+animationDuration  - duration of opening/closing animation
 */
 
-import React, { HTMLAttributes } from "react";
+import { HTMLAttributes } from "react";
 
 export interface DropdownProps extends HTMLAttributes<HTMLDivElement> {
-  show: boolean;
-
-  children?: React.ReactNode;
+  isOpen: boolean;
+  animationDuration?: number;
 }

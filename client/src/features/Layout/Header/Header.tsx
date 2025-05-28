@@ -16,9 +16,14 @@ export default function Header(): React.ReactElement {
     styles.headerContainer,
   );
 
+  const contentStyles = classNames(
+    sharedLayoutStyles.layoutContent,
+    styles.headerContent,
+  );
+
   return (
     <div className={containerStyles}>
-      <div className={sharedLayoutStyles.layoutContent}>
+      <div className={contentStyles}>
         <Logotype />
         {isAuth && (
           <>
