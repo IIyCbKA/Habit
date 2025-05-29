@@ -1,8 +1,8 @@
 .toggleMenuWrapper {
-  display: none;
+  display: flex;
   position: relative;
-  width: 25px;
-  height: 20px;
+  width: 24px;
+  height: 18px;
   border: none;
   padding: 0;
   background: transparent;
@@ -13,7 +13,7 @@
 .rootLine {
   position: absolute;
   left: 0;
-  height: 4px;
+  height: 2px;
   width: 100%;
   transition: 0.25s;
   border-radius: 100px;
@@ -32,7 +32,7 @@
 }
 
 .secondLine {
-  top: calc(50% - 2px);
+  top: calc(50% - 1px);
 }
 
 .thirdLine {
@@ -52,16 +52,10 @@
 }
 
 .toggleMenuWrapper.open .rootLine {
-  top: calc(50% - 2px);
+  top: calc(50% - 1px);
   background: linear-gradient(
     90deg,
     var(--variant-text-color),
     var(--variant-outlined-color)
   );
-}
-
-@media (max-width: 880px) {
-  .toggleMenuWrapper {
-    display: flex;
-  }
 }

@@ -7,9 +7,9 @@
 npm install
 ```
 
-2. Create `.env` file in the client root with the following variables:
+2. Don't forget to set in your `.env` file in the project root the following variables:
 ```
-VITE_API_BASE_URL=your_server_url
+VITE_API_URL=your_server_url
 ```
 
 ## Running the client

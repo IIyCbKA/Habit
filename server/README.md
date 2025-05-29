@@ -8,7 +8,7 @@
    ```
 
 #### 2. **Set up PostgreSQL**
-Create the database and user matching your `.env` from project root settings and grant necessary privileges.
+Create the database and user in your `.env` from project root settings and grant necessary privileges.
 
 ## 2. Running the server
 

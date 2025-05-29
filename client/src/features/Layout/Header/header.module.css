@@ -1,5 +1,6 @@
 @layer utils {
   .headerContainer {
+    position: relative;
     height: var(--header-height);
     border-bottom: 1px solid var(--commonDefault-bColor);
     z-index: 4;
@@ -8,6 +9,13 @@
   .headerContent {}
 
   @media (max-width: 600px) {
+    .headerContainer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+    }
+
     .headerContent {
       padding: 0 12px;
     }
