@@ -1,5 +1,29 @@
 version: '3.8'
 
+x-shared-configuration: &shared-configuration
+  image: denistred/habit_server:latest
+  restart: unless-stopped
+  volumes:
+    - .:/app
+  environment:
+    DEBUG: "False"
+    SECRET_KEY: ${SECRET_KEY}
+    DJANGO_ADMIN_URL: ${DJANGO_ADMIN_URL}
+
+    DB_NAME: ${POSTGRES_DB}
+    DB_USER: ${POSTGRES_USER}
+    DB_PASSWORD: ${POSTGRES_PASSWORD}
+    DB_HOST: ${POSTGRES_HOST}
+    DB_PORT: ${POSTGRES_PORT}
+
+    DJANGO_HOST: ${DJANGO_HOST}
+    DJANGO_ADMIN_IP: ${DJANGO_ADMIN_IP}
+    CLIENT_URL: ${CLIENT_URL}
+
+    CELERY_BROKER_URL: ${CELERY_BROKER_URL}
+    CELERY_RESULT_BACKEND: ${CELERY_RESULT_BACKEND}
+
+
 services:
   db:
     image: postgres:15
@@ -21,26 +45,16 @@ services:
       retries: 5
 
   server:
-    image: denistred/habit_server:latest
-    restart: unless-stopped
-    environment:
-      DEBUG: "False"
-      SECRET_KEY: ${SECRET_KEY}
-      DJANGO_ADMIN_URL: ${DJANGO_ADMIN_URL}
-      DB_NAME: ${POSTGRES_DB}
-      DB_USER: ${POSTGRES_USER}
-      DB_PASSWORD: ${POSTGRES_PASSWORD}
-      DB_HOST: ${POSTGRES_HOST}
-      DB_PORT: ${POSTGRES_PORT}
-      DJANGO_HOST: ${DJANGO_HOST}
-      DJANGO_ADMIN_IP: ${DJANGO_ADMIN_IP}
-      CLIENT_URL: ${CLIENT_URL}
-    networks:
-      - backend
-      - frontend
+    <<: *shared-configuration
+    entrypoint: ["sh", "-c", "export COMMAND=server && /entrypoint.sh"]
     depends_on:
       db:
         condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - backend
+      - frontend
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:8000/health/ || exit 1"]
       interval: 30s
@@ -79,8 +93,33 @@ services:
       client:
         condition: service_healthy
 
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  celery:
+    <<: *shared-configuration
+    entrypoint: ["sh", "-c", "export COMMAND=celery_worker && /entrypoint.sh"]
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - backend
+
 volumes:
   postgres_data:
+  redis_data:
 
 networks:
   backend:

@@ -30,6 +30,8 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG') == 'True'
 
+TIME_ZONE = 'UTC'
+
 ADMIN_URL = os.environ.get('DJANGO_ADMIN_URL')
 ADMIN_IPS = []
 ALLOWED_HOSTS = [
@@ -47,6 +49,11 @@ CSRF_TRUSTED_ORIGINS = [
     'http://localhost:3000', # for dev
 ]
 
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/1'
+CELERY_TIMEZONE = TIME_ZONE
+CELERY_ENABLE_UTC = True
+
 if not DEBUG:
     CORS_ALLOWED_ORIGINS.append(os.environ.get('CLIENT_URL'))
     CSRF_TRUSTED_ORIGINS.append(os.environ.get('CLIENT_URL'))
@@ -60,6 +67,9 @@ if not DEBUG:
     CSRF_COOKIE_SAMESITE = 'None'
     SESSION_COOKIE_SECURE = True
     SESSION_COOKIE_SAMESITE = 'None'
+
+    CELERY_RESULT_BACKEND = (os.environ.get('CELERY_RESULT_BACKEND'))
+    CELERY_BROKER_URL = (os.environ.get('CELERY_BROKER_URL'))
 
 
 # Application definition
@@ -193,8 +203,6 @@ LOGGING = {
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'UTC'
 
 USE_I18N = True
 

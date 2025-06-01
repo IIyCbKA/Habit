@@ -8,10 +8,6 @@ from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework.views import APIView
 
-from rest_framework_simplejwt.token_blacklist.models import (
-  OutstandingToken,
-  BlacklistedToken
-)
 from rest_framework_simplejwt.tokens import (
   RefreshToken,
   AccessToken,
@@ -21,9 +17,9 @@ from rest_framework_simplejwt.tokens import (
 from .serializers import RegisterSerializer, UserSerializer
 from rest_framework.permissions import AllowAny
 
+from .tasks import blacklistRefreshJTI
 from .schemas import AuthResponseData
 from typing import Optional
-
 
 User = get_user_model()
 
@@ -37,19 +33,15 @@ def resetTokenFromRequest(request: Request) -> None:
   cookieName: str = settings.SIMPLE_JWT['REFRESH_COOKIE']
   rawRefresh: Optional[str] = request.COOKIES.get(cookieName)
 
-  if rawRefresh:
-    try:
-      refresh: RefreshToken = RefreshToken(rawRefresh)
-      jti: str = refresh["jti"]
-      ot = OutstandingToken.objects.filter(jti=jti).first()
+  if not rawRefresh:
+    return
 
-      if not ot:
-        return
-
-      BlacklistedToken.objects.get_or_create(token=ot)
-
-    except TokenError:
-      return
+  try:
+    refresh: RefreshToken = RefreshToken(rawRefresh)
+    jti: str = refresh["jti"]
+    blacklistRefreshJTI.apply_async(args=(jti,), countdown=30)
+  except TokenError:
+    return
 
 
 def createResponse(request: Request, user: User, httpStatus: int) -> Response:
