@@ -3,8 +3,6 @@ version: '3.8'
 x-shared-configuration: &shared-configuration
   image: denistred/habit_server:latest
   restart: unless-stopped
-  volumes:
-    - .:/app
   environment:
     DEBUG: "False"
     SECRET_KEY: ${SECRET_KEY}

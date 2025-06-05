@@ -10,14 +10,16 @@
     background-color: var(--variant-secondary-bgColor);
     padding: 16px;
     box-shadow: var(--common-bs);
+
+    --dropdown-duration: 250ms;
   }
 
   .slideIn {
-    animation: slideIn 0.25s ease-out forwards;
+    animation: slideIn var(--dropdown-duration) ease-out forwards;
   }
 
   .slideOut {
-    animation: slideOut 0.25s ease-in forwards;
+    animation: slideOut var(--dropdown-duration) ease-in forwards;
   }
 
   @keyframes slideIn {

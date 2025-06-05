@@ -1,6 +1,6 @@
 /*
 --------------DrawerProps Interface--------------
-animationDuration  - duration of opening/closing animation
+animationDuration  - duration of opening/closing animation in ms
 isOpen             - drawer is open flag
 */
 

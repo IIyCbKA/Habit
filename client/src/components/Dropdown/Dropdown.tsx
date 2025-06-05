@@ -5,17 +5,21 @@ import { CSSTransition } from "react-transition-group";
 import classNames from "classnames";
 
 function DropdownInner(
-  { isOpen, animationDuration = 200, className, ...other }: DropdownProps,
+  { isOpen, animationDuration = 250, className, ...other }: DropdownProps,
   ref: React.ForwardedRef<HTMLDivElement>,
 ): React.ReactElement {
   const innerRef = React.useRef<HTMLDivElement>(null);
-
-  const containerStyles = classNames(styles.dropdownContainer, className);
 
   React.useImperativeHandle(
     ref,
     (): HTMLDivElement => innerRef.current as HTMLDivElement,
   );
+
+  const styleAnimation = {
+    "--dropdown-duration": `${animationDuration}ms`,
+  } as React.CSSProperties;
+
+  const containerStyles = classNames(styles.dropdownContainer, className);
 
   return (
     <CSSTransition
@@ -28,7 +32,12 @@ function DropdownInner(
       }}
       unmountOnExit
     >
-      <div ref={innerRef} {...other} className={containerStyles} />
+      <div
+        ref={innerRef}
+        style={styleAnimation}
+        {...other}
+        className={containerStyles}
+      />
     </CSSTransition>
   );
 }

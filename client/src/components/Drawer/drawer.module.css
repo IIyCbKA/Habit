@@ -8,14 +8,16 @@
     position: fixed;
     top: 0;
     right: 0;
+
+    --drawer-duration: 200ms;
   }
 
   .slideIn {
-    animation: slideIn 0.2s ease-out forwards;
+    animation: slideIn var(--drawer-duration) ease-out forwards;
   }
 
   .slideOut {
-    animation: slideOut 0.2s ease-in forwards;
+    animation: slideOut var(--drawer-duration) ease-in forwards;
   }
 
   @keyframes slideIn {
