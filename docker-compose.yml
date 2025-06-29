@@ -42,8 +42,7 @@ services:
 
   server:
     <<: *shared-configuration
-    environment:
-      COMMAND: "gunicorn"
+    command: gunicorn
     depends_on:
       db:
         condition: service_healthy
@@ -108,8 +107,7 @@ services:
 
   celery:
     <<: *shared-configuration
-    environment:
-      COMMAND: "celery_worker"
+    command: celery_worker
     depends_on:
       db:
         condition: service_healthy
