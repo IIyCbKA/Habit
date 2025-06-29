@@ -1,5 +1,3 @@
-version: '3.8'
-
 x-shared-configuration: &shared-configuration
   image: iiycbka/habit_server:latest
   restart: unless-stopped
@@ -123,6 +121,7 @@ services:
 volumes:
   postgres_data:
   redis_data:
+  static_data:
 
 networks:
   backend:
