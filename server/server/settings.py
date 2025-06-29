@@ -62,7 +62,7 @@ if not DEBUG:
     ADMIN_IPS.append(os.environ.get('DJANGO_ADMIN_IP'))
 
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-    SECURE_SSL_REDIRECT = False # off-load to Nginx
+    SECURE_SSL_REDIRECT = False
     CSRF_COOKIE_SECURE = True
     CSRF_COOKIE_SAMESITE = 'None'
     SESSION_COOKIE_SECURE = True
@@ -97,10 +97,6 @@ REST_FRAMEWORK = {
     )
 }
 
-"""
-ROTATE_REFRESH_TOKENS and BLACKLIST_AFTER_ROTATION is False 
-because these actions are prescribed manually
-"""
 SIMPLE_JWT = {
     'REFRESH_COOKIE': 'refresh_token',
     'AUTH_COOKIE': 'access_token',
@@ -212,7 +208,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'static'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

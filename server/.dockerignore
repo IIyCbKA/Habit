@@ -16,3 +16,6 @@ Dockerfile
 
 # environment variables
 .env*
+
+# update script
+update.sh
