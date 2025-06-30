@@ -18,7 +18,13 @@ x-shared-configuration: &shared-configuration
 
     CELERY_BROKER_URL: ${CELERY_BROKER_URL}
     CELERY_RESULT_BACKEND: ${CELERY_RESULT_BACKEND}
-
+  depends_on:
+    db:
+      condition: service_healthy
+    redis:
+      condition: service_healthy
+    bootstrap:
+      condition: service_completed_successfully
 
 services:
   db:
@@ -42,12 +48,7 @@ services:
 
   server:
     <<: *shared-configuration
-    command: gunicorn
-    depends_on:
-      db:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
+    command: "gunicorn"
     networks:
       - backend
       - frontend
@@ -107,14 +108,18 @@ services:
 
   celery:
     <<: *shared-configuration
-    command: celery_worker
+    command: "celery_worker"
+    networks:
+      - backend
+
+  bootstrap:
+    image: iiycbka/habit_server:latest
+    command: "bootstrap"
     depends_on:
       db:
         condition: service_healthy
-      redis:
-        condition: service_healthy
-    networks:
-      - backend
+    volumes:
+      - static_data:/app/static
 
 volumes:
   postgres_data:
