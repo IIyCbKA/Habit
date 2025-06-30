@@ -23,8 +23,6 @@ x-shared-configuration: &shared-configuration
       condition: service_healthy
     redis:
       condition: service_healthy
-    bootstrap:
-      condition: service_completed_successfully
 
 services:
   db:
@@ -111,15 +109,6 @@ services:
     command: "celery_worker"
     networks:
       - backend
-
-  bootstrap:
-    image: iiycbka/habit_server:latest
-    command: "bootstrap"
-    depends_on:
-      db:
-        condition: service_healthy
-    volumes:
-      - static_data:/app/static
 
 volumes:
   postgres_data:
