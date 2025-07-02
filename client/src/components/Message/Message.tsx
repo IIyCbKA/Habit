@@ -3,7 +3,6 @@ import styles from "./message.module.css";
 import sharedStyles from "@/shared/shared.module.css";
 import { MessageProps } from "./Message.interface";
 import classNames from "classnames";
-import { MessageVariant } from "./message.enums";
 
 function MessageInner(
   { variant, className, ...other }: MessageProps,
@@ -14,9 +13,9 @@ function MessageInner(
     sharedStyles.lowerText,
     className,
     {
-      [styles.successVariant]: variant === MessageVariant.Success,
-      [styles.errorVariant]: variant === MessageVariant.Error,
-      [styles.warningVariant]: variant === MessageVariant.Warning,
+      [styles.successVariant]: variant === "success",
+      [styles.errorVariant]: variant === "error",
+      [styles.warningVariant]: variant === "warning",
     },
   );
 

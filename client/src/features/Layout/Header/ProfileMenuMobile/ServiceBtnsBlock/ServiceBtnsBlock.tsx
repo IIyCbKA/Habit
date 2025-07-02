@@ -1,5 +1,5 @@
 import React from "react";
-import Button from "@/components/Buttons/DefaultButton/Button";
+import Button from "@/components/Buttons/Button/Button";
 import sharedMenuMobileStyles from "../profileMenuMobile.module.css";
 import sharedHeaderStyles from "../../header.module.css";
 import { SETTINGS_BTN, SIGN_OUT_BTN } from "./serviceBtnsBlock.constants";
@@ -20,14 +20,14 @@ export default function ServiceBtnsBlock(): React.ReactElement {
       <Button
         fullWidth
         className={sharedHeaderStyles.defaultMenuBtn}
-        adornment={<Settings />}
+        startIcon={{ content: <Settings /> }}
       >
         {SETTINGS_BTN}
       </Button>
       <Button
         fullWidth
         className={sharedHeaderStyles.defaultMenuBtn}
-        adornment={<Logout />}
+        startIcon={{ content: <Logout /> }}
         onClick={onSignOut}
       >
         {SIGN_OUT_BTN}

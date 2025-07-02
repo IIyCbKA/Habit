@@ -3,19 +3,14 @@ import CircularProgress from "@/components/Progress/CircularProgress/CircularPro
 import { LoadingOverlayProps } from "./LoadingOverlay.interface";
 import styles from "./loadingOverlay.module.css";
 import classNames from "classnames";
-import { LoadingOverlayVariant } from "./loadingOverlay.enums";
 
 function LoadingOverlayInner(
-  {
-    overlayType = LoadingOverlayVariant.FullParent,
-    className,
-    ...other
-  }: LoadingOverlayProps,
+  { overlayType = "fullparent", className, ...other }: LoadingOverlayProps,
   ref: React.ForwardedRef<HTMLDivElement>,
 ): React.ReactElement {
   const overlayStyles = classNames(styles.loadingOverlayRoot, className, {
-    [styles.fullParent]: overlayType === LoadingOverlayVariant.FullParent,
-    [styles.fullPage]: overlayType === LoadingOverlayVariant.FullPage,
+    [styles.fullParent]: overlayType === "fullparent",
+    [styles.fullPage]: overlayType === "fullpage",
   });
 
   return (

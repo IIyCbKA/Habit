@@ -2,43 +2,34 @@ import React from "react";
 import styles from "./divider.module.css";
 import { DividerProps } from "./Divider.interface";
 import classNames from "classnames";
-import {
-  DIV_ELEMENT,
-  DIVIDER_ORIENTATIONS,
-  DIVIDER_VARIANTS,
-  HR_ELEMENT,
-} from "./divider.constants";
 
 export default function Divider({
   flexItem,
-  orientation = DIVIDER_ORIENTATIONS.horizontal,
-  variant = DIVIDER_VARIANTS.fullWidth,
+  orientation = "horizontal",
+  variant = "fullwidth",
   className,
   ...other
 }: DividerProps): React.ReactElement {
   const Component: React.ElementType =
-    orientation === DIVIDER_ORIENTATIONS.horizontal ? HR_ELEMENT : DIV_ELEMENT;
+    orientation === "horizontal" ? "hr" : "div";
 
-  const orientationClasses =
-    orientation === DIVIDER_ORIENTATIONS.horizontal
-      ? classNames(
-          styles.dividerHorizontal,
-          variant === DIVIDER_VARIANTS.inset && styles.dividerHorizontalInset,
-          variant === DIVIDER_VARIANTS.middle && styles.dividerHorizontalMiddle,
-          flexItem && styles.dividerHorizontalFlex,
-        )
-      : classNames(
-          styles.dividerVertical,
-          variant === DIVIDER_VARIANTS.fullWidth &&
-            styles.dividerVerticalFullWidth,
-          variant === DIVIDER_VARIANTS.middle && styles.dividerVerticalMiddle,
-          variant === DIVIDER_VARIANTS.inset && styles.dividerVerticalInset,
-          flexItem && styles.dividerVerticalFlex,
-        );
+  const orientationStyles =
+    orientation === "horizontal"
+      ? classNames(styles.dividerHorizontal, {
+          [styles.dividerHorizontalInset]: variant === "inset",
+          [styles.dividerHorizontalMiddle]: variant === "middle",
+          [styles.dividerHorizontalFlex]: flexItem,
+        })
+      : classNames(styles.dividerVertical, {
+          [styles.dividerVerticalFullWidth]: variant === "fullwidth",
+          [styles.dividerVerticalMiddle]: variant === "middle",
+          [styles.dividerVerticalInset]: variant === "inset",
+          [styles.dividerVerticalFlex]: flexItem,
+        });
 
   const dividerStyles = classNames(
     styles.dividerRoot,
-    orientationClasses,
+    orientationStyles,
     className,
   );
 

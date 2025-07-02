@@ -1,17 +1,12 @@
 import React from "react";
 import { ClickAwayListenerProps } from "./ClickAwayListener.interface";
-import { ClickType, TouchType } from "./clickAwayListener.enums";
 
-const ClickAwayListener = <RefElType extends HTMLElement = HTMLElement>(
-  props: ClickAwayListenerProps<RefElType>,
-): React.ReactElement => {
-  const {
-    children,
-    onClickAway,
-    clickEventType = ClickType.OnClick,
-    touchEventType = TouchType.OnTouchEnd,
-  } = props;
-
+const ClickAwayListener = <RefElType extends HTMLElement = HTMLElement>({
+  children,
+  onClickAway,
+  clickEventType = "click",
+  touchEventType = "touchend",
+}: ClickAwayListenerProps<RefElType>): React.ReactElement => {
   const nodeRef = React.useRef<RefElType | null>(null);
 
   React.useEffect((): (() => void) => {

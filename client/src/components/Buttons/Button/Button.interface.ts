@@ -1,16 +1,18 @@
 /*
 --------------ButtonProps Interface--------------
 fullWidth   - flag is full parent width
-adornment   - icon for start of btn
+endIcon     - button end icon
+startIcon   - button start icon
 variant     - variant of button style
 */
 
-import React, { ButtonHTMLAttributes } from "react";
-import { ButtonVariant } from "./button.enums";
+import { ButtonHTMLAttributes } from "react";
+import { Adornment, ButtonVariant } from "./button.types";
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   fullWidth?: boolean;
 
-  adornment?: React.ReactNode;
+  endIcon?: Adornment;
+  startIcon?: Adornment;
   variant?: ButtonVariant;
 }

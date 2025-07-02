@@ -1,5 +1,5 @@
 import React from "react";
-import Button from "@/components/Buttons/DefaultButton/Button";
+import Button from "@/components/Buttons/Button/Button";
 import sharedMenuMobileStyles from "../profileMenuMobile.module.css";
 import sharedHeaderStyles from "../../header.module.css";
 import Lock from "@/assets/icons/lock_outline_64x64.svg?react";
@@ -11,14 +11,14 @@ export default function NavigationBtnsBlock(): React.ReactElement {
       <Button
         fullWidth
         className={sharedHeaderStyles.defaultMenuBtn}
-        adornment={<Lock />}
+        startIcon={{ content: <Lock /> }}
       >
         {FIRST_PATTERN}
       </Button>
       <Button
         fullWidth
         className={sharedHeaderStyles.defaultMenuBtn}
-        adornment={<Lock />}
+        startIcon={{ content: <Lock /> }}
       >
         {SECOND_PATTERN}
       </Button>

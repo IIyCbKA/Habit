@@ -5,7 +5,6 @@ import PrivateRoutes from "./PrivateRoutes";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { refreshAuth, selectIsAuth } from "@/features/Auth/auth.slice";
 import LoadingOverlay from "@/components/LoadingOverlay/LoadingOverlay";
-import { LoadingOverlayVariant } from "@/components/LoadingOverlay/loadingOverlay.enums";
 
 export default function AppRoutes(): React.ReactElement {
   const [isWaitingAuth, setIsWaitingAuth] = React.useState(true);
@@ -19,7 +18,7 @@ export default function AppRoutes(): React.ReactElement {
   const routes: React.ReactElement = React.useMemo(
     (): React.ReactElement =>
       isWaitingAuth ? (
-        <LoadingOverlay overlayType={LoadingOverlayVariant.FullPage} />
+        <LoadingOverlay overlayType={"fullpage"} />
       ) : isAuth ? (
         <PrivateRoutes />
       ) : (

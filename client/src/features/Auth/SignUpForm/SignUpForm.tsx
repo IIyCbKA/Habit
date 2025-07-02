@@ -11,21 +11,17 @@ import {
 import { EMPTY_STRING, EMPTY_STRING_LENGTH } from "@/shared/shared.constants";
 import Input from "@/components/Input/Input";
 import Divider from "@/components/Divider/Divider";
-import Button from "@/components/Buttons/DefaultButton/Button";
-import { ButtonVariant } from "@/components/Buttons/DefaultButton/button.enums";
+import Button from "@/components/Buttons/Button/Button";
 import ActionBar from "./ActionBar/ActionBar";
 import SignInWith from "../shared/SignInWith/SignInWith";
 import { FormData } from "./SignUpForm.types";
-import { AutoCompleteMode, InputType } from "@/components/Input/input.enums";
 import { FormFieldType } from "./signUpForm.enums";
-import { ButtonType } from "@/components/Buttons/shared.enums";
 import IconButton from "@/components/Buttons/IconButton/IconButton";
 import OpenEye from "@/assets/icons/open_eye_24x24.svg?react";
 import CloseEye from "@/assets/icons/close_eye_24x24.svg?react";
 import { registerUser } from "../auth.slice";
 import { useAppDispatch } from "@/store/hooks";
 import Message from "@/components/Message/Message";
-import { MessageVariant } from "@/components/Message/message.enums";
 import { validatePassword } from "@/shared/utils/utils";
 
 export default function SignUpForm({
@@ -98,7 +94,7 @@ export default function SignUpForm({
         <Logotype className={sharedAuthStyles.formLogotype} />
         <Input
           fullWidth
-          autoComplete={AutoCompleteMode.Username}
+          autoComplete={"username"}
           placeholder={INPUT_ELEMENTS[FormFieldType.Username].placeholder}
           name={INPUT_ELEMENTS[FormFieldType.Username].inputName}
           value={form.username}
@@ -107,8 +103,8 @@ export default function SignUpForm({
         <Divider className={sharedAuthStyles.formDivider} flexItem />
         <Input
           fullWidth
-          autoComplete={AutoCompleteMode.NewPassword}
-          type={showPassword ? InputType.Text : InputType.Password}
+          autoComplete={"new-password"}
+          type={showPassword ? "text" : "password"}
           placeholder={INPUT_ELEMENTS[FormFieldType.Password].placeholder}
           name={INPUT_ELEMENTS[FormFieldType.Password].inputName}
           value={form.password}
@@ -121,14 +117,14 @@ export default function SignUpForm({
           onBlur={onPasswordBlur}
         />
         {showPasswordError ? (
-          <Message variant={MessageVariant.Error}>{PASSWORD_ERROR}</Message>
+          <Message variant={"error"}>{PASSWORD_ERROR}</Message>
         ) : (
           <Divider className={sharedAuthStyles.formDivider} flexItem />
         )}
         <Input
           fullWidth
-          autoComplete={AutoCompleteMode.NewPassword}
-          type={showPasswordConfirmation ? InputType.Text : InputType.Password}
+          autoComplete={"new-password"}
+          type={showPasswordConfirmation ? "text" : "password"}
           placeholder={
             INPUT_ELEMENTS[FormFieldType.PasswordConfirmation].placeholder
           }
@@ -143,16 +139,14 @@ export default function SignUpForm({
           onBlur={onPasswordConfirmationBlur}
         />
         {showPasswordConfirmationError ? (
-          <Message variant={MessageVariant.Error}>
-            {PASSWORD_CONFIRMATION_ERROR}
-          </Message>
+          <Message variant={"error"}>{PASSWORD_CONFIRMATION_ERROR}</Message>
         ) : (
           <Divider className={sharedAuthStyles.formDivider} flexItem />
         )}
         <Input
           fullWidth
-          autoComplete={AutoCompleteMode.Email}
-          type={InputType.Email}
+          autoComplete={"email"}
+          type={"email"}
           placeholder={INPUT_ELEMENTS[FormFieldType.Email].placeholder}
           name={INPUT_ELEMENTS[FormFieldType.Email].inputName}
           value={form.email}
@@ -161,9 +155,9 @@ export default function SignUpForm({
         <Divider className={sharedAuthStyles.formDivider} flexItem />
         <Button
           fullWidth
-          variant={ButtonVariant.Contained}
+          variant={"contained"}
           disabled={signUpButtonDisabled}
-          type={ButtonType.Submit}
+          type={"submit"}
         >
           {SIGN_UP_BUTTON_TEXT}
         </Button>

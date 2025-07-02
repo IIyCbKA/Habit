@@ -2,7 +2,6 @@ import React from "react";
 import styles from "./input.module.css";
 import { InputProps } from "./Input.interface";
 import classNames from "classnames";
-import { InputType, AutoCompleteMode } from "./input.enums";
 
 function InputInner(
   { fullWidth, className, inputAdornment, ...other }: InputProps,

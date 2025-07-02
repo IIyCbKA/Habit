@@ -6,7 +6,7 @@ import {
   TO_SIGN_IN_BUTTON_TEXT,
 } from "./actionBar.constants";
 import classNames from "classnames";
-import Button from "@/components/Buttons/DefaultButton/Button";
+import Button from "@/components/Buttons/Button/Button";
 import { ActionBarProps } from "../../shared/shared.interfaces";
 
 export default function ActionBar({

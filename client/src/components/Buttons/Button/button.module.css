@@ -18,7 +18,7 @@
   }
 
   .buttonWithAdornment {
-    padding: 0 8px;
+    padding: 10px 8px;
   }
 
   .fullWidth {
@@ -87,13 +87,23 @@
   }
 
   .adornmentContainer {
-    height: 50%;
+    height: 100%;
     aspect-ratio: 1/1;
-    margin-right: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .adornmentContainer svg {
     height: 100%;
     width: 100%;
+  }
+
+  .startAdornment {
+    margin-right: 12px;
+  }
+
+  .endAdornment {
+    margin-left: 12px;
   }
 }

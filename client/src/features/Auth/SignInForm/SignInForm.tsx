@@ -9,21 +9,17 @@ import {
   SIGN_IN_BTN_TEXT,
 } from "./signInForm.constants";
 import { EMPTY_STRING, EMPTY_STRING_LENGTH } from "@/shared/shared.constants";
-import Button from "@/components/Buttons/DefaultButton/Button";
-import { ButtonVariant } from "@/components/Buttons/DefaultButton/button.enums";
+import Button from "@/components/Buttons/Button/Button";
 import ActionBar from "./ActionBar/ActionBar";
 import SignInWith from "../shared/SignInWith/SignInWith";
 import Divider from "@/components/Divider/Divider";
 import { FormProps } from "../shared/shared.interfaces";
-import { AutoCompleteMode, InputType } from "@/components/Input/input.enums";
 import IconButton from "@/components/Buttons/IconButton/IconButton";
 import OpenEye from "@/assets/icons/open_eye_24x24.svg?react";
 import CloseEye from "@/assets/icons/close_eye_24x24.svg?react";
-import { ButtonType } from "@/components/Buttons/shared.enums";
 import { loginUser, selectAuthStatus } from "../auth.slice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import Message from "@/components/Message/Message";
-import { MessageVariant } from "@/components/Message/message.enums";
 import { AuthStatus } from "../auth.enums";
 
 export default function SignInForm({
@@ -68,7 +64,7 @@ export default function SignInForm({
         <Logotype className={sharedAuthStyles.formLogotype} />
         <Input
           fullWidth
-          autoComplete={AutoCompleteMode.Username}
+          autoComplete={"username"}
           value={identifier}
           onChange={onLoginChange}
           placeholder={LOGIN_PLACEHOLDER}
@@ -76,8 +72,8 @@ export default function SignInForm({
         <Divider className={sharedAuthStyles.formDivider} flexItem />
         <Input
           fullWidth
-          type={showPassword ? InputType.Text : InputType.Password}
-          autoComplete={AutoCompleteMode.CurrentPassword}
+          type={showPassword ? "text" : "password"}
+          autoComplete={"current-password"}
           value={password}
           onChange={onPasswordChange}
           placeholder={PASSWORD_PLACEHOLDER}
@@ -88,15 +84,15 @@ export default function SignInForm({
           }
         />
         {showLoginError ? (
-          <Message variant={MessageVariant.Error}>{LOGIN_ERROR_TEXT}</Message>
+          <Message variant={"error"}>{LOGIN_ERROR_TEXT}</Message>
         ) : (
           <Divider className={sharedAuthStyles.formDivider} flexItem />
         )}
         <Button
           fullWidth
           disabled={signInButtonDisabled}
-          variant={ButtonVariant.Contained}
-          type={ButtonType.Submit}
+          variant={"contained"}
+          type={"submit"}
         >
           {SIGN_IN_BTN_TEXT}
         </Button>

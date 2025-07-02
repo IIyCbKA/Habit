@@ -3,13 +3,15 @@ import sharedHeaderStyles from "../../header.module.css";
 import {
   FIRST_PATTERN,
   SECOND_PATTERN,
+  SETTINGS_BTN,
   SIGN_OUT_BTN,
 } from "./btnsBlock.constants";
-import Button from "@/components/Buttons/DefaultButton/Button";
+import Button from "@/components/Buttons/Button/Button";
 import { logout } from "@/features/Auth/auth.slice";
 import { useAppDispatch } from "@/store/hooks";
 import Logout from "@/assets/icons/logout_64x64.svg?react";
 import Lock from "@/assets/icons/lock_outline_64x64.svg?react";
+import Settings from "@/assets/icons/settings_64x64.svg?react";
 
 export default function BtnsBlock(): React.ReactElement {
   const dispatch = useAppDispatch();
@@ -23,22 +25,29 @@ export default function BtnsBlock(): React.ReactElement {
       <Button
         fullWidth
         className={sharedHeaderStyles.defaultMenuBtn}
-        adornment={<Lock />}
+        startIcon={{ content: <Lock /> }}
       >
         {FIRST_PATTERN}
       </Button>
       <Button
         fullWidth
         className={sharedHeaderStyles.defaultMenuBtn}
-        adornment={<Lock />}
+        startIcon={{ content: <Lock /> }}
       >
         {SECOND_PATTERN}
       </Button>
       <Button
         fullWidth
         className={sharedHeaderStyles.defaultMenuBtn}
+        startIcon={{ content: <Settings /> }}
+      >
+        {SETTINGS_BTN}
+      </Button>
+      <Button
+        fullWidth
+        className={sharedHeaderStyles.defaultMenuBtn}
         onClick={onSignOut}
-        adornment={<Logout />}
+        startIcon={{ content: <Logout /> }}
       >
         {SIGN_OUT_BTN}
       </Button>

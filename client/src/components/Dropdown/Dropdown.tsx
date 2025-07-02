@@ -27,8 +27,12 @@ function DropdownInner(
       in={isOpen}
       timeout={animationDuration}
       classNames={{
-        enterActive: styles.slideIn,
-        exitActive: styles.slideOut,
+        enter: styles.enter,
+        enterActive: styles.enterActive,
+        enterDone: styles.enterDone,
+        exit: styles.exit,
+        exitActive: styles.exitActive,
+        exitDone: styles.exitDone,
       }}
       unmountOnExit
     >
