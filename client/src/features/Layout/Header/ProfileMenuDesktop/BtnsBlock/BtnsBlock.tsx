@@ -10,7 +10,7 @@ import Button from "@/components/Buttons/Button/Button";
 import { logout } from "@/features/Auth/auth.slice";
 import { useAppDispatch } from "@/store/hooks";
 import Logout from "@/assets/icons/logout_64x64.svg?react";
-import Lock from "@/assets/icons/lock_outline_64x64.svg?react";
+import Closed from "@/assets/icons/close_64x64.svg?react";
 import Settings from "@/assets/icons/settings_64x64.svg?react";
 
 export default function BtnsBlock(): React.ReactElement {
@@ -25,14 +25,14 @@ export default function BtnsBlock(): React.ReactElement {
       <Button
         fullWidth
         className={sharedHeaderStyles.defaultMenuBtn}
-        startIcon={{ content: <Lock /> }}
+        startIcon={{ content: <Closed /> }}
       >
         {FIRST_PATTERN}
       </Button>
       <Button
         fullWidth
         className={sharedHeaderStyles.defaultMenuBtn}
-        startIcon={{ content: <Lock /> }}
+        startIcon={{ content: <Closed /> }}
       >
         {SECOND_PATTERN}
       </Button>
