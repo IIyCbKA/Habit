@@ -1,9 +1,7 @@
 from django.conf import settings
-from django.utils import timezone
-from django.db.models import Q
 from django.contrib.auth import get_user_model
 
-from rest_framework import status
+from rest_framework import status, generics
 from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework.views import APIView
@@ -14,52 +12,55 @@ from rest_framework_simplejwt.tokens import (
   TokenError
 )
 
-from .serializers import RegisterSerializer, UserSerializer
+from .serializers import UserSerializer, LoginSerializer
 from rest_framework.permissions import AllowAny
 
 from .tasks import blacklistRefreshJTI
-from .schemas import AuthResponseData
+from .constants import *
 from typing import Optional
 
 User = get_user_model()
 
-def getTokensForUser(user: User) -> tuple[RefreshToken, AccessToken]:
+def get_tokens_for_user(user: User) -> tuple[RefreshToken, AccessToken]:
   refresh: RefreshToken = RefreshToken.for_user(user)
   access: AccessToken = refresh.access_token
   return refresh, access
 
 
-def resetTokenFromRequest(request: Request) -> None:
-  cookieName: str = settings.SIMPLE_JWT['REFRESH_COOKIE']
-  rawRefresh: Optional[str] = request.COOKIES.get(cookieName)
+def reset_token_from_request(request: Request) -> None:
+  cookie_name: str = settings.SIMPLE_JWT['REFRESH_COOKIE']
+  raw_refresh: Optional[str] = request.COOKIES.get(cookie_name)
 
-  if not rawRefresh:
+  if not raw_refresh:
     return
 
   try:
-    refresh: RefreshToken = RefreshToken(rawRefresh)
+    refresh: RefreshToken = RefreshToken(raw_refresh)
     jti: str = refresh["jti"]
     blacklistRefreshJTI.apply_async(args=(jti,), countdown=30)
   except TokenError:
     return
 
 
-def createResponse(request: Request, user: User, httpStatus: int) -> Response:
-  resetTokenFromRequest(request)
+def create_response(request: Request, user: User, http_status: int) -> Response:
+  reset_token_from_request(request)
 
-  refresh, access = getTokensForUser(user)
-  data: AuthResponseData = {
-    'accessToken': str(access),
-    'user': UserSerializer(user).data,
-  }
+  refresh, access = get_tokens_for_user(user)
 
-  response: Response = Response(data, status=httpStatus)
-  setRefresh2Cookie(response, refresh)
+  response: Response = Response(
+    data={
+      'accessToken': str(access),
+      'user': UserSerializer(user).data,
+    },
+    status=http_status
+  )
+
+  set_refresh_to_cookie(response, refresh)
 
   return response
 
 
-def setRefresh2Cookie(response: Response, refresh: RefreshToken) -> None:
+def set_refresh_to_cookie(response: Response, refresh: RefreshToken) -> None:
   response.set_cookie(
     key=settings.SIMPLE_JWT['REFRESH_COOKIE'],
     value=str(refresh),
@@ -70,72 +71,72 @@ def setRefresh2Cookie(response: Response, refresh: RefreshToken) -> None:
   )
 
 
-class RegisterView(APIView):
+class RegisterView(generics.CreateAPIView):
   permission_classes = [AllowAny]
+  serializer_class = UserSerializer
 
-  def post(self, request) -> Response:
-    serializer = RegisterSerializer(data=request.data)
+  def create(self, request: Request, *args, **kwargs) -> Response:
+    serializer = self.get_serializer(data=request.data)
     serializer.is_valid(raise_exception=True)
-    user = serializer.save()
+    user: User = serializer.save()
 
-    response: Response = createResponse(request, user, status.HTTP_201_CREATED)
+    response: Response = create_response(request, user, status.HTTP_201_CREATED)
     return response
 
 
 class LoginView(APIView):
   permission_classes = [AllowAny]
 
-  def post(self, request) -> Response:
-    identifier: str = request.data.get('identifier')
-    password: str = request.data.get('password')
+  def post(self, request: Request) -> Response:
+    serializer = LoginSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    user: User = serializer.save()
 
-    try:
-      user = User.objects.get(Q(username=identifier) | Q(email=identifier))
-    except User.DoesNotExist:
-      return Response(status=status.HTTP_401_UNAUTHORIZED)
-
-    if not user.check_password(password):
-      return Response(status=status.HTTP_401_UNAUTHORIZED)
-
-    user.last_login = timezone.now()
-    user.save(update_fields=['last_login'])
-
-    response: Response = createResponse(request, user, status.HTTP_200_OK)
+    response: Response = create_response(request, user, status.HTTP_200_OK)
     return response
 
 
 class RefreshView(APIView):
   permission_classes = [AllowAny]
 
-  def post(self, request) -> Response:
-    cookieName: str = settings.SIMPLE_JWT['REFRESH_COOKIE']
-    rawRefresh: Optional[str] = request.COOKIES.get(cookieName)
+  def post(self, request: Request) -> Response:
+    cookie_name: str = settings.SIMPLE_JWT['REFRESH_COOKIE']
+    raw_refresh: Optional[str] = request.COOKIES.get(cookie_name)
 
-    if rawRefresh is None:
-      return Response({'detail': 'Refresh token not provided'},
-        status=status.HTTP_401_UNAUTHORIZED)
+    if raw_refresh is None:
+      return Response(
+        {'detail': REFRESH_NOT_PROVIDED_ERROR},
+        status=status.HTTP_401_UNAUTHORIZED
+      )
 
     try:
-      oldRefresh: RefreshToken = RefreshToken(rawRefresh)
+      old_refresh: RefreshToken = RefreshToken(raw_refresh)
     except TokenError:
-      return Response({'detail': 'Invalid or expired refresh token'},
-        status=status.HTTP_401_UNAUTHORIZED)
+      return Response(
+        {'detail': INVALID_REFRESH_ERROR},
+        status=status.HTTP_401_UNAUTHORIZED
+      )
 
     try:
-      userID: int = oldRefresh.payload.get('user_id')
-      user = User.objects.get(pk=userID)
+      user_id: int = old_refresh.payload.get('user_id')
+      user: User = User.objects.get(pk=user_id)
     except (KeyError, User.DoesNotExist):
-      return Response({'detail': 'User not found'},
-        status=status.HTTP_401_UNAUTHORIZED)
+      return Response(
+        {'detail': USER_NOT_FOUND_ERROR},
+        status=status.HTTP_401_UNAUTHORIZED
+      )
 
-    response: Response = createResponse(request, user, status.HTTP_200_OK)
+    response: Response = create_response(request, user, status.HTTP_200_OK)
     return response
 
 
 class LogoutView(APIView):
   permission_classes = [AllowAny]
 
-  def post(self, request) -> Response:
-    resetTokenFromRequest(request)
+  def post(self, request: Request) -> Response:
+    reset_token_from_request(request)
 
-    return Response(status=status.HTTP_200_OK)
+    response: Response = Response(status=status.HTTP_200_OK)
+    response.delete_cookie(key=settings.SIMPLE_JWT['REFRESH_COOKIE'])
+
+    return response

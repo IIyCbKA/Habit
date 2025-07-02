@@ -1,0 +1,5 @@
+EMAIL_TAKEN_ERROR = 'Email already taken'
+INVALID_REFRESH_ERROR = 'Invalid or expired refresh token'
+REFRESH_NOT_PROVIDED_ERROR = 'Refresh token not provided'
+USER_NOT_FOUND_ERROR = 'User not found'
+USERNAME_TAKEN_ERROR = 'Username already taken'
