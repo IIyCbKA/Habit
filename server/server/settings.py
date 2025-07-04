@@ -54,6 +54,8 @@ CELERY_RESULT_BACKEND = 'redis://localhost:6379/1'
 CELERY_TIMEZONE = TIME_ZONE
 CELERY_ENABLE_UTC = True
 
+AUTH_USER_MODEL = 'accounts.CustomUser'
+
 if not DEBUG:
     CORS_ALLOWED_ORIGINS.append(os.environ.get('CLIENT_URL'))
     CSRF_TRUSTED_ORIGINS.append(os.environ.get('CLIENT_URL'))
@@ -73,8 +75,8 @@ if not DEBUG:
 
 
 # Application definition
-
 INSTALLED_APPS = [
+    'accounts.apps.AccountsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -85,7 +87,6 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
     'corsheaders',
-    'accounts.apps.AccountsConfig',
 ]
 
 REST_FRAMEWORK = {

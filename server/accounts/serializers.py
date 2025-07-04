@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.db.models import Q
 from django.utils import timezone
 from rest_framework import serializers
@@ -6,6 +6,7 @@ from rest_framework.validators import UniqueValidator
 
 from .constants import *
 
+User = get_user_model()
 
 class UserSerializer(serializers.ModelSerializer):
   username = serializers.CharField(
