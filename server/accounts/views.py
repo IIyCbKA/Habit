@@ -12,10 +12,11 @@ from rest_framework_simplejwt.tokens import (
   TokenError
 )
 
-from .serializers import UserSerializer, LoginSerializer
+from .serializers import UserSerializer, LoginSerializer, \
+  EmailVerificationSerializer
 from rest_framework.permissions import AllowAny
 
-from .tasks import blacklistRefreshJTI
+from .tasks import blacklistRefreshJTI, send_verification_email
 from .constants import *
 from typing import Optional
 
@@ -42,7 +43,7 @@ def reset_token_from_request(request: Request) -> None:
     return
 
 
-def create_response(request: Request, user: User, http_status: int) -> Response:
+def create_response_with_tokens(request: Request, user: User, http_status: int) -> Response:
   reset_token_from_request(request)
 
   refresh, access = get_tokens_for_user(user)
@@ -71,16 +72,27 @@ def set_refresh_to_cookie(response: Response, refresh: RefreshToken) -> None:
   )
 
 
-class RegisterView(generics.CreateAPIView):
+class PendingRegisterView(generics.CreateAPIView):
   permission_classes = [AllowAny]
   serializer_class = UserSerializer
 
   def create(self, request: Request, *args, **kwargs) -> Response:
     serializer = self.get_serializer(data=request.data)
     serializer.is_valid(raise_exception=True)
+    serializer.save()
+
+    return Response(data={'user': serializer.data}, status=status.HTTP_201_CREATED)
+
+
+class VerifyEmailView(APIView):
+  permission_classes = [AllowAny]
+
+  def post(self, request: Request) -> Response:
+    serializer = EmailVerificationSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
     user: User = serializer.save()
 
-    response: Response = create_response(request, user, status.HTTP_201_CREATED)
+    response: Response = create_response_with_tokens(request, user, status.HTTP_200_OK)
     return response
 
 
@@ -90,9 +102,24 @@ class LoginView(APIView):
   def post(self, request: Request) -> Response:
     serializer = LoginSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
-    user: User = serializer.save()
+    user: User = serializer.validated_data['user']
 
-    response: Response = create_response(request, user, status.HTTP_200_OK)
+    if not user.is_email_verified:
+      raw_code = user.regenerate_secret_code()
+      send_verification_email.delay(user.email, raw_code)
+
+      return Response(
+        {
+          'requestEmailVerification': True,
+          'user': UserSerializer(user).data,
+          'detail': EMAIL_HAS_NOT_VERIFIED_ERROR,
+        },
+        status=status.HTTP_200_OK
+      )
+
+    serializer.save()
+
+    response: Response = create_response_with_tokens(request, user, status.HTTP_200_OK)
     return response
 
 
@@ -126,7 +153,7 @@ class RefreshView(APIView):
         status=status.HTTP_401_UNAUTHORIZED
       )
 
-    response: Response = create_response(request, user, status.HTTP_200_OK)
+    response: Response = create_response_with_tokens(request, user, status.HTTP_200_OK)
     return response
 
 

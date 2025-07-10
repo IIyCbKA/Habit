@@ -12,38 +12,7 @@ Copy the template and fill only the variables relevant to your environment:
    cp .env.example .env
    ```
 
-#### 2. **Configure `.env`**
-
-   ```dotenv
-# ==============================================================================
-#                                     LOCAL
-# ==============================================================================
-DEBUG=True
-
-
-# ==============================================================================
-#                                     PROD
-# ==============================================================================
-HOST=your_main_domain
-DJANGO_HOST=your_server_host
-DJANGO_ADMIN_IP=your_ip_for_django_admin
-CLIENT_URL=url_of_your_frontend_server
-
-
-# ==============================================================================
-#                                   GENERAL
-# ==============================================================================
-SECRET_KEY=your_secret_key
-DJANGO_ADMIN_URL=your_admin_url/
-POSTGRES_DB=your_postgres_name
-POSTGRES_USER=your_postgres_user
-POSTGRES_PASSWORD=your_postgres_password
-POSTGRES_HOST=your_postgres_host
-POSTGRES_PORT=your_postgres_port
-VITE_API_URL=your_api_server_url
-CELERY_BROKER_URL=your_celery_broker_url
-CELERY_RESULT_BACKEND=your_celery_result_backend_url
-   ```
+#### 2. **Configure `.env` for your project**
 
 ## 📦 Assets Attribution
 - Flags: [Rene Herrmann Figma files](https://www.figma.com/community/plugin/749888869584535589/flags) under [Community Free Resource License](https://www.figma.com/legal/community-free-resource-license) (Cropped original images).
