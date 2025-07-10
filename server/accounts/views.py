@@ -37,7 +37,7 @@ def reset_token_from_request(request: Request) -> None:
 
   try:
     refresh: RefreshToken = RefreshToken(raw_refresh)
-    jti: str = refresh["jti"]
+    jti: str = refresh['jti']
     blacklistRefreshJTI.apply_async(args=(jti,), countdown=30)
   except TokenError:
     return

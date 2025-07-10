@@ -58,6 +58,7 @@ CELERY_TASK_ALWAYS_EAGER = DEBUG
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = 'Green Habit Team <no-reply@greenhabit.ru>'
 
 if not DEBUG:
     CORS_ALLOWED_ORIGINS.append(os.environ.get('CLIENT_URL'))
@@ -77,16 +78,7 @@ if not DEBUG:
     CELERY_BROKER_URL = (os.environ.get('CELERY_BROKER_URL'))
     CELERY_ACKS_LATE = True
 
-    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-
-    EMAIL_HOST = "smtp-relay.brevo.com"
-    EMAIL_PORT = 587
-    EMAIL_USE_TLS = True
-
-    EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
-    EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
-
-    DEFAULT_FROM_EMAIL = "Green Habit Team <no-reply@greenhabit.ru>"
+    EMAIL_API_KEY = os.environ.get('EMAIL_API_KEY')
 
 
 # Application definition

@@ -19,8 +19,7 @@ x-shared-configuration: &shared-configuration
     CELERY_BROKER_URL: ${CELERY_BROKER_URL}
     CELERY_RESULT_BACKEND: ${CELERY_RESULT_BACKEND}
 
-    EMAIL_HOST_USER: ${EMAIL_HOST_USER}
-    EMAIL_HOST_PASSWORD: ${EMAIL_HOST_PASSWORD}
+    EMAIL_API_KEY: ${EMAIL_API_KEY}
   depends_on:
     db:
       condition: service_healthy
