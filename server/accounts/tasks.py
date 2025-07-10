@@ -7,7 +7,6 @@ from rest_framework_simplejwt.token_blacklist.models import (
 )
 
 from .constants import *
-import requests
 
 @shared_task
 def blacklistRefreshJTI(jti: str) -> None:
@@ -25,31 +24,10 @@ def send_verification_email(email: str, code: str) -> None:
     "If you did not request this verification, please disregard this email."
   )
 
-  if settings.DEBUG:
-    send_mail(
-      subject=VERIFICATION_MAIL_SUBJECT,
-      message=message,
-      from_email=settings.DEFAULT_FROM_EMAIL,
-      recipient_list=[email],
-      fail_silently=False,
-    )
-    return
-
-  payload: dict = {
-    'sender': {
-      'name': EMAIL_FROM_NAME,
-      'email': EMAIL_FROM_EMAIL,
-    },
-    'to': [{'email': email}],
-    'subject': VERIFICATION_MAIL_SUBJECT,
-    'textContent': message,
-  }
-
-  headers: dict = {
-    'accept': 'application/json',
-    'api-key': settings.EMAIL_API_KEY,
-    'content-type': 'application/json',
-  }
-
-  response = requests.post(EMAIL_SENDER_URL, headers=headers, json=payload)
-  response.raise_for_status()
+  send_mail(
+    subject=VERIFICATION_MAIL_SUBJECT,
+    message=message,
+    from_email=settings.DEFAULT_FROM_EMAIL,
+    recipient_list=[email],
+    fail_silently=False,
+  )

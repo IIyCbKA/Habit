@@ -58,7 +58,7 @@ CELERY_TASK_ALWAYS_EAGER = DEBUG
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-DEFAULT_FROM_EMAIL = 'Green Habit Team <no-reply@greenhabit.ru>'
+DEFAULT_FROM_EMAIL = 'no-reply@greenhabit.ru'
 
 if not DEBUG:
     CORS_ALLOWED_ORIGINS.append(os.environ.get('CLIENT_URL'))
@@ -78,7 +78,11 @@ if not DEBUG:
     CELERY_BROKER_URL = (os.environ.get('CELERY_BROKER_URL'))
     CELERY_ACKS_LATE = True
 
-    EMAIL_API_KEY = os.environ.get('EMAIL_API_KEY')
+    EMAIL_BACKEND = 'anymail.backends.brevo.EmailBackend'
+    ANYMAIL = {
+        'BREVO_API_KEY': os.environ.get('EMAIL_API_KEY'),
+        'IGNORE_RECIPIENT_STATUS': True,
+    }
 
 
 # Application definition
@@ -94,6 +98,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
     'corsheaders',
+    'anymail',
 ]
 
 REST_FRAMEWORK = {
