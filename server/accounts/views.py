@@ -79,14 +79,13 @@ class PendingRegisterView(generics.CreateAPIView):
   def create(self, request: Request, *args, **kwargs) -> Response:
     serializer = self.get_serializer(data=request.data)
     serializer.is_valid(raise_exception=True)
-    serializer.save()
+    user: User = serializer.save()
 
-    return Response(data={'user': serializer.data}, status=status.HTTP_201_CREATED)
+    response: Response = create_response_with_tokens(request, user, status.HTTP_201_CREATED)
+    return response
 
 
-class VerifyEmailView(APIView):
-  permission_classes = [AllowAny]
-
+class ConfirmEmailView(APIView):
   def post(self, request: Request) -> Response:
     serializer = EmailVerificationSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
@@ -102,24 +101,22 @@ class LoginView(APIView):
   def post(self, request: Request) -> Response:
     serializer = LoginSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
+    serializer.save()
     user: User = serializer.validated_data['user']
 
-    if not user.is_email_verified:
+    need_verification: bool = not user.is_email_verified
+    if need_verification:
       raw_code = user.regenerate_secret_code()
       send_verification_email.delay(user.email, raw_code)
 
-      return Response(
-        {
-          'requestEmailVerification': True,
-          'user': UserSerializer(user).data,
-          'detail': EMAIL_HAS_NOT_VERIFIED_ERROR,
-        },
-        status=status.HTTP_200_OK
-      )
-
-    serializer.save()
-
     response: Response = create_response_with_tokens(request, user, status.HTTP_200_OK)
+
+    if need_verification:
+      response.data.update({
+        'requestEmailVerification': True,
+        'detail': EMAIL_HAS_NOT_VERIFIED_ERROR,
+      })
+
     return response
 
 
