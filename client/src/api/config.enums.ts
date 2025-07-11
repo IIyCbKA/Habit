@@ -1,6 +1,7 @@
 export const enum ENDPOINT {
   LOGIN = "/auth/login/",
-  REGISTER = "/auth/register/",
+  PENDING_REGISTER = "/auth/pending-register/",
+  EMAIL_CONFIRM = "/auth/email-confirm/",
   REFRESH = "/auth/refresh/",
   LOGOUT = "/auth/logout/",
 }

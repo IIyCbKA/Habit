@@ -4,6 +4,7 @@ import {
   register as registerAPI,
   refresh as refreshAPI,
   logout as logoutAPI,
+  emailConfirm as emailConfirmAPI,
 } from "./auth.api";
 import {
   AuthState,
@@ -12,29 +13,37 @@ import {
   RefreshResponse,
   RegisterCreds,
   RegisterResponse,
+  EmailConfirmCreds,
   User,
+  AuthStatus,
 } from "./auth.types";
 import { SLISE_NAME } from "./auth.constants";
-import { AuthStatus } from "./auth.enums";
 import { RootState } from "@/store/store";
 
 export const loginUser = createAsyncThunk<LoginResponse, LoginCreds>(
   `${SLISE_NAME}/login`,
-  async (creds: LoginCreds): Promise<any> => {
+  async (creds: LoginCreds): Promise<LoginResponse> => {
     return await loginAPI(creds);
   },
 );
 
 export const registerUser = createAsyncThunk<RegisterResponse, RegisterCreds>(
   `${SLISE_NAME}/register`,
-  async (creds: RegisterCreds): Promise<any> => {
+  async (creds: RegisterCreds): Promise<RegisterResponse> => {
     return await registerAPI(creds);
+  },
+);
+
+export const emailConfirm = createAsyncThunk<LoginResponse, EmailConfirmCreds>(
+  `${SLISE_NAME}/email-confirm`,
+  async (creds: EmailConfirmCreds): Promise<LoginResponse> => {
+    return await emailConfirmAPI(creds);
   },
 );
 
 export const refreshAuth = createAsyncThunk<RefreshResponse>(
   `${SLISE_NAME}/refresh`,
-  async (): Promise<any> => {
+  async (): Promise<RefreshResponse> => {
     return await refreshAPI();
   },
 );
@@ -52,7 +61,9 @@ const authSlice = createSlice({
     user: null,
     accessToken: null,
     isAuth: false,
-    status: AuthStatus.IDLE,
+    emailVerificationStatus: "idle",
+    requiresEmailVerification: false,
+    status: "idle",
   } as AuthState,
   reducers: {
     forcedLogout: (state): void => {
@@ -64,48 +75,58 @@ const authSlice = createSlice({
   extraReducers: (builder): void => {
     builder
       .addCase(loginUser.pending, (state): void => {
-        state.status = AuthStatus.LOADING;
+        state.status = "loading";
       })
       .addCase(loginUser.fulfilled, (state, action): void => {
         state.user = action.payload.user;
         state.accessToken = action.payload.accessToken;
-        state.isAuth = true;
-        state.status = AuthStatus.SUCCEEDED;
+        state.isAuth = !action.payload.requiresEmailVerification;
+        state.status = "succeeded";
       })
       .addCase(loginUser.rejected, (state, action): void => {
-        state.status = AuthStatus.FAILED;
+        state.status = "failed";
         state.error = action.error.message;
       })
       .addCase(registerUser.pending, (state): void => {
-        state.status = AuthStatus.LOADING;
+        state.status = "loading";
       })
       .addCase(registerUser.fulfilled, (state, action): void => {
         state.user = action.payload.user;
         state.accessToken = action.payload.accessToken;
-        state.isAuth = true;
-        state.status = AuthStatus.SUCCEEDED;
+        state.requiresEmailVerification = true;
+        state.status = "succeeded";
       })
       .addCase(registerUser.rejected, (state, action): void => {
-        state.status = AuthStatus.FAILED;
+        state.status = "failed";
         state.error = action.error.message;
       })
       .addCase(refreshAuth.fulfilled, (state, action): void => {
         state.user = action.payload.user;
         state.accessToken = action.payload.accessToken;
         state.isAuth = true;
-        state.status = AuthStatus.SUCCEEDED;
+        state.status = "succeeded";
       })
       .addCase(refreshAuth.rejected, (state, action): void => {
         state.user = null;
         state.accessToken = null;
         state.isAuth = false;
-        state.status = AuthStatus.FAILED;
+        state.status = "failed";
         state.error = action.error.message;
       })
       .addCase(logout.fulfilled, (state): void => {
         state.user = null;
         state.accessToken = null;
         state.isAuth = false;
+      })
+      .addCase(emailConfirm.fulfilled, (state, action): void => {
+        state.user = action.payload.user;
+        state.accessToken = action.payload.accessToken;
+        state.isAuth = true;
+        state.emailVerificationStatus = "succeeded";
+        state.status = "succeeded";
+      })
+      .addCase(emailConfirm.rejected, (state): void => {
+        state.emailVerificationStatus = "failed";
       });
   },
 });

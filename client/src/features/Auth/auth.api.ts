@@ -1,18 +1,34 @@
 import { apiClient } from "@/api/client";
 import { ENDPOINT } from "@/api/config.enums";
-import { LoginCreds, RegisterCreds } from "./auth.types";
+import {
+  EmailConfirmCreds,
+  LoginCreds,
+  LoginResponse,
+  RefreshResponse,
+  RegisterCreds,
+  RegisterResponse,
+} from "./auth.types";
 
-export async function login(creds: LoginCreds): Promise<any> {
+export async function login(creds: LoginCreds): Promise<LoginResponse> {
   const { data } = await apiClient.post(ENDPOINT.LOGIN, creds);
   return data;
 }
 
-export async function register(creds: RegisterCreds): Promise<any> {
-  const { data } = await apiClient.post(ENDPOINT.REGISTER, creds);
+export async function register(
+  creds: RegisterCreds,
+): Promise<RegisterResponse> {
+  const { data } = await apiClient.post(ENDPOINT.PENDING_REGISTER, creds);
   return data;
 }
 
-export async function refresh(): Promise<any> {
+export async function emailConfirm(
+  creds: EmailConfirmCreds,
+): Promise<LoginResponse> {
+  const { data } = await apiClient.post(ENDPOINT.EMAIL_CONFIRM, creds);
+  return data;
+}
+
+export async function refresh(): Promise<RefreshResponse> {
   const { data } = await apiClient.post(ENDPOINT.REFRESH);
   return data;
 }

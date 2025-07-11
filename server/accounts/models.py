@@ -25,4 +25,4 @@ class CustomUser(AbstractUser):
   def is_code_expired(self) -> bool:
     if not self.code_created_at:
       return True
-    return timezone.now() - self.code_created_at > timedelta(hours=VERIFICATION_CODE_LIFE_TIME)
+    return timezone.now() - self.code_created_at > timedelta(minutes=VERIFICATION_CODE_LIFE_TIME_MINUTES)

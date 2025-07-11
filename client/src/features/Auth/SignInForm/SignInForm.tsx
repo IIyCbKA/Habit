@@ -20,7 +20,6 @@ import CloseEye from "@/assets/icons/close_eye_24x24.svg?react";
 import { loginUser, selectAuthStatus } from "../auth.slice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import Message from "@/components/Message/Message";
-import { AuthStatus } from "../auth.enums";
 
 export default function SignInForm({
   toggleFormType,
@@ -54,7 +53,7 @@ export default function SignInForm({
   const onSubmit: (e: React.FormEvent) => void = (e: React.FormEvent): void => {
     e.preventDefault();
     dispatch(loginUser({ identifier, password })).finally((): void =>
-      setShowLoginError(authStatus === AuthStatus.FAILED),
+      setShowLoginError(authStatus === "failed"),
     );
   };
 

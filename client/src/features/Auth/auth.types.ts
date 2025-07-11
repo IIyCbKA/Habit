@@ -1,14 +1,27 @@
-import { AuthStatus } from "./auth.enums";
+/*
+--------------Form type--------------
+*/
+export type Form = "signIn" | "signUp";
+
+/*
+--------------AuthStatus type--------------
+*/
+export type AuthStatus = "idle" | "loading" | "succeeded" | "failed";
+
+/*
+--------------EmailVerificationStatus type--------------
+*/
+export type EmailVerificationStatus = "idle" | "succeeded" | "failed";
 
 /*
 --------------LoginCreds type--------------
 identifier - identifier of user (email or username)
 password   - password of user
 */
-export interface LoginCreds {
+export type LoginCreds = {
   identifier: string;
   password: string;
-}
+};
 
 /*
 --------------RegisterCreds type--------------
@@ -16,73 +29,78 @@ username - name of new user
 password - password of new user
 email    - email of new user
 */
-export interface RegisterCreds {
+export type RegisterCreds = {
   username: string;
   password: string;
   email: string;
-}
+};
 
 /*
 --------------AuthState type--------------
-This type is used in AuthSlice for initialState
-
-user           - user data
-accessToken    - access token of auth user
-isAuth         - trivial flag is user is auth user
-status         - status of authorization
-error          - error authorization log
+user                       - user data
+accessToken                - access token of auth user
+emailVerificationStatus    - utils value for verification status flag
+isAuth                     - trivial flag is user is auth user
+requiresEmailVerification  - flag about require
+status                     - status of authorization
+error                      - error authorization log
 */
-export interface AuthState {
+export type AuthState = {
   user: User | null;
   accessToken: string | null;
   isAuth: boolean;
+  emailVerificationStatus: EmailVerificationStatus;
+  requiresEmailVerification: boolean;
   status: AuthStatus;
   error?: string;
-}
+};
 
 /*
 --------------User type--------------
-This type is used in AuthSlice in initialState for storing user information
-
-username - name of user
 */
-export interface User {
+export type User = {
   id: number;
   username: string;
   email: string;
-}
+};
 
 /*
 --------------LoginResponse type--------------
-This type is used in AuthSlice for response of loginAPI
-
-user           - user data
-accessToken    - access token of auth user
+accessToken                - access token of auth
+user                       - user data
+requiresEmailVerification  - flag about require
 */
-export interface LoginResponse {
-  user: User;
+export type LoginResponse = {
   accessToken: string;
-}
+  user: User;
+  requiresEmailVerification?: boolean;
+};
 
 /*
 --------------RegisterResponse type--------------
-This type is used in AuthSlice for response of registerAPI
-
+accessToken    - access token of auth
 user           - user data
-accessToken    - access token of auth user
 */
-export interface RegisterResponse {
-  user: User;
+export type RegisterResponse = {
   accessToken: string;
-}
+  user: User;
+};
 
 /*
 --------------RefreshAuthResponse type--------------
-This type is used in AuthSlice for response of refreshAPI
-
 accessToken    - access token of auth user
 */
-export interface RefreshResponse {
+export type RefreshResponse = {
   user: User;
   accessToken: string;
-}
+};
+
+/*
+--------------EmailConfirmCreds type--------------
+email  - user email
+code   - verification code
+*/
+export type EmailConfirmCreds = {
+  email: string;
+  code: string;
+};
