@@ -60,6 +60,12 @@ AUTH_USER_MODEL = 'accounts.CustomUser'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DEFAULT_FROM_EMAIL = 'no-reply@greenhabit.ru'
 
+CACHES = {
+    'default': {
+        'BACKEND': "django.core.cache.backends.locmem.LocMemCache",
+    }
+}
+
 if not DEBUG:
     CORS_ALLOWED_ORIGINS.append(os.environ.get('CLIENT_URL'))
     CSRF_TRUSTED_ORIGINS.append(os.environ.get('CLIENT_URL'))
@@ -82,6 +88,17 @@ if not DEBUG:
     ANYMAIL = {
         'BREVO_API_KEY': os.environ.get('EMAIL_API_KEY'),
         'IGNORE_RECIPIENT_STATUS': True,
+    }
+
+    CACHES['default'] = {
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+
+        'LOCATION': os.getenv('CACHE_BROKER_URL'),
+        'OPTIONS': {
+            'SOCKET_CONNECT_TIMEOUT': 5,
+            'SOCKET_TIMEOUT': 5,
+        },
+        'TIMEOUT': 60 * 60 * 24 * 30,
     }
 
 
@@ -107,7 +124,20 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
-    )
+    ),
+    'DEFAULT_RENDERER_CLASSES': (
+        'djangorestframework_camel_case.render.CamelCaseJSONRenderer',
+    ),
+    'DEFAULT_PARSER_CLASSES': (
+        'djangorestframework_camel_case.parser.CamelCaseMultiPartParser',
+        'djangorestframework_camel_case.parser.CamelCaseJSONParser',
+    ),
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.ScopedRateThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'resend_code': '1/minute'
+    }
 }
 
 SIMPLE_JWT = {
@@ -134,6 +164,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'server.middleware.AdminIPRestrictionMiddleware',
+    'djangorestframework_camel_case.middleware.CamelCaseMiddleWare',
 ]
 
 ROOT_URLCONF = 'server.urls'

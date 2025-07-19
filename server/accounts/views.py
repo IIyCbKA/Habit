@@ -50,7 +50,7 @@ def create_response_with_tokens(request: Request, user: User, http_status: int) 
 
   response: Response = Response(
     data={
-      'accessToken': str(access),
+      'access_token': str(access),
       'user': UserSerializer(user).data,
     },
     status=http_status
@@ -85,14 +85,30 @@ class PendingRegisterView(generics.CreateAPIView):
     return response
 
 
-class ConfirmEmailView(APIView):
+class EmailConfirmView(APIView):
   def post(self, request: Request) -> Response:
-    serializer = EmailVerificationSerializer(data=request.data)
+    user: User = request.user
+    data = request.data.copy()
+    data['email'] = user.email
+
+    serializer = EmailVerificationSerializer(data=data)
     serializer.is_valid(raise_exception=True)
-    user: User = serializer.save()
+    serializer.save()
 
     response: Response = create_response_with_tokens(request, user, status.HTTP_200_OK)
     return response
+
+
+class CodeResendView(APIView):
+  throttle_scope = 'resend_code'
+
+  def post(self, request: Request) -> Response:
+    user: User = request.user
+
+    raw_code = user.regenerate_secret_code()
+    send_verification_email.delay(user.email, raw_code)
+
+    return Response(status=status.HTTP_202_ACCEPTED)
 
 
 class LoginView(APIView):
@@ -104,23 +120,17 @@ class LoginView(APIView):
     serializer.save()
     user: User = serializer.validated_data['user']
 
-    need_verification: bool = not user.is_email_verified
-    if need_verification:
+    if not user.is_email_verified:
       raw_code = user.regenerate_secret_code()
       send_verification_email.delay(user.email, raw_code)
 
     response: Response = create_response_with_tokens(request, user, status.HTTP_200_OK)
 
-    if need_verification:
-      response.data.update({
-        'requestEmailVerification': True,
-        'detail': EMAIL_HAS_NOT_VERIFIED_ERROR,
-      })
-
     return response
 
 
 class RefreshView(APIView):
+  authentication_classes = []
   permission_classes = [AllowAny]
 
   def post(self, request: Request) -> Response:

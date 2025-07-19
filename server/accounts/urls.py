@@ -4,12 +4,14 @@ from .views import (
   LoginView,
   PendingRegisterView,
   LogoutView,
-  ConfirmEmailView
+  EmailConfirmView,
+  CodeResendView
 )
 
 urlpatterns = [
-  path('pending-register/', PendingRegisterView.as_view(), name='register'),
-  path('confirm-email/', ConfirmEmailView.as_view(), name='confirm_email'),
+  path('register/', PendingRegisterView.as_view(), name='register'),
+  path('email/confirm/', EmailConfirmView.as_view(), name='email_confirm'),
+  path('code/resend/', CodeResendView.as_view(), name='code_resend'),
   path('login/', LoginView.as_view(), name='login'),
   path('refresh/', RefreshView.as_view(), name='token_refresh'),
   path('logout/', LogoutView.as_view(), name='logout'),
