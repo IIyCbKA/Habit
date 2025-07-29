@@ -105,13 +105,12 @@ class EmailConfirmView(APIView):
   throttle_scope = 'email_confirm'
 
   def post(self, request: Request) -> Response:
-    user: User = request.user
-    data = request.data.copy()
-    data['email'] = user.email
-
-    serializer = EmailVerificationSerializer(data=data)
+    serializer = EmailVerificationSerializer(
+      data=request.data,
+      context={'user': request.user}
+    )
     serializer.is_valid(raise_exception=True)
-    user = serializer.save()
+    user: User = serializer.save()
 
     response: Response = create_response_with_tokens(request, user, status.HTTP_200_OK)
     return response

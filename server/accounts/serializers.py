@@ -48,7 +48,6 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class EmailVerificationSerializer(serializers.Serializer):
-  email = serializers.EmailField()
   code = serializers.CharField(
     min_length=VERIFICATION_CODE_LENGTH,
     max_length=VERIFICATION_CODE_LENGTH,
@@ -56,13 +55,8 @@ class EmailVerificationSerializer(serializers.Serializer):
   )
 
   def validate(self, data):
-    email = data['email']
+    user: User = self.context['user']
     code = data['code']
-
-    try:
-      user: User = User.objects.get(email=email)
-    except User.DoesNotExist:
-      raise serializers.ValidationError(USER_NOT_FOUND_ERROR)
 
     if user.is_code_expired():
       raise serializers.ValidationError(VERIFICATION_CODE_EXPIRED_ERROR)
@@ -70,15 +64,14 @@ class EmailVerificationSerializer(serializers.Serializer):
     if not check_password(code, user.secret_code):
       raise serializers.ValidationError(VERIFICATION_CODE_INCORRECT_ERROR)
 
-    data['user'] = user
-
     return data
 
   def save(self, **kwargs) -> User:
-    user: User = self.validated_data['user']
+    user: User = self.context['user']
     user.is_email_verified = True
-
     user.save(update_fields=['is_email_verified'])
+    user.regenerate_secret_code()
+
     return user
 
 
