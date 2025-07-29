@@ -2,7 +2,7 @@
   .circularProgressWrap {
     width: 48px;
     height: 48px;
-    color: var(--variant-text-color);
+    color: currentColor;
     animation: 1.4s linear 0s infinite normal none running circleProgressAnimation;
     display: inline-block;
   }

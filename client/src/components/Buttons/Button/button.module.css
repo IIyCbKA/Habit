@@ -1,5 +1,6 @@
 @layer components {
   .rootButton {
+    position: relative;
     height: 40px;
     outline: none;
     cursor: pointer;
@@ -43,7 +44,6 @@
 
   .containedButton:disabled {
     background-color: var(--variant-containedDisabled-bgColor);
-    color: var(--variant-containedDisabled-color);
   }
 
   .textButton {
@@ -105,5 +105,24 @@
 
   .endAdornment {
     margin-left: 12px;
+  }
+
+  .loadingWrap {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    inset: 0;
+    color: var(--variant-text-color);
+  }
+}
+
+@layer overrides {
+  .loading {
+    color: transparent;
+  }
+
+  .spinner {
+    height: 60%;
   }
 }

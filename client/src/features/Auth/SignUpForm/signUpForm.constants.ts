@@ -1,19 +1,19 @@
-import { FormFieldType } from "./signUpForm.enums";
+import { FieldConfigMap } from "./SignUpForm.types";
 
-export const INPUT_ELEMENTS = {
-  [FormFieldType.Username]: {
+export const INPUT_ELEMENTS: FieldConfigMap = {
+  username: {
     placeholder: "Username",
     inputName: "username",
   },
-  [FormFieldType.Password]: {
+  password: {
     placeholder: "Password",
     inputName: "password",
   },
-  [FormFieldType.PasswordConfirmation]: {
+  passwordConfirmation: {
     placeholder: "Confirm password",
     inputName: "passwordConfirmation",
   },
-  [FormFieldType.Email]: {
+  email: {
     placeholder: "E-mail address",
     inputName: "email",
   },

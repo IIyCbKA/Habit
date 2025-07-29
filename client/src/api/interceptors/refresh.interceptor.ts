@@ -1,10 +1,6 @@
-import {
-  forcedLogout,
-  refreshAuth,
-  selectAccessToken,
-} from "@/features/Auth/auth.slice";
+import { refreshAuth, selectAccessToken } from "@/features/Auth/auth.slice";
 import { store } from "@/store/store";
-import { apiClient } from "../client";
+import { apiClient } from "../clients";
 import { InternalAxiosRequestConfig } from "axios";
 import { RefreshSubscriber } from "./interceptors.types";
 import { MISSING_TOKEN_ERROR } from "./interceptors.constants";
@@ -29,66 +25,42 @@ function onRefreshedFailed(error: any): void {
   subscribers = [];
 }
 
-const rejectedPromise: (error: any) => Promise<never> = (
-  error: any,
-): Promise<never> => {
-  store.dispatch(forcedLogout());
-  onRefreshedFailed(error);
-  return Promise.reject(error);
-};
-
-const createRetryConfig: (
-  config: InternalAxiosRequestConfig,
-  token: string,
-) => InternalAxiosRequestConfig = (
-  config: any,
-  token: string,
-): InternalAxiosRequestConfig => {
-  const retryConfig = { ...config };
-  delete (retryConfig as any)._retry;
-  retryConfig.headers = {
-    ...retryConfig.headers,
-    Authorization: `Bearer ${token}`,
-  };
-
-  return retryConfig;
-};
-
 export const refreshInterceptor: (
   config: InternalAxiosRequestConfig,
 ) => Promise<any> = async (config: any): Promise<any> => {
   config._retry = true;
 
-  if (!isRefreshing) {
-    isRefreshing = true;
-    try {
-      await store.dispatch(refreshAuth()).unwrap();
-      const accessToken: string | null = selectAccessToken(store.getState());
-
-      if (!accessToken) {
-        return rejectedPromise(new Error(MISSING_TOKEN_ERROR));
-      }
-
-      onRefreshed(accessToken);
-    } catch (refreshError) {
-      return rejectedPromise(refreshError);
-    } finally {
-      isRefreshing = false;
-    }
-  }
-
-  return new Promise((resolve, reject): void => {
+  const retryRequest = new Promise((resolve, reject) => {
     addSubscriber(
-      (token: string): void => {
-        const retryConfig: InternalAxiosRequestConfig = createRetryConfig(
-          config,
-          token,
-        );
-        resolve(apiClient(retryConfig));
+      (token: string) => {
+        const retryCfg: InternalAxiosRequestConfig = {
+          ...config,
+          headers: { ...config.headers, Authorization: `Bearer ${token}` },
+        };
+        resolve(apiClient(retryCfg));
       },
-      (error: any): void => {
-        reject(error);
-      },
+      (err: any) => reject(err),
     );
   });
+
+  if (isRefreshing) return retryRequest;
+
+  isRefreshing = true;
+
+  store
+    .dispatch(refreshAuth())
+    .unwrap()
+    .then(() => {
+      const newAccess = selectAccessToken(store.getState());
+      if (!newAccess) throw new Error(MISSING_TOKEN_ERROR);
+      onRefreshed(newAccess);
+    })
+    .catch((err) => {
+      onRefreshedFailed(err);
+    })
+    .finally(() => {
+      isRefreshing = false;
+    });
+
+  return retryRequest;
 };

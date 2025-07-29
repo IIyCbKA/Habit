@@ -12,7 +12,14 @@ export default function AppRoutes(): React.ReactElement {
   const dispatch = useAppDispatch();
 
   React.useEffect((): void => {
-    dispatch(refreshAuth()).finally((): void => setIsWaitingAuth(false));
+    (async (): Promise<void> => {
+      try {
+        await dispatch(refreshAuth()).unwrap();
+      } catch (err) {
+      } finally {
+        setIsWaitingAuth(false);
+      }
+    })();
   }, [dispatch]);
 
   const routes: React.ReactElement = React.useMemo(

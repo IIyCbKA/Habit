@@ -1,7 +1,7 @@
-import { apiClient } from "../client";
+import { apiClient } from "../clients";
 import { AxiosResponse, InternalAxiosRequestConfig } from "axios";
 import { selectAccessToken } from "@/features/Auth/auth.slice";
-import { HTTP_STATUS } from "../config.enums";
+import { ENDPOINT, HTTP_STATUS } from "../config.enums";
 import { store } from "@/store/store";
 import { refreshInterceptor } from "./refresh.interceptor";
 
@@ -18,7 +18,11 @@ apiClient.interceptors.response.use(
   (response: AxiosResponse): AxiosResponse => response,
   async (error: any): Promise<any> => {
     const { config, response } = error;
-    if (response?.status === HTTP_STATUS.UNAUTHORIZED && !config._retry) {
+    if (
+      response?.status === HTTP_STATUS.UNAUTHORIZED &&
+      !config._retry &&
+      !config.url?.includes(ENDPOINT.REFRESH)
+    ) {
       return refreshInterceptor(config);
     }
 

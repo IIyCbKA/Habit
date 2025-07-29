@@ -1,6 +1,5 @@
 import React from "react";
 import sharedAuthStyles from "../shared/shared.module.css";
-import { FormProps } from "../shared/shared.interfaces";
 import Logotype from "@/assets/icons/heart_with_text_148x180.svg?react";
 import {
   INPUT_ELEMENTS,
@@ -15,7 +14,6 @@ import Button from "@/components/Buttons/Button/Button";
 import ActionBar from "./ActionBar/ActionBar";
 import SignInWith from "../shared/SignInWith/SignInWith";
 import { FormData } from "./SignUpForm.types";
-import { FormFieldType } from "./signUpForm.enums";
 import IconButton from "@/components/Buttons/IconButton/IconButton";
 import OpenEye from "@/assets/icons/open_eye_24x24.svg?react";
 import CloseEye from "@/assets/icons/close_eye_24x24.svg?react";
@@ -24,9 +22,9 @@ import { useAppDispatch } from "@/store/hooks";
 import Message from "@/components/Message/Message";
 import { validatePassword } from "@/shared/utils/utils";
 
-export default function SignUpForm({
-  toggleFormType,
-}: FormProps): React.ReactElement {
+export default function SignUpForm(): React.ReactElement {
+  const isMounted = React.useRef(true);
+  const [isProcessing, setProcessing] = React.useState<boolean>(false);
   const [form, setForm] = React.useState<FormData>({
     username: EMPTY_STRING,
     password: EMPTY_STRING,
@@ -56,21 +54,37 @@ export default function SignUpForm({
       (value: string): boolean => value.length === EMPTY_STRING_LENGTH,
     ) || form.password !== form.passwordConfirmation;
 
+  React.useEffect(
+    (): (() => void) => (): void => {
+      isMounted.current = false;
+    },
+    [],
+  );
+
   const onChangeData: (e: React.ChangeEvent<HTMLInputElement>) => void =
     React.useCallback((e: React.ChangeEvent<HTMLInputElement>): void => {
       const { name, value } = e.target;
       setForm((prev: FormData) => ({ ...prev, [name]: value }));
     }, []);
 
-  const onSubmit: (e: React.FormEvent) => void = (e: React.FormEvent): void => {
+  const onSubmit: (e: React.FormEvent) => void = async (
+    e: React.FormEvent,
+  ): Promise<void> => {
     e.preventDefault();
-    dispatch(
-      registerUser({
-        username: form.username,
-        password: form.password,
-        email: form.email,
-      }),
-    );
+    setProcessing(true);
+
+    try {
+      await dispatch(
+        registerUser({
+          username: form.username,
+          password: form.password,
+          email: form.email,
+        }),
+      ).unwrap();
+    } catch (e) {
+    } finally {
+      if (isMounted.current) setProcessing(false);
+    }
   };
 
   const onPasswordBlur: () => void = (): void => {
@@ -95,8 +109,8 @@ export default function SignUpForm({
         <Input
           fullWidth
           autoComplete={"username"}
-          placeholder={INPUT_ELEMENTS[FormFieldType.Username].placeholder}
-          name={INPUT_ELEMENTS[FormFieldType.Username].inputName}
+          placeholder={INPUT_ELEMENTS.username.placeholder}
+          name={INPUT_ELEMENTS.username.inputName}
           value={form.username}
           onChange={onChangeData}
         />
@@ -105,8 +119,8 @@ export default function SignUpForm({
           fullWidth
           autoComplete={"new-password"}
           type={showPassword ? "text" : "password"}
-          placeholder={INPUT_ELEMENTS[FormFieldType.Password].placeholder}
-          name={INPUT_ELEMENTS[FormFieldType.Password].inputName}
+          placeholder={INPUT_ELEMENTS.password.placeholder}
+          name={INPUT_ELEMENTS.password.inputName}
           value={form.password}
           onChange={onChangeData}
           inputAdornment={
@@ -125,10 +139,8 @@ export default function SignUpForm({
           fullWidth
           autoComplete={"new-password"}
           type={showPasswordConfirmation ? "text" : "password"}
-          placeholder={
-            INPUT_ELEMENTS[FormFieldType.PasswordConfirmation].placeholder
-          }
-          name={INPUT_ELEMENTS[FormFieldType.PasswordConfirmation].inputName}
+          placeholder={INPUT_ELEMENTS.passwordConfirmation.placeholder}
+          name={INPUT_ELEMENTS.passwordConfirmation.inputName}
           value={form.passwordConfirmation}
           onChange={onChangeData}
           inputAdornment={
@@ -147,13 +159,14 @@ export default function SignUpForm({
           fullWidth
           autoComplete={"email"}
           type={"email"}
-          placeholder={INPUT_ELEMENTS[FormFieldType.Email].placeholder}
-          name={INPUT_ELEMENTS[FormFieldType.Email].inputName}
+          placeholder={INPUT_ELEMENTS.email.placeholder}
+          name={INPUT_ELEMENTS.email.inputName}
           value={form.email}
           onChange={onChangeData}
         />
         <Divider className={sharedAuthStyles.formDivider} flexItem />
         <Button
+          isLoading={isProcessing}
           fullWidth
           variant={"contained"}
           disabled={signUpButtonDisabled}
@@ -161,7 +174,7 @@ export default function SignUpForm({
         >
           {SIGN_UP_BUTTON_TEXT}
         </Button>
-        <ActionBar toggleFormType={toggleFormType} />
+        <ActionBar />
         <SignInWith />
       </div>
     </form>

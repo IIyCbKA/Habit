@@ -1,5 +1,6 @@
 import React from "react";
 import "./index.css";
+import "./api/interceptors/interceptors";
 import AppRoutes from "./routes/AppRoutes";
 import { Provider } from "react-redux";
 import { store } from "@/store/store";

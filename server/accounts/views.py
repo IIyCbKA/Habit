@@ -22,9 +22,14 @@ from typing import Optional
 
 User = get_user_model()
 
-def get_tokens_for_user(user: User) -> tuple[RefreshToken, AccessToken]:
-  refresh: RefreshToken = RefreshToken.for_user(user)
-  access: AccessToken = refresh.access_token
+def get_tokens_for_user(user: User) -> tuple[Optional[RefreshToken], AccessToken]:
+  if not user.is_email_verified:
+    refresh: None = None
+    access: AccessToken = AccessToken.for_user(user)
+  else:
+    refresh: RefreshToken = RefreshToken.for_user(user)
+    access: AccessToken = refresh.access_token
+
   return refresh, access
 
 
@@ -61,7 +66,17 @@ def create_response_with_tokens(request: Request, user: User, http_status: int) 
   return response
 
 
-def set_refresh_to_cookie(response: Response, refresh: RefreshToken) -> None:
+def delete_refresh_from_cookie(response: Response) -> None:
+  response.delete_cookie(
+    key=settings.SIMPLE_JWT['REFRESH_COOKIE'],
+    samesite=settings.SIMPLE_JWT['REFRESH_COOKIE_SAMESITE'],
+  )
+
+
+def set_refresh_to_cookie(response: Response, refresh: Optional[RefreshToken]) -> None:
+  if refresh is None:
+    return
+
   response.set_cookie(
     key=settings.SIMPLE_JWT['REFRESH_COOKIE'],
     value=str(refresh),
@@ -75,6 +90,7 @@ def set_refresh_to_cookie(response: Response, refresh: RefreshToken) -> None:
 class PendingRegisterView(generics.CreateAPIView):
   permission_classes = [AllowAny]
   serializer_class = UserSerializer
+  throttle_scope = 'register'
 
   def create(self, request: Request, *args, **kwargs) -> Response:
     serializer = self.get_serializer(data=request.data)
@@ -86,6 +102,8 @@ class PendingRegisterView(generics.CreateAPIView):
 
 
 class EmailConfirmView(APIView):
+  throttle_scope = 'email_confirm'
+
   def post(self, request: Request) -> Response:
     user: User = request.user
     data = request.data.copy()
@@ -93,13 +111,13 @@ class EmailConfirmView(APIView):
 
     serializer = EmailVerificationSerializer(data=data)
     serializer.is_valid(raise_exception=True)
-    serializer.save()
+    user = serializer.save()
 
     response: Response = create_response_with_tokens(request, user, status.HTTP_200_OK)
     return response
 
 
-class CodeResendView(APIView):
+class ResendCodeView(APIView):
   throttle_scope = 'resend_code'
 
   def post(self, request: Request) -> Response:
@@ -113,12 +131,12 @@ class CodeResendView(APIView):
 
 class LoginView(APIView):
   permission_classes = [AllowAny]
+  throttle_scope = 'login'
 
   def post(self, request: Request) -> Response:
     serializer = LoginSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
-    serializer.save()
-    user: User = serializer.validated_data['user']
+    user: User = serializer.save()
 
     if not user.is_email_verified:
       raw_code = user.regenerate_secret_code()
@@ -171,6 +189,6 @@ class LogoutView(APIView):
     reset_token_from_request(request)
 
     response: Response = Response(status=status.HTTP_200_OK)
-    response.delete_cookie(key=settings.SIMPLE_JWT['REFRESH_COOKIE'])
+    delete_refresh_from_cookie(response)
 
     return response

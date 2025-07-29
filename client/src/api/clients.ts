@@ -5,3 +5,8 @@ export const apiClient: AxiosInstance = axios.create({
   headers: { "Content-Type": "application/json" },
   withCredentials: true,
 });
+
+export const refreshClient: AxiosInstance = axios.create({
+  baseURL: import.meta.env.VITE_API_URL,
+  withCredentials: true,
+});

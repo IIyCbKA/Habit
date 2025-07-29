@@ -13,7 +13,6 @@ import Button from "@/components/Buttons/Button/Button";
 import ActionBar from "./ActionBar/ActionBar";
 import SignInWith from "../shared/SignInWith/SignInWith";
 import Divider from "@/components/Divider/Divider";
-import { FormProps } from "../shared/shared.interfaces";
 import IconButton from "@/components/Buttons/IconButton/IconButton";
 import OpenEye from "@/assets/icons/open_eye_24x24.svg?react";
 import CloseEye from "@/assets/icons/close_eye_24x24.svg?react";
@@ -21,18 +20,19 @@ import { loginUser, selectAuthStatus } from "../auth.slice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import Message from "@/components/Message/Message";
 
-export default function SignInForm({
-  toggleFormType,
-}: FormProps): React.ReactElement {
+export default function SignInForm(): React.ReactElement {
+  const isMounted = React.useRef(true);
   const dispatch = useAppDispatch();
   const authStatus = useAppSelector(selectAuthStatus);
   const [identifier, setIdentifier] = React.useState<string>(EMPTY_STRING);
   const [password, setPassword] = React.useState<string>(EMPTY_STRING);
   const [showPassword, setShowPassword] = React.useState<boolean>(false);
   const [showLoginError, setShowLoginError] = React.useState<boolean>(false);
+  const [isProcessing, setProcessing] = React.useState<boolean>(false);
   const signInButtonDisabled: boolean =
     identifier.length === EMPTY_STRING_LENGTH ||
-    password.length === EMPTY_STRING_LENGTH;
+    password.length === EMPTY_STRING_LENGTH ||
+    authStatus === "loading";
 
   const onLoginChange: (e: React.ChangeEvent<HTMLInputElement>) => void = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -50,12 +50,30 @@ export default function SignInForm({
     setShowPassword((prev: boolean): boolean => !prev);
   };
 
-  const onSubmit: (e: React.FormEvent) => void = (e: React.FormEvent): void => {
+  const onSubmit: (e: React.FormEvent) => void = async (
+    e: React.FormEvent,
+  ): Promise<void> => {
+    setProcessing(true);
+
     e.preventDefault();
-    dispatch(loginUser({ identifier, password })).finally((): void =>
-      setShowLoginError(authStatus === "failed"),
-    );
+    try {
+      await dispatch(loginUser({ identifier, password })).unwrap();
+    } catch (e) {
+    } finally {
+      if (isMounted.current) setProcessing(false);
+    }
   };
+
+  React.useEffect(() => {
+    setShowLoginError(authStatus === "failed");
+  }, [authStatus]);
+
+  React.useEffect(
+    (): (() => void) => (): void => {
+      isMounted.current = false;
+    },
+    [],
+  );
 
   return (
     <form className={sharedAuthStyles.formWrap} onSubmit={onSubmit}>
@@ -88,6 +106,7 @@ export default function SignInForm({
           <Divider className={sharedAuthStyles.formDivider} flexItem />
         )}
         <Button
+          isLoading={isProcessing}
           fullWidth
           disabled={signInButtonDisabled}
           variant={"contained"}
@@ -95,7 +114,7 @@ export default function SignInForm({
         >
           {SIGN_IN_BTN_TEXT}
         </Button>
-        <ActionBar toggleFormType={toggleFormType} />
+        <ActionBar />
         <SignInWith />
       </div>
     </form>

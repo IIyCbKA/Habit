@@ -1,6 +1,7 @@
-@layer base, components, utils;
+@layer base, components, overrides, utils;
 /* base - basic themes */
 /* components - component modules */
+/* overrides - component modules with high priority */
 /* utils - custom classes-redefinitions */
 
 :root {
@@ -34,7 +35,6 @@
   --variant-containedActive-bgColor: #388E3C;
   --variant-containedDisabled-bgColor: #C8E6C9;
   --variant-contained-color: #FFFFFF;
-  --variant-containedDisabled-color: #FFFFFF99;
   --variant-outlined-bgColor: transparent;
   --variant-outlinedHover-bgColor: #4CAF5014;
   --variant-outlinedActive-bgColor: #4CAF5026;

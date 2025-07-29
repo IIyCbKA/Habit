@@ -1,17 +1,10 @@
-/*
---------------Form type--------------
-*/
-export type Form = "signIn" | "signUp";
+import React from "react";
+import { Form } from "@/features/uiState/uiState.types";
 
 /*
 --------------AuthStatus type--------------
 */
 export type AuthStatus = "idle" | "loading" | "succeeded" | "failed";
-
-/*
---------------EmailVerificationStatus type--------------
-*/
-export type EmailVerificationStatus = "idle" | "succeeded" | "failed";
 
 /*
 --------------LoginCreds type--------------
@@ -39,9 +32,7 @@ export type RegisterCreds = {
 --------------AuthState type--------------
 user                       - user data
 accessToken                - access token of auth user
-emailVerificationStatus    - utils value for verification status flag
 isAuth                     - trivial flag is user is auth user
-requiresEmailVerification  - flag about require
 status                     - status of authorization
 error                      - error authorization log
 */
@@ -49,8 +40,6 @@ export type AuthState = {
   user: User | null;
   accessToken: string | null;
   isAuth: boolean;
-  emailVerificationStatus: EmailVerificationStatus;
-  requiresEmailVerification: boolean;
   status: AuthStatus;
   error?: string;
 };
@@ -62,45 +51,30 @@ export type User = {
   id: number;
   username: string;
   email: string;
+  isEmailVerified: boolean;
 };
 
 /*
---------------LoginResponse type--------------
+--------------CommonFulfilledResponse type--------------
 accessToken                - access token of auth
 user                       - user data
-requiresEmailVerification  - flag about require
 */
-export type LoginResponse = {
+export type CommonFulfilledResponse = {
   accessToken: string;
   user: User;
-  requiresEmailVerification?: boolean;
-};
-
-/*
---------------RegisterResponse type--------------
-accessToken    - access token of auth
-user           - user data
-*/
-export type RegisterResponse = {
-  accessToken: string;
-  user: User;
-};
-
-/*
---------------RefreshAuthResponse type--------------
-accessToken    - access token of auth user
-*/
-export type RefreshResponse = {
-  user: User;
-  accessToken: string;
 };
 
 /*
 --------------EmailConfirmCreds type--------------
-email  - user email
 code   - verification code
 */
 export type EmailConfirmCreds = {
-  email: string;
   code: string;
 };
+
+/*
+--------------FormComponents type--------------
+key    - form type
+value  - form component
+*/
+export type FormComponents = Record<Form, React.FC>;

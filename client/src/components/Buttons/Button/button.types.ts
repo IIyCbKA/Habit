@@ -23,9 +23,19 @@ export type Adornment = {
 export type Position = "start" | "end";
 
 /*
---------------PositionedAdornment type--------------
+--------------PositionedAdornmentProps type--------------
 content    - adornment content
 className  - classNames for adornment
 position   - adornment position
 */
-export type PositionedAdornment = Partial<Adornment> & { position: Position };
+export type PositionedAdornmentProps = Partial<Adornment> & {
+  position: Position;
+};
+
+/*
+--------------LoadingSpinnerProps type--------------
+isLoading    - flag that button in process
+*/
+export type LoadingSpinnerProps = {
+  isLoading?: boolean;
+};

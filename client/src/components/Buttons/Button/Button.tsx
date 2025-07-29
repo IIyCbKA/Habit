@@ -3,13 +3,19 @@ import styles from "./button.module.css";
 import sharedStyles from "@/shared/shared.module.css";
 import classNames from "classnames";
 import { ButtonProps } from "./Button.interface";
-import { PositionedAdornment } from "./button.types";
+import {
+  Adornment,
+  LoadingSpinnerProps,
+  PositionedAdornmentProps,
+} from "./button.types";
+import CircularProgress from "@/components/Progress/CircularProgress/CircularProgress";
+import LoadingOverlay from "@/components/LoadingOverlay/LoadingOverlay";
 
 function AdornmentIcon({
   content,
   className,
   position,
-}: PositionedAdornment): React.ReactElement | null {
+}: PositionedAdornmentProps): React.ReactElement | null {
   const adornmentStyles = classNames(styles.adornmentContainer, className, {
     [styles.startAdornment]: position === "start",
     [styles.endAdornment]: position === "end",
@@ -19,8 +25,22 @@ function AdornmentIcon({
   return <div className={adornmentStyles}>{content}</div>;
 }
 
+function LoadingSpinner({
+  isLoading,
+}: LoadingSpinnerProps): React.ReactElement | null {
+  if (!isLoading) return null;
+
+  return (
+    <span className={styles.loadingWrap}>
+      <CircularProgress className={styles.spinner} />
+    </span>
+  );
+}
+
 function ButtonInner(
   {
+    disabled,
+    isLoading,
     fullWidth,
     children,
     className,
@@ -32,6 +52,8 @@ function ButtonInner(
   }: ButtonProps,
   ref: React.ForwardedRef<HTMLButtonElement>,
 ): React.ReactElement {
+  const isDisabled = disabled || isLoading;
+
   const buttonStyles = classNames(
     styles.rootButton,
     sharedStyles.defaultText,
@@ -42,14 +64,22 @@ function ButtonInner(
       [styles.textButton]: variant === "text",
       [styles.outlinedButton]: variant === "outlined",
       [styles.buttonWithAdornment]: startIcon || endIcon,
+      [styles.loading]: isLoading,
     },
   );
 
   return (
-    <button {...other} ref={ref} type={type} className={buttonStyles}>
+    <button
+      {...other}
+      ref={ref}
+      disabled={isDisabled}
+      type={type}
+      className={buttonStyles}
+    >
       <AdornmentIcon position={"start"} {...startIcon} />
       {children}
       <AdornmentIcon position={"end"} {...endIcon} />
+      <LoadingSpinner isLoading={isLoading} />
     </button>
   );
 }

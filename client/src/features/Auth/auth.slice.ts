@@ -1,4 +1,9 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import {
+  createAsyncThunk,
+  createSlice,
+  isAnyOf,
+  PayloadAction,
+} from "@reduxjs/toolkit";
 import {
   login as loginAPI,
   register as registerAPI,
@@ -9,41 +14,45 @@ import {
 import {
   AuthState,
   LoginCreds,
-  LoginResponse,
-  RefreshResponse,
+  CommonFulfilledResponse,
   RegisterCreds,
-  RegisterResponse,
-  EmailConfirmCreds,
   User,
   AuthStatus,
+  EmailConfirmCreds,
 } from "./auth.types";
 import { SLISE_NAME } from "./auth.constants";
 import { RootState } from "@/store/store";
 
-export const loginUser = createAsyncThunk<LoginResponse, LoginCreds>(
+export const loginUser = createAsyncThunk<CommonFulfilledResponse, LoginCreds>(
   `${SLISE_NAME}/login`,
-  async (creds: LoginCreds): Promise<LoginResponse> => {
+  async (creds: LoginCreds): Promise<CommonFulfilledResponse> => {
     return await loginAPI(creds);
   },
 );
 
-export const registerUser = createAsyncThunk<RegisterResponse, RegisterCreds>(
+export const registerUser = createAsyncThunk<
+  CommonFulfilledResponse,
+  RegisterCreds
+>(
   `${SLISE_NAME}/register`,
-  async (creds: RegisterCreds): Promise<RegisterResponse> => {
+  async (creds: RegisterCreds): Promise<CommonFulfilledResponse> => {
     return await registerAPI(creds);
   },
 );
 
-export const emailConfirm = createAsyncThunk<LoginResponse, EmailConfirmCreds>(
+export const emailConfirm = createAsyncThunk<
+  CommonFulfilledResponse,
+  EmailConfirmCreds
+>(
   `${SLISE_NAME}/email-confirm`,
-  async (creds: EmailConfirmCreds): Promise<LoginResponse> => {
+  async (creds: EmailConfirmCreds): Promise<CommonFulfilledResponse> => {
     return await emailConfirmAPI(creds);
   },
 );
 
-export const refreshAuth = createAsyncThunk<RefreshResponse>(
+export const refreshAuth = createAsyncThunk<CommonFulfilledResponse>(
   `${SLISE_NAME}/refresh`,
-  async (): Promise<RefreshResponse> => {
+  async (): Promise<CommonFulfilledResponse> => {
     return await refreshAPI();
   },
 );
@@ -55,79 +64,57 @@ export const logout = createAsyncThunk(
   },
 );
 
+const commonFulfilled = (
+  state: AuthState,
+  { payload: { user, accessToken } }: PayloadAction<CommonFulfilledResponse>,
+): void => {
+  state.user = user;
+  state.accessToken = accessToken;
+  state.isAuth = user.isEmailVerified;
+  state.status = "succeeded";
+};
+
+const commonLogout = (state: AuthState): void => {
+  state.user = null;
+  state.accessToken = null;
+  state.isAuth = false;
+  state.status = "idle";
+};
+
 const authSlice = createSlice({
   name: SLISE_NAME,
   initialState: {
     user: null,
     accessToken: null,
     isAuth: false,
-    emailVerificationStatus: "idle",
-    requiresEmailVerification: false,
     status: "idle",
   } as AuthState,
-  reducers: {
-    forcedLogout: (state): void => {
-      state.user = null;
-      state.accessToken = null;
-      state.isAuth = false;
-    },
-  },
+  reducers: {},
   extraReducers: (builder): void => {
     builder
       .addCase(loginUser.pending, (state): void => {
         state.status = "loading";
-      })
-      .addCase(loginUser.fulfilled, (state, action): void => {
-        state.user = action.payload.user;
-        state.accessToken = action.payload.accessToken;
-        state.isAuth = !action.payload.requiresEmailVerification;
-        state.status = "succeeded";
+        state.error = undefined;
       })
       .addCase(loginUser.rejected, (state, action): void => {
         state.status = "failed";
         state.error = action.error.message;
-      })
-      .addCase(registerUser.pending, (state): void => {
-        state.status = "loading";
-      })
-      .addCase(registerUser.fulfilled, (state, action): void => {
-        state.user = action.payload.user;
-        state.accessToken = action.payload.accessToken;
-        state.requiresEmailVerification = true;
-        state.status = "succeeded";
-      })
-      .addCase(registerUser.rejected, (state, action): void => {
-        state.status = "failed";
-        state.error = action.error.message;
-      })
-      .addCase(refreshAuth.fulfilled, (state, action): void => {
-        state.user = action.payload.user;
-        state.accessToken = action.payload.accessToken;
-        state.isAuth = true;
-        state.status = "succeeded";
-      })
-      .addCase(refreshAuth.rejected, (state, action): void => {
-        state.user = null;
-        state.accessToken = null;
-        state.isAuth = false;
-        state.status = "failed";
-        state.error = action.error.message;
-      })
-      .addCase(logout.fulfilled, (state): void => {
-        state.user = null;
-        state.accessToken = null;
-        state.isAuth = false;
-      })
-      .addCase(emailConfirm.fulfilled, (state, action): void => {
-        state.user = action.payload.user;
-        state.accessToken = action.payload.accessToken;
-        state.isAuth = true;
-        state.emailVerificationStatus = "succeeded";
-        state.status = "succeeded";
-      })
-      .addCase(emailConfirm.rejected, (state): void => {
-        state.emailVerificationStatus = "failed";
       });
+
+    builder
+      .addMatcher(
+        isAnyOf(
+          loginUser.fulfilled,
+          registerUser.fulfilled,
+          refreshAuth.fulfilled,
+          emailConfirm.fulfilled,
+        ),
+        commonFulfilled,
+      )
+      .addMatcher(
+        isAnyOf(refreshAuth.rejected, logout.fulfilled),
+        commonLogout,
+      );
   },
 });
 
@@ -138,5 +125,4 @@ export const selectAccessToken = (state: RootState): string | null =>
 export const selectAuthStatus = (state: RootState): AuthStatus =>
   state.auth.status;
 
-export const { forcedLogout } = authSlice.actions;
 export default authSlice.reducer;

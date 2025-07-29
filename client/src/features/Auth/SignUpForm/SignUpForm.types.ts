@@ -1,14 +1,35 @@
 /*
---------------FormData Type--------------
-username                 - value of username input line
-password                 - value of password input line
-passwordConfirmation     - value of passwordConfirmation input line
-email                    - value of email input line
+--------------FormData type--------------
+username                 - username input line value
+password                 - password input line value
+passwordConfirmation     - passwordConfirmation input line value
+email                    - email input line value
 */
-
 export type FormData = {
   username: string;
   password: string;
   passwordConfirmation: string;
   email: string;
 };
+
+/*
+--------------FormField type--------------
+*/
+export type FormField =
+  | "username"
+  | "password"
+  | "passwordConfirmation"
+  | "email";
+
+/*
+--------------FieldConfig type--------------
+*/
+export type FieldConfig = {
+  placeholder: string;
+  inputName: FormField;
+};
+
+/*
+--------------FieldConfigMap type--------------
+*/
+export type FieldConfigMap = Record<FormField, FieldConfig>;

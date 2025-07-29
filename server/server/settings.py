@@ -94,10 +94,6 @@ if not DEBUG:
         'BACKEND': 'django.core.cache.backends.redis.RedisCache',
 
         'LOCATION': os.getenv('CACHE_BROKER_URL'),
-        'OPTIONS': {
-            'SOCKET_CONNECT_TIMEOUT': 5,
-            'SOCKET_TIMEOUT': 5,
-        },
         'TIMEOUT': 60 * 60 * 24 * 30,
     }
 
@@ -136,7 +132,10 @@ REST_FRAMEWORK = {
         'rest_framework.throttling.ScopedRateThrottle',
     ],
     'DEFAULT_THROTTLE_RATES': {
-        'resend_code': '1/minute'
+        'resend_code': '1/minute',
+        'login': '10/hour',
+        'register': '10/hour',
+        'email_confirm': '10/hour',
     }
 }
 
