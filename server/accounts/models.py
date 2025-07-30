@@ -13,12 +13,23 @@ class CustomUser(AbstractUser):
   secret_code = models.CharField(blank=True, editable=False)
   code_created_at = models.DateTimeField(null=True, blank=True)
 
-  def regenerate_secret_code(self) -> str:
+  def generate_secret_code(self) -> str:
     raw = f"{randint(0, 10 ** VERIFICATION_CODE_LENGTH - 1):0{VERIFICATION_CODE_LENGTH}d}"
     self.secret_code = make_password(raw)
     self.code_created_at = timezone.now()
 
+    return raw
+
+  def regenerate_secret_code(self) -> str:
+    raw = self.generate_secret_code()
     self.save(update_fields=['secret_code', 'code_created_at'])
+
+    return raw
+
+  def verify_email(self) -> str:
+    self.is_email_verified = True
+    raw = self.generate_secret_code()
+    self.save(update_fields=['is_email_verified', 'secret_code', 'code_created_at'])
 
     return raw
 

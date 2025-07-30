@@ -3,6 +3,7 @@ import styles from "./actionBar.module.css";
 import Button from "@/components/Buttons/Button/Button";
 import {
   CANCEL_BTN_TEXT,
+  RESEND_AFTER_TEXT,
   RESEND_CODE_BTN_TEXT,
   RESEND_LOCK_SECONDS,
 } from "./actionBar.constants";
@@ -55,7 +56,7 @@ export default function ActionBar(): React.ReactElement {
 
   const resendBtnText: string =
     secondsLeft > 0
-      ? seconds2MinutesSeconds(secondsLeft)
+      ? `${RESEND_AFTER_TEXT} ${seconds2MinutesSeconds(secondsLeft)}`
       : RESEND_CODE_BTN_TEXT;
 
   return (

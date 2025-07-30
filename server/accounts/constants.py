@@ -11,3 +11,11 @@ VERIFICATION_CODE_INCORRECT_ERROR = 'Verification code incorrect'
 VERIFICATION_CODE_LENGTH = 6
 VERIFICATION_CODE_LIFE_TIME_MINUTES = 10
 VERIFICATION_MAIL_SUBJECT = 'Your email verification code for Habit'
+VERIFICATION_MAIL_BODY = """
+Hello!
+
+To verify your email, please use the following code: {code}
+This code is valid for {minutes} minutes.
+
+If you did not request this verification, please disregard this email.
+"""

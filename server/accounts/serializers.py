@@ -68,9 +68,7 @@ class EmailVerificationSerializer(serializers.Serializer):
 
   def save(self, **kwargs) -> User:
     user: User = self.context['user']
-    user.is_email_verified = True
-    user.save(update_fields=['is_email_verified'])
-    user.regenerate_secret_code()
+    user.verify_email()
 
     return user
 

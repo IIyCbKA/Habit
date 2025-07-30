@@ -17,11 +17,9 @@ def blacklistRefreshJTI(jti: str) -> None:
 
 @shared_task
 def send_verification_email(email: str, code: str) -> None:
-  message: str = (
-    f"Hello!\n\n"
-    f"To verify your email, please use the following code: {code}\n"
-    f"This code is valid for {VERIFICATION_CODE_LIFE_TIME_MINUTES} minutes.\n\n"
-    "If you did not request this verification, please disregard this email."
+  message: str = VERIFICATION_MAIL_BODY.format(
+    code=code,
+    minutes=VERIFICATION_CODE_LIFE_TIME_MINUTES
   )
 
   send_mail(
