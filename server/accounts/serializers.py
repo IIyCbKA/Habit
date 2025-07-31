@@ -7,31 +7,43 @@ from rest_framework.validators import UniqueValidator
 
 from .constants import *
 from .tasks import send_verification_email
+from .validators import check_deliverability, ascii_password_validator
 
 User = get_user_model()
 
 class UserSerializer(serializers.ModelSerializer):
   username = serializers.CharField(
+    min_length=1,
     validators=[UniqueValidator(
       queryset=User.objects.all(),
+      lookup='iexact',
       message=USERNAME_TAKEN_ERROR
     )],
-    min_length=1,
   )
 
   email = serializers.EmailField(
     validators=[UniqueValidator(
       queryset=User.objects.all(),
+      lookup='iexact',
       message=EMAIL_TAKEN_ERROR
     )]
   )
 
-  password = serializers.CharField(write_only=True, min_length=8)
+  password = serializers.CharField(
+    write_only=True,
+    validators=[ascii_password_validator],
+  )
 
   class Meta:
     model = User
     fields = ('id', 'username', 'email', 'password', 'is_email_verified')
     read_only_fields = ('id', 'is_email_verified')
+
+  def validate_email(self, value: str) -> str:
+    if self.instance is None or self.instance.email.lower() != value.lower():
+      check_deliverability(value)
+
+    return value
 
   def create(self, validated_data) -> User:
     user = User(
@@ -39,8 +51,8 @@ class UserSerializer(serializers.ModelSerializer):
       email=validated_data['email'],
     )
     user.set_password(validated_data['password'])
-
     user.save()
+
     raw_code = user.regenerate_secret_code()
     send_verification_email.delay(user.email, raw_code)
 
@@ -82,7 +94,10 @@ class LoginSerializer(serializers.Serializer):
     password = data['password']
 
     try:
-      user = User.objects.get(Q(username=identifier) | Q(email=identifier))
+      user = User.objects.get(
+        Q(username__iexact=identifier) |
+        Q(email__iexact=identifier)
+      )
     except User.DoesNotExist:
       return serializers.ValidationError(USER_NOT_FOUND_ERROR)
 
@@ -97,4 +112,5 @@ class LoginSerializer(serializers.Serializer):
     user = self.validated_data['user']
     user.last_login = timezone.now()
     user.save(update_fields=['last_login'])
+
     return user

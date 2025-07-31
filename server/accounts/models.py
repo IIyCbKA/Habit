@@ -1,4 +1,6 @@
 from django.contrib.auth.models import AbstractUser
+from django.db.models import UniqueConstraint
+from django.db.models.functions import Lower
 from django.contrib.auth.hashers import make_password
 from django.db import models
 from django.utils import timezone
@@ -9,9 +11,16 @@ from datetime import timedelta
 from random import randint
 
 class CustomUser(AbstractUser):
+  email = models.EmailField(blank=False)
   is_email_verified = models.BooleanField(default=False)
   secret_code = models.CharField(blank=True, editable=False)
   code_created_at = models.DateTimeField(null=True, blank=True)
+
+  class Meta:
+    constraints = [
+      UniqueConstraint(Lower('username'), name='uniq_username_ci'),
+      UniqueConstraint(Lower('email'), name='uniq_email_ci'),
+    ]
 
   def generate_secret_code(self) -> str:
     raw = f"{randint(0, 10 ** VERIFICATION_CODE_LENGTH - 1):0{VERIFICATION_CODE_LENGTH}d}"
