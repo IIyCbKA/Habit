@@ -7,7 +7,7 @@ from .constants import PASSWORD_PATTERN, PASSWORD_VALIDATE_ERROR
 def check_deliverability(email: str) -> None:
   validate_email(
     email,
-    check_deliverability=settings.DEBUG,
+    check_deliverability=not settings.DEBUG,
     allow_smtputf8=True,
     test_environment=settings.DEBUG,
   )
