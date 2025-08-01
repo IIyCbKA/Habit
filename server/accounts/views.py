@@ -173,7 +173,7 @@ class RefreshView(APIView):
       user: User = User.objects.get(pk=user_id)
     except (KeyError, User.DoesNotExist):
       return Response(
-        {'detail': USER_NOT_FOUND_ERROR},
+        {'detail': INVALID_CREDENTIALS_ERROR},
         status=status.HTTP_401_UNAUTHORIZED
       )
 

@@ -99,10 +99,10 @@ class LoginSerializer(serializers.Serializer):
         Q(email__iexact=identifier)
       )
     except User.DoesNotExist:
-      return serializers.ValidationError(USER_NOT_FOUND_ERROR)
+      raise serializers.ValidationError(INVALID_CREDENTIALS_ERROR)
 
     if not user.check_password(password):
-      return serializers.ValidationError(USER_NOT_FOUND_ERROR)
+      raise serializers.ValidationError(INVALID_CREDENTIALS_ERROR)
 
     data['user'] = user
 

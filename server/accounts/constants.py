@@ -16,7 +16,7 @@ PASSWORD_VALIDATE_ERROR = (
     f'and consist only of ASCII letters and digits.'
 )
 REFRESH_NOT_PROVIDED_ERROR = 'Refresh token not provided'
-USER_NOT_FOUND_ERROR = 'User not found'
+INVALID_CREDENTIALS_ERROR = 'Invalid identifier or password'
 USERNAME_TAKEN_ERROR = 'Username already taken'
 VERIFICATION_CODE_EXPIRED_ERROR = 'Verification code expired'
 VERIFICATION_CODE_INCORRECT_ERROR = 'Verification code incorrect'

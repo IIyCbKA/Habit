@@ -1,0 +1,1 @@
+VALIDATION_ERROR_KEY = 'detail'
