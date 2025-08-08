@@ -1,9 +1,4 @@
-import {
-  createAsyncThunk,
-  createSlice,
-  isAnyOf,
-  PayloadAction,
-} from "@reduxjs/toolkit";
+import { createSlice, isAnyOf, PayloadAction } from "@reduxjs/toolkit";
 import {
   login as loginAPI,
   register as registerAPI,
@@ -13,68 +8,40 @@ import {
 } from "./auth.api";
 import {
   AuthState,
-  LoginCreds,
   CommonFulfilledResponse,
-  RegisterCreds,
   User,
   AuthStatus,
-  EmailConfirmCreds,
 } from "./auth.types";
 import { SLISE_NAME } from "./auth.constants";
 import { RootState } from "@/store/store";
+import { createAppAsyncThunk } from "@/store/apiThunk";
 
-export const loginUser = createAsyncThunk<CommonFulfilledResponse, LoginCreds>(
-  `${SLISE_NAME}/login`,
-  async (creds: LoginCreds): Promise<CommonFulfilledResponse> => {
-    return await loginAPI(creds);
-  },
-);
-
-export const registerUser = createAsyncThunk<
-  CommonFulfilledResponse,
-  RegisterCreds
->(
+export const loginUser = createAppAsyncThunk(`${SLISE_NAME}/login`, loginAPI);
+export const registerUser = createAppAsyncThunk(
   `${SLISE_NAME}/register`,
-  async (creds: RegisterCreds): Promise<CommonFulfilledResponse> => {
-    return await registerAPI(creds);
-  },
+  registerAPI,
 );
-
-export const emailConfirm = createAsyncThunk<
-  CommonFulfilledResponse,
-  EmailConfirmCreds
->(
-  `${SLISE_NAME}/email-confirm`,
-  async (creds: EmailConfirmCreds): Promise<CommonFulfilledResponse> => {
-    return await emailConfirmAPI(creds);
-  },
+export const emailConfirm = createAppAsyncThunk(
+  `${SLISE_NAME}/email/confirm`,
+  emailConfirmAPI,
 );
-
-export const refreshAuth = createAsyncThunk<CommonFulfilledResponse>(
+export const refreshAuth = createAppAsyncThunk(
   `${SLISE_NAME}/refresh`,
-  async (): Promise<CommonFulfilledResponse> => {
-    return await refreshAPI();
-  },
+  refreshAPI,
 );
-
-export const logout = createAsyncThunk(
-  `${SLISE_NAME}/logout`,
-  async (): Promise<any> => {
-    return await logoutAPI();
-  },
-);
+export const logout = createAppAsyncThunk(`${SLISE_NAME}/logout`, logoutAPI);
 
 const commonFulfilled = (
   state: AuthState,
   { payload: { user, accessToken } }: PayloadAction<CommonFulfilledResponse>,
-): void => {
+) => {
   state.user = user;
   state.accessToken = accessToken;
   state.isAuth = user.isEmailVerified;
   state.status = "succeeded";
 };
 
-const commonLogout = (state: AuthState): void => {
+const commonLogout = (state: AuthState) => {
   state.user = null;
   state.accessToken = null;
   state.isAuth = false;
@@ -90,15 +57,13 @@ const authSlice = createSlice({
     status: "idle",
   } as AuthState,
   reducers: {},
-  extraReducers: (builder): void => {
+  extraReducers: (builder) => {
     builder
-      .addCase(loginUser.pending, (state): void => {
+      .addCase(loginUser.pending, (state) => {
         state.status = "loading";
-        state.error = undefined;
       })
-      .addCase(loginUser.rejected, (state, action): void => {
+      .addCase(loginUser.rejected, (state) => {
         state.status = "failed";
-        state.error = action.error.message;
       });
 
     builder

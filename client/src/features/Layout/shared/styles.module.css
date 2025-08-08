@@ -3,7 +3,7 @@
     position: relative;
     display: flex;
     justify-content: center;
-    background-color: var(--variant-secondary-bgColor);
+    background-color: var(--secondary-bgColor);
     flex-shrink: 0;
   }
 

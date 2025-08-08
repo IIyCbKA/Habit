@@ -11,7 +11,7 @@
 .menuContainer {
   padding: 16px 0;
   overflow-y: auto;
-  background-color: var(--variant-secondary-bgColor);
+  background-color: var(--secondary-bgColor);
   box-shadow: var(--common-bs);
 }
 

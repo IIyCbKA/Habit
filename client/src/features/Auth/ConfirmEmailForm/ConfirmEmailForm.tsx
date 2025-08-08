@@ -19,14 +19,6 @@ export default function ConfirmEmailForm(): React.ReactElement {
   const [isProcessing, setProcessing] = React.useState<boolean>(false);
   const confirmBtnDisable = code.length !== CODE_LENGTH;
   const dispatch = useAppDispatch();
-  const isMounted = React.useRef(true);
-
-  React.useEffect(
-    (): (() => void) => (): void => {
-      isMounted.current = false;
-    },
-    [],
-  );
 
   const onCodeChange: (e: React.ChangeEvent<HTMLInputElement>) => void = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -44,7 +36,7 @@ export default function ConfirmEmailForm(): React.ReactElement {
       await dispatch(emailConfirm({ code })).unwrap();
     } catch (e) {
     } finally {
-      if (isMounted.current) setProcessing(false);
+      setProcessing(false);
     }
   };
 

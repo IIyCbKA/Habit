@@ -1,0 +1,16 @@
+@layer components {
+  .container {
+    position: relative;
+    height: 4px;
+    width: 100%;
+    overflow: hidden;
+    background-color: var(--variant-textHover-bgColor);
+  }
+
+  .progress {
+    height: 100%;
+    background-color: var(--variant-text-color);
+    transform-origin: left;
+    transition: transform 0.15s linear;
+  }
+}

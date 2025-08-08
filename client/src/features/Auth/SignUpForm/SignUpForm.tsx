@@ -1,12 +1,7 @@
 import React from "react";
 import sharedAuthStyles from "../shared/shared.module.css";
 import Logotype from "@/assets/icons/heart_with_text_148x180.svg?react";
-import {
-  INPUT_ELEMENTS,
-  PASSWORD_CONFIRMATION_ERROR,
-  PASSWORD_ERROR,
-  SIGN_UP_BUTTON_TEXT,
-} from "./signUpForm.constants";
+import { INPUT_ELEMENTS, SIGN_UP_BUTTON_TEXT } from "./signUpForm.constants";
 import { EMPTY_STRING, EMPTY_STRING_LENGTH } from "@/shared/shared.constants";
 import Input from "@/components/Input/Input";
 import Divider from "@/components/Divider/Divider";
@@ -19,11 +14,8 @@ import OpenEye from "@/assets/icons/open_eye_24x24.svg?react";
 import CloseEye from "@/assets/icons/close_eye_24x24.svg?react";
 import { registerUser } from "../auth.slice";
 import { useAppDispatch } from "@/store/hooks";
-import Message from "@/components/Message/Message";
-import { validatePassword } from "@/shared/utils/utils";
 
 export default function SignUpForm(): React.ReactElement {
-  const isMounted = React.useRef(true);
   const [isProcessing, setProcessing] = React.useState<boolean>(false);
   const [form, setForm] = React.useState<FormData>({
     username: EMPTY_STRING,
@@ -33,10 +25,6 @@ export default function SignUpForm(): React.ReactElement {
   });
 
   const dispatch = useAppDispatch();
-  const [showPasswordError, setShowPasswordError] =
-    React.useState<boolean>(false);
-  const [showPasswordConfirmationError, setShowPasswordConfirmationError] =
-    React.useState<boolean>(false);
   const [showPassword, setShowPassword] = React.useState<boolean>(false);
   const [showPasswordConfirmation, setShowPasswordConfirmation] =
     React.useState<boolean>(false);
@@ -53,13 +41,6 @@ export default function SignUpForm(): React.ReactElement {
     Object.values(form).some(
       (value: string): boolean => value.length === EMPTY_STRING_LENGTH,
     ) || form.password !== form.passwordConfirmation;
-
-  React.useEffect(
-    (): (() => void) => (): void => {
-      isMounted.current = false;
-    },
-    [],
-  );
 
   const onChangeData: (e: React.ChangeEvent<HTMLInputElement>) => void =
     React.useCallback((e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -83,23 +64,8 @@ export default function SignUpForm(): React.ReactElement {
       ).unwrap();
     } catch (e) {
     } finally {
-      if (isMounted.current) setProcessing(false);
+      setProcessing(false);
     }
-  };
-
-  const onPasswordBlur: () => void = (): void => {
-    setShowPasswordError(
-      form.password.length > EMPTY_STRING_LENGTH &&
-        !validatePassword(form.password),
-    );
-    onPasswordConfirmationBlur();
-  };
-
-  const onPasswordConfirmationBlur: () => void = (): void => {
-    setShowPasswordConfirmationError(
-      form.passwordConfirmation.length > EMPTY_STRING_LENGTH &&
-        form.passwordConfirmation !== form.password,
-    );
   };
 
   return (
@@ -128,13 +94,8 @@ export default function SignUpForm(): React.ReactElement {
               {showPassword ? <CloseEye /> : <OpenEye />}
             </IconButton>
           }
-          onBlur={onPasswordBlur}
         />
-        {showPasswordError ? (
-          <Message variant={"error"}>{PASSWORD_ERROR}</Message>
-        ) : (
-          <Divider className={sharedAuthStyles.formDivider} flexItem />
-        )}
+        <Divider className={sharedAuthStyles.formDivider} flexItem />
         <Input
           fullWidth
           autoComplete={"new-password"}
@@ -148,13 +109,8 @@ export default function SignUpForm(): React.ReactElement {
               {showPasswordConfirmation ? <CloseEye /> : <OpenEye />}
             </IconButton>
           }
-          onBlur={onPasswordConfirmationBlur}
         />
-        {showPasswordConfirmationError ? (
-          <Message variant={"error"}>{PASSWORD_CONFIRMATION_ERROR}</Message>
-        ) : (
-          <Divider className={sharedAuthStyles.formDivider} flexItem />
-        )}
+        <Divider className={sharedAuthStyles.formDivider} flexItem />
         <Input
           fullWidth
           autoComplete={"email"}

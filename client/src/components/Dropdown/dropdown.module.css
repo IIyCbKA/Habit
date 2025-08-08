@@ -7,7 +7,7 @@
     margin-top: 4px;
     position: absolute;
     border-radius: 12px;
-    background-color: var(--variant-secondary-bgColor);
+    background-color: var(--secondary-bgColor);
     padding: 16px;
     box-shadow: var(--common-bs);
 

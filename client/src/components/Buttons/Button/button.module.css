@@ -5,7 +5,7 @@
     outline: none;
     cursor: pointer;
     transition: 0.18s all ease-in-out;
-    border-radius: 3px;
+    border-radius: var(--primary-borderRadius);
     padding: 0 12px;
     user-select: none;
     text-align: center;

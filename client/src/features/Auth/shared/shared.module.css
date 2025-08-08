@@ -7,7 +7,7 @@
 
 .formWrap {
   display: flex;
-  background-color: var(--variant-secondary-bgColor);
+  background-color: var(--secondary-bgColor);
   padding: 40px 0 30px;
   justify-content: center;
   align-items: center;

@@ -31,4 +31,17 @@
   .show {
     opacity: 1;
   }
+
+  .truncateText {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+
+  .breakText {
+    white-space: normal;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    hyphens: auto;
+  }
 }

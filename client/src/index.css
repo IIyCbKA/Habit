@@ -11,8 +11,6 @@
   --root-font-family: "Roboto", sans-serif;
   --text-primary: #1A1A1A;
   --text-secondary: #737373;
-  --text-error: #C62928;
-  --text-warning: #FFCF48;
   --default-font-size: 14px;
   --default-line-height: 20px;
   --default-font-weight: 400;
@@ -20,11 +18,14 @@
   --lower-line-height: 16px;
   --upper-font-size: 20px;
   --upper-line-height: 28px;
+  --primary-borderRadius: 3px;
+  --secondary-borderRadius: 6px;
+  --notification-zIndex: 9999;
   --overlay-layer-zIndex: 10000;
   --overlay-elem-zIndex: 10001;
 
-  --variant-primary-bgColor: #ECEFF1;
-  --variant-secondary-bgColor: #FFFFFF;
+  --primary-bgColor: #ECEFF1;
+  --secondary-bgColor: #FFFFFF;
   --variant-text-bgColor: transparent;
   --variant-textHover-bgColor: #4CAF5014;
   --variant-textActive-bgColor: #4CAF5026;
@@ -59,7 +60,7 @@
 
 body {
   margin: 0;
-  background-color: var(--variant-primary-bgColor);
+  background-color: var(--primary-bgColor);
   min-width: 320px;
   font-family: var(--root-font-family), "sans-serif";
   font-size: var(--default-font-size);

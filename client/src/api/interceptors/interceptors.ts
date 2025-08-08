@@ -7,7 +7,7 @@ import { refreshInterceptor } from "./refresh.interceptor";
 
 apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
-    const accessToken: string | null = selectAccessToken(store.getState());
+    const accessToken = selectAccessToken(store.getState());
     if (accessToken) config.headers.Authorization = `Bearer ${accessToken}`;
     return config;
   },

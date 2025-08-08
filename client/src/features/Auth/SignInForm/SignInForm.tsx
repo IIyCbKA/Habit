@@ -3,7 +3,6 @@ import sharedAuthStyles from "../shared/shared.module.css";
 import Logotype from "@/assets/icons/heart_with_text_148x180.svg?react";
 import Input from "@/components/Input/Input";
 import {
-  LOGIN_ERROR_TEXT,
   LOGIN_PLACEHOLDER,
   PASSWORD_PLACEHOLDER,
   SIGN_IN_BTN_TEXT,
@@ -18,16 +17,13 @@ import OpenEye from "@/assets/icons/open_eye_24x24.svg?react";
 import CloseEye from "@/assets/icons/close_eye_24x24.svg?react";
 import { loginUser, selectAuthStatus } from "../auth.slice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import Message from "@/components/Message/Message";
 
 export default function SignInForm(): React.ReactElement {
-  const isMounted = React.useRef(true);
   const dispatch = useAppDispatch();
   const authStatus = useAppSelector(selectAuthStatus);
   const [identifier, setIdentifier] = React.useState<string>(EMPTY_STRING);
   const [password, setPassword] = React.useState<string>(EMPTY_STRING);
   const [showPassword, setShowPassword] = React.useState<boolean>(false);
-  const [showLoginError, setShowLoginError] = React.useState<boolean>(false);
   const [isProcessing, setProcessing] = React.useState<boolean>(false);
   const signInButtonDisabled: boolean =
     identifier.length === EMPTY_STRING_LENGTH ||
@@ -60,20 +56,9 @@ export default function SignInForm(): React.ReactElement {
       await dispatch(loginUser({ identifier, password })).unwrap();
     } catch (e) {
     } finally {
-      if (isMounted.current) setProcessing(false);
+      setProcessing(false);
     }
   };
-
-  React.useEffect(() => {
-    setShowLoginError(authStatus === "failed");
-  }, [authStatus]);
-
-  React.useEffect(
-    (): (() => void) => (): void => {
-      isMounted.current = false;
-    },
-    [],
-  );
 
   return (
     <form className={sharedAuthStyles.formWrap} onSubmit={onSubmit}>
@@ -100,11 +85,7 @@ export default function SignInForm(): React.ReactElement {
             </IconButton>
           }
         />
-        {showLoginError ? (
-          <Message variant={"error"}>{LOGIN_ERROR_TEXT}</Message>
-        ) : (
-          <Divider className={sharedAuthStyles.formDivider} flexItem />
-        )}
+        <Divider className={sharedAuthStyles.formDivider} flexItem />
         <Button
           isLoading={isProcessing}
           fullWidth

@@ -34,14 +34,12 @@ user                       - user data
 accessToken                - access token of auth user
 isAuth                     - trivial flag is user is auth user
 status                     - status of authorization
-error                      - error authorization log
 */
 export type AuthState = {
   user: User | null;
   accessToken: string | null;
   isAuth: boolean;
   status: AuthStatus;
-  error?: string;
 };
 
 /*

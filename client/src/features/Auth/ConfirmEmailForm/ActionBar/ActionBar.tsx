@@ -17,15 +17,7 @@ export default function ActionBar(): React.ReactElement {
     React.useState<number>(RESEND_LOCK_SECONDS);
   const [isProcessing, setProcessing] = React.useState<boolean>(false);
   const isDisabledResend: boolean = secondsLeft > 0;
-  const isMounted = React.useRef(true);
   const dispatch = useAppDispatch();
-
-  React.useEffect(
-    (): (() => void) => (): void => {
-      isMounted.current = false;
-    },
-    [],
-  );
 
   const onResendClick: () => Promise<void> = async (): Promise<void> => {
     setProcessing(true);
@@ -34,7 +26,7 @@ export default function ActionBar(): React.ReactElement {
       await resendCode();
     } catch (e) {
     } finally {
-      if (isMounted.current) setProcessing(false);
+      setProcessing(false);
     }
 
     setSecondsLeft(RESEND_LOCK_SECONDS);

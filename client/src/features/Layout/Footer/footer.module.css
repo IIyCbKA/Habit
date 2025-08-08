@@ -4,19 +4,9 @@
     border-top: 1px solid var(--commonDefault-bColor);
   }
 
-  .footerContent {
-
-  }
-
   @media (max-width: 600px) {
     .footerContainer {
-      height: auto;
-    }
-
-    .footerContent {
-      flex-direction: column;
-      align-items: start;
-      padding: 15px 20px;
+      display: none;
     }
   }
 }
