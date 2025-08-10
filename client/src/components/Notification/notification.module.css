@@ -3,7 +3,7 @@
     --notification-duration: 200ms;
     --notification-transform: translateX(2%);
 
-    padding: 12px 10px 12px 14px;
+    padding: 14px 10px 14px 14px;
     border-radius: var(--secondary-borderRadius);
     box-shadow: var(--common-bs);
     overflow: hidden;

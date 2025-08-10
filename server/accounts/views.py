@@ -6,86 +6,29 @@ from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework.views import APIView
 
-from rest_framework_simplejwt.tokens import (
-  RefreshToken,
-  AccessToken,
-  TokenError
+from rest_framework_simplejwt.tokens import RefreshToken, TokenError
+
+from .serializers import (
+  UserSerializer,
+  LoginSerializer,
+  EmailVerificationSerializer,
+  PasswordResetSerializer
 )
 
-from .serializers import UserSerializer, LoginSerializer, \
-  EmailVerificationSerializer
 from rest_framework.permissions import AllowAny
 
-from .tasks import blacklistRefreshJTI, send_verification_email
-from .constants import *
 from typing import Optional
 
+from .tasks import send_verification_email, send_password_reset_email
+from .constants import *
+from .views_helpers import (
+  create_response_with_tokens,
+  reset_token_from_request,
+  delete_refresh_from_cookie,
+  generate_reset_link
+)
+
 User = get_user_model()
-
-def get_tokens_for_user(user: User) -> tuple[Optional[RefreshToken], AccessToken]:
-  if not user.is_email_verified:
-    refresh: None = None
-    access: AccessToken = AccessToken.for_user(user)
-  else:
-    refresh: RefreshToken = RefreshToken.for_user(user)
-    access: AccessToken = refresh.access_token
-
-  return refresh, access
-
-
-def reset_token_from_request(request: Request) -> None:
-  cookie_name: str = settings.SIMPLE_JWT['REFRESH_COOKIE']
-  raw_refresh: Optional[str] = request.COOKIES.get(cookie_name)
-
-  if not raw_refresh:
-    return
-
-  try:
-    refresh: RefreshToken = RefreshToken(raw_refresh)
-    jti: str = refresh['jti']
-    blacklistRefreshJTI.apply_async(args=(jti,), countdown=30)
-  except TokenError:
-    return
-
-
-def create_response_with_tokens(request: Request, user: User, http_status: int) -> Response:
-  reset_token_from_request(request)
-
-  refresh, access = get_tokens_for_user(user)
-
-  response: Response = Response(
-    data={
-      'access_token': str(access),
-      'user': UserSerializer(user).data,
-    },
-    status=http_status
-  )
-
-  set_refresh_to_cookie(response, refresh)
-
-  return response
-
-
-def delete_refresh_from_cookie(response: Response) -> None:
-  response.delete_cookie(
-    key=settings.SIMPLE_JWT['REFRESH_COOKIE'],
-    samesite=settings.SIMPLE_JWT['REFRESH_COOKIE_SAMESITE'],
-  )
-
-
-def set_refresh_to_cookie(response: Response, refresh: Optional[RefreshToken]) -> None:
-  if refresh is None:
-    return
-
-  response.set_cookie(
-    key=settings.SIMPLE_JWT['REFRESH_COOKIE'],
-    value=str(refresh),
-    max_age=settings.SIMPLE_JWT['REFRESH_TOKEN_LIFETIME'].total_seconds(),
-    httponly=settings.SIMPLE_JWT['REFRESH_COOKIE_HTTP_ONLY'],
-    secure=settings.SIMPLE_JWT['REFRESH_COOKIE_SECURE'],
-    samesite=settings.SIMPLE_JWT['REFRESH_COOKIE_SAMESITE'],
-  )
-
 
 class PendingRegisterView(generics.CreateAPIView):
   permission_classes = [AllowAny]
@@ -96,6 +39,9 @@ class PendingRegisterView(generics.CreateAPIView):
     serializer = self.get_serializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     user: User = serializer.save()
+
+    raw_code = user.regenerate_secret_code()
+    send_verification_email.delay(user.email, raw_code)
 
     response: Response = create_response_with_tokens(request, user, status.HTTP_201_CREATED)
     return response
@@ -191,3 +137,19 @@ class LogoutView(APIView):
     delete_refresh_from_cookie(response)
 
     return response
+
+
+class PasswordResetView(APIView):
+  permission_classes = [AllowAny]
+  throttle_scope = 'reset_password'
+
+  def post(self, request: Request) -> Response:
+    serializer = PasswordResetSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    user: User | None = serializer.validated_data['user']
+
+    if user:
+      reset_link = generate_reset_link(user)
+      send_password_reset_email.delay(user.email, reset_link)
+
+    return Response(status=status.HTTP_202_ACCEPTED)

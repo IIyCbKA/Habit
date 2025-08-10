@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db.models import UniqueConstraint
 from django.db.models.functions import Lower
@@ -45,4 +46,4 @@ class CustomUser(AbstractUser):
   def is_code_expired(self) -> bool:
     if not self.code_created_at:
       return True
-    return timezone.now() - self.code_created_at > timedelta(minutes=VERIFICATION_CODE_LIFE_TIME_MINUTES)
+    return timezone.now() - self.code_created_at > timedelta(seconds=settings.TIMEOUTS['VERIFICATION_CODE'])

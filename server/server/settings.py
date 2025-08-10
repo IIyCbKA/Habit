@@ -32,6 +32,16 @@ DEBUG = os.environ.get('DEBUG') == 'True'
 
 TIME_ZONE = 'UTC'
 
+##############################
+#          WARNING!          #
+#         IN SECONDS         #
+##############################
+TIMEOUTS = {
+    'VERIFICATION_CODE': 60 * 10,
+    'PASSWORD_RESET_LINK': 60 * 30,
+    'REDIS_CACHES': 60 * 60 * 24 * 30,
+}
+
 ADMIN_URL = os.environ.get('DJANGO_ADMIN_URL')
 ADMIN_IPS = []
 ALLOWED_HOSTS = [
@@ -49,6 +59,7 @@ CSRF_TRUSTED_ORIGINS = [
     'http://localhost:3000', # for dev
 ]
 
+CLIENT_BASE_URL = 'http://127.0.0.1:3000' # without lslash
 CELERY_BROKER_URL = 'redis://localhost:6379/0'
 CELERY_RESULT_BACKEND = 'redis://localhost:6379/1'
 CELERY_TIMEZONE = TIME_ZONE
@@ -60,15 +71,18 @@ AUTH_USER_MODEL = 'accounts.CustomUser'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DEFAULT_FROM_EMAIL = 'no-reply@greenhabit.ru'
 
+PASSWORD_RESET_TIMEOUT = TIMEOUTS['PASSWORD_RESET_LINK']
+
 CACHES = {
     'default': {
-        'BACKEND': "django.core.cache.backends.locmem.LocMemCache",
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
     }
 }
 
 if not DEBUG:
-    CORS_ALLOWED_ORIGINS.append(os.environ.get('CLIENT_URL'))
-    CSRF_TRUSTED_ORIGINS.append(os.environ.get('CLIENT_URL'))
+    CLIENT_BASE_URL = os.environ.get('CLIENT_URL')
+    CORS_ALLOWED_ORIGINS.append(CLIENT_BASE_URL)
+    CSRF_TRUSTED_ORIGINS.append(CLIENT_BASE_URL)
 
     ALLOWED_HOSTS.append(os.environ.get('DJANGO_HOST'))
     ADMIN_IPS.append(os.environ.get('DJANGO_ADMIN_IP'))
@@ -94,9 +108,16 @@ if not DEBUG:
         'BACKEND': 'django.core.cache.backends.redis.RedisCache',
 
         'LOCATION': os.getenv('CACHE_BROKER_URL'),
-        'TIMEOUT': 60 * 60 * 24 * 30,
+        'TIMEOUT': TIMEOUTS['REDIS_CACHES'],
     }
 
+##############################
+#          WARNING!          #
+#       WITHOUT LSLASH       #
+##############################
+CLIENT_ENDPOINTS = {
+    'PASSWORD_RESET': f'{CLIENT_BASE_URL.rstrip('/')}/password/reset',
+}
 
 # Application definition
 INSTALLED_APPS = [
@@ -137,6 +158,7 @@ REST_FRAMEWORK = {
         'login': '10/hour',
         'register': '10/hour',
         'email_confirm': '10/hour',
+        'reset_password': '5/hour',
     }
 }
 

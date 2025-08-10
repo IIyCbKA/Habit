@@ -6,7 +6,6 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 
 from .constants import *
-from .tasks import send_verification_email
 from .validators import check_deliverability, ascii_password_validator
 
 User = get_user_model()
@@ -52,9 +51,6 @@ class UserSerializer(serializers.ModelSerializer):
     )
     user.set_password(validated_data['password'])
     user.save()
-
-    raw_code = user.regenerate_secret_code()
-    send_verification_email.delay(user.email, raw_code)
 
     return user
 
@@ -114,3 +110,14 @@ class LoginSerializer(serializers.Serializer):
     user.save(update_fields=['last_login'])
 
     return user
+
+
+class PasswordResetSerializer(serializers.Serializer):
+  email = serializers.EmailField()
+
+  def validate(self, data):
+    user: User = User.objects.filter(email__iexact=data['email']).first()
+    if user:
+      data['user'] = user
+
+    return data
