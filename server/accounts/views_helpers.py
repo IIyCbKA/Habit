@@ -6,6 +6,10 @@ from django.utils.http import urlsafe_base64_encode
 
 from rest_framework.response import Response
 from rest_framework.request import Request
+from rest_framework_simplejwt.token_blacklist.models import (
+  OutstandingToken,
+  BlacklistedToken
+)
 
 from rest_framework_simplejwt.tokens import (
   RefreshToken,
@@ -16,7 +20,6 @@ from rest_framework_simplejwt.tokens import (
 from typing import Optional
 
 from .serializers import UserSerializer
-from .tasks import blacklistRefreshJTI
 
 User = get_user_model()
 
@@ -41,14 +44,20 @@ def reset_token_from_request(request: Request) -> None:
   try:
     refresh: RefreshToken = RefreshToken(raw_refresh)
     jti: str = refresh['jti']
-    blacklistRefreshJTI.apply_async(args=(jti,), countdown=30)
+    ot = OutstandingToken.objects.filter(jti=jti).first()
+    if ot:
+      BlacklistedToken.objects.get_or_create(token=ot)
   except TokenError:
     return
 
 
-def create_response_with_tokens(request: Request, user: User, http_status: int) -> Response:
-  reset_token_from_request(request)
+def blacklist_all_refresh_tokens_for_user(user: User) -> None:
+  outstanding_tokens = OutstandingToken.objects.filter(user=user)
+  for ot in outstanding_tokens:
+    BlacklistedToken.objects.get_or_create(token=ot)
 
+
+def create_response_with_tokens(request: Request, user: User, http_status: int) -> Response:
   refresh, access = get_tokens_for_user(user)
 
   response: Response = Response(
@@ -60,6 +69,7 @@ def create_response_with_tokens(request: Request, user: User, http_status: int) 
   )
 
   set_refresh_to_cookie(response, refresh)
+  reset_token_from_request(request)
 
   return response
 

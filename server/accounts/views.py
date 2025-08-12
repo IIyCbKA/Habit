@@ -12,7 +12,9 @@ from .serializers import (
   UserSerializer,
   LoginSerializer,
   EmailVerificationSerializer,
-  PasswordResetSerializer
+  PasswordResetSerializer,
+  PasswordResetConfirmSerializer,
+  ValidatePasswordResetTokenSerializer,
 )
 
 from rest_framework.permissions import AllowAny
@@ -22,6 +24,7 @@ from typing import Optional
 from .tasks import send_verification_email, send_password_reset_email
 from .constants import *
 from .views_helpers import (
+  blacklist_all_refresh_tokens_for_user,
   create_response_with_tokens,
   reset_token_from_request,
   delete_refresh_from_cookie,
@@ -153,3 +156,28 @@ class PasswordResetView(APIView):
       send_password_reset_email.delay(user.email, reset_link)
 
     return Response(status=status.HTTP_202_ACCEPTED)
+
+
+class PasswordResetConfirmView(APIView):
+  permission_classes = [AllowAny]
+  throttle_scope = 'password_reset_confirm'
+
+  def post(self, request: Request) -> Response:
+    serializer = PasswordResetConfirmSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    user: User = serializer.save()
+
+    blacklist_all_refresh_tokens_for_user(user)
+
+    response: Response = create_response_with_tokens(request, user, status.HTTP_200_OK)
+    return response
+
+
+class ValidatePasswordResetTokenView(APIView):
+  permission_classes = [AllowAny]
+
+  def post(self, request: Request) -> Response:
+    serializer = ValidatePasswordResetTokenSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+
+    return Response(status=status.HTTP_200_OK)

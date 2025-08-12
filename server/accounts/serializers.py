@@ -1,7 +1,10 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import check_password
+from django.contrib.auth.tokens import default_token_generator
 from django.db.models import Q
 from django.utils import timezone
+from django.utils.encoding import force_str
+from django.utils.http import urlsafe_base64_decode
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 
@@ -12,12 +15,12 @@ User = get_user_model()
 
 class UserSerializer(serializers.ModelSerializer):
   username = serializers.CharField(
-    min_length=1,
     validators=[UniqueValidator(
       queryset=User.objects.all(),
       lookup='iexact',
       message=USERNAME_TAKEN_ERROR
     )],
+    blank=False,
   )
 
   email = serializers.EmailField(
@@ -25,7 +28,8 @@ class UserSerializer(serializers.ModelSerializer):
       queryset=User.objects.all(),
       lookup='iexact',
       message=EMAIL_TAKEN_ERROR
-    )]
+    )],
+    blank=False,
   )
 
   password = serializers.CharField(
@@ -56,11 +60,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class EmailVerificationSerializer(serializers.Serializer):
-  code = serializers.CharField(
-    min_length=VERIFICATION_CODE_LENGTH,
-    max_length=VERIFICATION_CODE_LENGTH,
-    write_only=True
-  )
+  code = serializers.CharField(blank=False, write_only=True)
 
   def validate(self, data):
     user: User = self.context['user']
@@ -113,11 +113,65 @@ class LoginSerializer(serializers.Serializer):
 
 
 class PasswordResetSerializer(serializers.Serializer):
-  email = serializers.EmailField()
+  email = serializers.EmailField(blank=False)
 
   def validate(self, data):
     user: User = User.objects.filter(email__iexact=data['email']).first()
     if user:
       data['user'] = user
+
+    return data
+
+
+class PasswordResetConfirmSerializer(serializers.Serializer):
+  uid = serializers.CharField(blank=False)
+  token = serializers.CharField(blank=False)
+  new_password = serializers.CharField(
+    write_only=True,
+    validators=[ascii_password_validator],
+  )
+
+  def validate(self, data):
+    uidb64 = data['uid']
+    token = data['token']
+    new_password = data['new_password']
+
+    try:
+      uid = force_str(urlsafe_base64_decode(uidb64))
+      user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+      raise serializers.ValidationError()
+
+    if not default_token_generator.check_token(user, token):
+      raise serializers.ValidationError()
+
+    data['user'] = user
+    return data
+
+  def save(self) -> User:
+    user = self.validated_data['user']
+    new_password = self.validated_data['new_password']
+
+    user.set_password(new_password)
+    user.save()
+    return user
+
+
+class ValidatePasswordResetTokenSerializer(serializers.Serializer):
+  uid = serializers.CharField(blank=False)
+  token = serializers.CharField(blank=False)
+
+  def validate(self, data):
+    uidb64 = data['uid']
+    token = data['token']
+
+    try:
+      uid = force_str(urlsafe_base64_decode(uidb64))
+      user = User.objects.get(id=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+      raise serializers.ValidationError()
+
+    if not default_token_generator.check_token(user, token):
+      raise serializers.ValidationError()
 
     return data

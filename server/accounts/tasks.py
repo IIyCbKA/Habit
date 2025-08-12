@@ -2,10 +2,6 @@ from celery import shared_task
 from django.core.mail import send_mail
 from django.conf import settings
 from django.utils import timezone
-from rest_framework_simplejwt.token_blacklist.models import (
-  OutstandingToken,
-  BlacklistedToken
-)
 
 from datetime import datetime, timedelta
 
@@ -38,13 +34,6 @@ def _send_email(
     recipient_list=[email],
     fail_silently=False,
   )
-
-
-@shared_task
-def blacklistRefreshJTI(jti: str) -> None:
-  ot = OutstandingToken.objects.filter(jti=jti).first()
-  if ot:
-    BlacklistedToken.objects.get_or_create(token=ot)
 
 
 @shared_task
