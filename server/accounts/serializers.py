@@ -20,7 +20,7 @@ class UserSerializer(serializers.ModelSerializer):
       lookup='iexact',
       message=USERNAME_TAKEN_ERROR
     )],
-    blank=False,
+    allow_blank=False,
   )
 
   email = serializers.EmailField(
@@ -29,7 +29,7 @@ class UserSerializer(serializers.ModelSerializer):
       lookup='iexact',
       message=EMAIL_TAKEN_ERROR
     )],
-    blank=False,
+    allow_blank=False,
   )
 
   password = serializers.CharField(
@@ -60,7 +60,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class EmailVerificationSerializer(serializers.Serializer):
-  code = serializers.CharField(blank=False, write_only=True)
+  code = serializers.CharField(allow_blank=False, write_only=True)
 
   def validate(self, data):
     user: User = self.context['user']
@@ -113,7 +113,7 @@ class LoginSerializer(serializers.Serializer):
 
 
 class PasswordResetSerializer(serializers.Serializer):
-  email = serializers.EmailField(blank=False)
+  email = serializers.EmailField(allow_blank=False)
 
   def validate(self, data):
     user: User = User.objects.filter(email__iexact=data['email']).first()
@@ -124,8 +124,8 @@ class PasswordResetSerializer(serializers.Serializer):
 
 
 class PasswordResetConfirmSerializer(serializers.Serializer):
-  uid = serializers.CharField(blank=False)
-  token = serializers.CharField(blank=False)
+  uid = serializers.CharField(allow_blank=False)
+  token = serializers.CharField(allow_blank=False)
   new_password = serializers.CharField(
     write_only=True,
     validators=[ascii_password_validator],
@@ -158,8 +158,8 @@ class PasswordResetConfirmSerializer(serializers.Serializer):
 
 
 class ValidatePasswordResetTokenSerializer(serializers.Serializer):
-  uid = serializers.CharField(blank=False)
-  token = serializers.CharField(blank=False)
+  uid = serializers.CharField(allow_blank=False)
+  token = serializers.CharField(allow_blank=False)
 
   def validate(self, data):
     uidb64 = data['uid']
