@@ -9,13 +9,11 @@ from django.utils import timezone
 from .constants import *
 
 from datetime import timedelta
-from random import randint
+import secrets
 
 class CustomUser(AbstractUser):
   email = models.EmailField(blank=False)
   is_email_verified = models.BooleanField(default=False)
-  secret_code = models.CharField(blank=True, editable=False)
-  code_created_at = models.DateTimeField(null=True, blank=True)
 
   class Meta:
     constraints = [
@@ -23,27 +21,36 @@ class CustomUser(AbstractUser):
       UniqueConstraint(Lower('email'), name='uniq_email_ci'),
     ]
 
-  def generate_secret_code(self) -> str:
-    raw = f"{randint(0, 10 ** VERIFICATION_CODE_LENGTH - 1):0{VERIFICATION_CODE_LENGTH}d}"
+  def verify_email(self) -> None:
+    self.is_email_verified = True
+    self.save(update_fields=['is_email_verified'])
+
+
+class EmailVerificationCode(models.Model):
+  user = models.OneToOneField(
+    settings.AUTH_USER_MODEL,
+    on_delete=models.CASCADE,
+    related_name='verification_code'
+  )
+  secret_code = models.CharField(max_length=255, blank=True, editable=False)
+  code_created_at = models.DateTimeField(null=True, blank=True)
+
+  def generate_code(self) -> str:
+    raw = f'{secrets.randbelow(10 ** VERIFICATION_CODE_LENGTH):0{VERIFICATION_CODE_LENGTH}d}'
     self.secret_code = make_password(raw)
     self.code_created_at = timezone.now()
-
-    return raw
-
-  def regenerate_secret_code(self) -> str:
-    raw = self.generate_secret_code()
     self.save(update_fields=['secret_code', 'code_created_at'])
-
     return raw
 
-  def verify_email(self) -> str:
-    self.is_email_verified = True
-    raw = self.generate_secret_code()
-    self.save(update_fields=['is_email_verified', 'secret_code', 'code_created_at'])
+  def regenerate_code(self) -> str:
+    return self.generate_code()
 
-    return raw
+  def check_code(self, input_code: str) -> bool:
+    from django.contrib.auth.hashers import check_password
+    return check_password(input_code, self.secret_code)
 
-  def is_code_expired(self) -> bool:
+  def is_expired(self) -> bool:
     if not self.code_created_at:
       return True
+
     return timezone.now() - self.code_created_at > timedelta(seconds=settings.TIMEOUTS['VERIFICATION_CODE'])
