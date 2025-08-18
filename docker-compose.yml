@@ -21,6 +21,8 @@ x-shared-configuration: &shared-configuration
     CACHE_BROKER_URL: ${CACHE_BROKER_URL}
 
     EMAIL_API_KEY: ${EMAIL_API_KEY}
+
+    REFRESH_GRACE_SECRET: ${REFRESH_GRACE_SECRET}
   depends_on:
     db:
       condition: service_healthy

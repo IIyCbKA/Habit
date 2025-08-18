@@ -12,6 +12,7 @@ from rest_framework_simplejwt.token_blacklist.models import (
 )
 
 from rest_framework_simplejwt.tokens import (
+  UntypedToken,
   RefreshToken,
   AccessToken,
   TokenError
@@ -20,8 +21,30 @@ from rest_framework_simplejwt.tokens import (
 from typing import Optional
 
 from .serializers import UserSerializer
+from .token_grace import put_in_grace, in_grace
 
 User = get_user_model()
+
+def decode_refresh_payload(raw_refresh: str) -> dict:
+  if not raw_refresh:
+    raise TokenError
+
+  try:
+    payload = UntypedToken(raw_refresh).payload
+  except Exception as e:
+    raise TokenError from e
+
+  if payload.get('token_type') != 'refresh':
+    raise TokenError
+
+  return payload
+
+
+def ensure_refresh_allowed(jti: str, token_str: str) -> None:
+  is_blacklisted = BlacklistedToken.objects.filter(token__jti=jti).exists()
+  if is_blacklisted and not in_grace(jti, token_str):
+    raise TokenError
+
 
 def get_tokens_for_user(user: User) -> tuple[Optional[RefreshToken], AccessToken]:
   if not user.is_email_verified:
@@ -46,6 +69,7 @@ def reset_token_from_request(request: Request) -> None:
     jti: str = refresh['jti']
     ot = OutstandingToken.objects.filter(jti=jti).first()
     if ot:
+      put_in_grace(jti, raw_refresh)
       BlacklistedToken.objects.get_or_create(token=ot)
   except TokenError:
     return

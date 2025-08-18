@@ -7,8 +7,7 @@ from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework.views import APIView
 
-from rest_framework_simplejwt.tokens import RefreshToken, TokenError
-from rest_framework_simplejwt.token_blacklist.models import BlacklistedToken
+from rest_framework_simplejwt.tokens import TokenError
 
 from .serializers import (
   UserSerializer,
@@ -27,6 +26,8 @@ from .constants import *
 from .models import EmailVerificationCode
 from .tasks import send_verification_email, send_password_reset_email
 from .views_helpers import (
+  ensure_refresh_allowed,
+  decode_refresh_payload,
   blacklist_all_refresh_tokens_for_user,
   create_response_with_tokens,
   reset_token_from_request,
@@ -126,27 +127,18 @@ class RefreshView(APIView):
     cookie_name: str = settings.SIMPLE_JWT['REFRESH_COOKIE']
     raw_refresh: Optional[str] = request.COOKIES.get(cookie_name)
 
-    if raw_refresh is None:
-      return Response({'detail': REFRESH_NOT_PROVIDED_ERROR}, status=status.HTTP_401_UNAUTHORIZED)
-
     try:
-      old_refresh: RefreshToken = RefreshToken(raw_refresh)
-    except TokenError:
-      return Response({'detail': INVALID_REFRESH_ERROR}, status=status.HTTP_401_UNAUTHORIZED)
+      payload = decode_refresh_payload(raw_refresh)
+      jti = payload['jti']
+      ensure_refresh_allowed(jti, token_str=raw_refresh)
 
-    try:
-      jti = old_refresh['jti']
-    except KeyError:
-      return Response({'detail': INVALID_REFRESH_ERROR}, status=status.HTTP_401_UNAUTHORIZED)
-
-    if BlacklistedToken.objects.filter(token__jti=jti).exists():
-      return Response({'detail': INVALID_REFRESH_ERROR}, status=status.HTTP_401_UNAUTHORIZED)
-
-    try:
-      user_id: int = old_refresh.payload.get('user_id')
-      user: User = User.objects.get(pk=user_id)
-    except (KeyError, User.DoesNotExist):
-      return Response({'detail': INVALID_CREDENTIALS_ERROR}, status=status.HTTP_401_UNAUTHORIZED)
+      user_id = payload['user_id']
+      user = User.objects.get(pk=user_id)
+    except (TokenError, KeyError, User.DoesNotExist):
+      return Response(
+        {'detail': INVALID_REFRESH_ERROR},
+        status=status.HTTP_401_UNAUTHORIZED
+      )
 
     response: Response = create_response_with_tokens(request, user, status.HTTP_200_OK)
     return response
