@@ -4,3 +4,11 @@
   justify-content: center;
   align-items: center;
 }
+
+.logo {
+  position: absolute;
+  top: 30px;
+  left: var(--auth-horizontal-margin);
+  width: 36px;
+  height: 36px;
+}

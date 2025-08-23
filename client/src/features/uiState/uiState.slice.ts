@@ -13,13 +13,14 @@ import {
   NotificationInput,
   UiState,
 } from "./uiState.types";
-import { Form } from "./uiState.types";
+import { AuthScreen } from "./uiState.types";
 import {
   emailConfirm,
   loginUser,
   logout,
   refreshAuth,
   registerUser,
+  resetPassword,
 } from "@/features/Auth/auth.slice";
 import { RootState } from "@/store/store";
 import { RejectedPayload } from "@/store/store.types";
@@ -33,7 +34,7 @@ const createNotification = ({
 };
 
 const commonLogout = (state: UiState) => {
-  state.authForm = "signIn";
+  state.authScreen = "signIn";
 };
 
 const commonAuthRejected: CaseReducer<
@@ -47,12 +48,12 @@ const commonAuthRejected: CaseReducer<
 const uiSlice = createSlice({
   name: SLICE_NAME,
   initialState: {
-    authForm: "signIn",
+    authScreen: "signIn",
     notifications: [],
   } as UiState,
   reducers: {
-    setAuthForm(state, action: PayloadAction<Form>) {
-      state.authForm = action.payload;
+    setAuthScreen(state, action: PayloadAction<AuthScreen>) {
+      state.authScreen = action.payload;
     },
 
     pushNotification: {
@@ -72,26 +73,34 @@ const uiSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(registerUser.fulfilled, (state) => {
-        state.authForm = "confirmEmail";
+        state.authScreen = "confirmEmail";
       })
       .addCase(loginUser.fulfilled, (state, action) => {
-        state.authForm = action.payload.user.isEmailVerified
+        state.authScreen = action.payload.user.isEmailVerified
           ? "signIn"
           : "confirmEmail";
+      })
+      .addCase(resetPassword.fulfilled, (state) => {
+        state.authScreen = "forgotPasswordSent";
       });
 
     builder
       .addMatcher(isAnyOf(refreshAuth.rejected, logout.fulfilled), commonLogout)
       .addMatcher(
-        isRejectedWithValue(loginUser, registerUser, emailConfirm),
+        isRejectedWithValue(
+          loginUser,
+          registerUser,
+          emailConfirm,
+          resetPassword,
+        ),
         commonAuthRejected,
       );
   },
 });
 
-export const { setAuthForm, pushNotification, popNotification } =
+export const { setAuthScreen, pushNotification, popNotification } =
   uiSlice.actions;
-export const selectAuthForm = (state: RootState) => state.ui.authForm;
+export const selectAuthScreen = (state: RootState) => state.ui.authScreen;
 export const selectNotifications = (state: RootState) => state.ui.notifications;
 
 export default uiSlice.reducer;

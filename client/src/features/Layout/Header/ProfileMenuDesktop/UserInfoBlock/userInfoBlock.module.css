@@ -11,4 +11,5 @@
 
 .profileUsername {
   margin-left: 12px;
+  font: var(--text-semibold-large);
 }

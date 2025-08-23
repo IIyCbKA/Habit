@@ -27,11 +27,11 @@
   }
 
   .stackRoot[data-vertical="bottom"] {
-    bottom: calc(var(--footer-height) + 20px);
+    bottom: 80px;
   }
 
   .stackRoot[data-vertical="top"] {
-    top: calc(var(--header-height) + 20px);
+    top: 80px;
   }
 
   @media (max-width: 600px) {

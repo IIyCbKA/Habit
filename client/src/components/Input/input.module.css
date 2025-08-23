@@ -6,20 +6,19 @@
   }
 
   .input {
-    padding: 8px 14px;
-    font-size: var(--default-font-size);
-    font-weight: 300;
-    border-radius: var(--primary-borderRadius);
-    color: var(--text-secondary);
-    border: 1px solid var(--commonDefault-bColor);
+    padding: 12px 14px;
+    font: var(--text-regular-medium);
+    border-radius: var(--border-radius-medium);
+    background-color: transparent;
+    color: var(--text-color);
+    border: 1px solid var(--line-color);
     text-overflow: ellipsis;
     transition: 0.4s all;
-    height: 40px;
     width: 100%;
   }
 
   .inputWithAdornmentEnd {
-    padding: 8px 40px 8px 14px;
+    padding: 12px 40px 12px 14px;
   }
 
   .fullWidth {
@@ -27,20 +26,18 @@
   }
 
   .input:hover {
-    color: var(--text-primary);
-    border-color: var(--text-primary);
+    border-color: var(--main-color);
   }
 
   .input:focus {
-    color: var(--text-primary);
-    border-color: var(--text-primary);
+    border-color: var(--main-color);
     outline: none;
-    box-shadow: 0 0 0 2px var(--commonDefault-bsColor);
   }
 
   .adornmentWrap {
     position: absolute;
     right: 12px;
-    top: 8px;
+    top: 50%;
+    transform: translateY(-50%);
   }
 }

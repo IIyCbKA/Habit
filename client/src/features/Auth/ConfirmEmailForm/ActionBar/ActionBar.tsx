@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "./actionBar.module.css";
+import sharedStyles from "../../shared/shared.module.css";
 import Button from "@/components/Buttons/Button/Button";
 import {
   CANCEL_BTN_TEXT,
@@ -52,7 +52,7 @@ export default function ActionBar(): React.ReactElement {
       : RESEND_CODE_BTN_TEXT;
 
   return (
-    <div className={styles.actionBarContainer}>
+    <div className={sharedStyles.actionBarContainer}>
       <Button variant={"text"} type={"button"} onClick={onCancelClick}>
         {CANCEL_BTN_TEXT}
       </Button>

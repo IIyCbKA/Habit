@@ -20,3 +20,4 @@ export const INPUT_ELEMENTS: FieldConfigMap = {
 };
 
 export const SIGN_UP_BUTTON_TEXT = "Sign Up";
+export const TITLE_SCREEN = "Sign up to Habit";

@@ -11,4 +11,5 @@
 
 .usernameWrap {
   padding: 4px 0 0 12px;
+  font: var(--text-semibold-large);
 }

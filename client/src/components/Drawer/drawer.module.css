@@ -4,7 +4,7 @@
     width: 100%;
     overflow-y: auto;
     z-index: var(--overlay-layer-zIndex);
-    background: var(--secondary-bgColor);
+    background: var(--surface-color);
     position: fixed;
     top: 0;
     right: 0;

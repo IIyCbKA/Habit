@@ -4,12 +4,11 @@
     --notification-transform: translateX(2%);
 
     padding: 14px 10px 14px 14px;
-    border-radius: var(--secondary-borderRadius);
-    box-shadow: var(--common-bs);
+    border-radius: var(--border-radius-large);
     overflow: hidden;
-    color: var(--text-primary);
+    color: var(--background-color);
     width: 320px;
-    background-color: var(--secondary-bgColor);
+    background-color: var(--text-color);
     display: flex;
     align-items: center;
     gap: 12px;
@@ -38,8 +37,15 @@
 
   .closeZone {
     flex-shrink: 0;
-    width: 18px;
-    height: 18px;
+    font-size: 16px;
+    padding: 0;
+    background-color: transparent;
+    color: var(--grey-color-50);
+  }
+
+  .closeZone:hover {
+    background-color: transparent;
+    color: var(--background-color);
   }
 
   .notificationAppear {

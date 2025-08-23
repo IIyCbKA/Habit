@@ -1,11 +1,11 @@
 import React from "react";
 import sharedAuthStyles from "../shared/shared.module.css";
-import Logotype from "@/assets/icons/heart_with_text_148x180.svg?react";
 import Input from "@/components/Input/Input";
 import {
   LOGIN_PLACEHOLDER,
   PASSWORD_PLACEHOLDER,
   SIGN_IN_BTN_TEXT,
+  TITLE_SCREEN,
 } from "./signInForm.constants";
 import { EMPTY_STRING, EMPTY_STRING_LENGTH } from "@/shared/shared.constants";
 import Button from "@/components/Buttons/Button/Button";
@@ -17,6 +17,7 @@ import OpenEye from "@/assets/icons/open_eye_24x24.svg?react";
 import CloseEye from "@/assets/icons/close_eye_24x24.svg?react";
 import { loginUser, selectAuthStatus } from "../auth.slice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import Typography from "@/components/Typography/Typography";
 
 export default function SignInForm(): React.ReactElement {
   const dispatch = useAppDispatch();
@@ -63,7 +64,7 @@ export default function SignInForm(): React.ReactElement {
   return (
     <form className={sharedAuthStyles.formWrap} onSubmit={onSubmit}>
       <div className={sharedAuthStyles.formContainer}>
-        <Logotype className={sharedAuthStyles.formLogotype} />
+        <Typography variant={"h1"}>{TITLE_SCREEN}</Typography>
         <Input
           fullWidth
           autoComplete={"username"}
@@ -80,7 +81,10 @@ export default function SignInForm(): React.ReactElement {
           onChange={onPasswordChange}
           placeholder={PASSWORD_PLACEHOLDER}
           inputAdornment={
-            <IconButton onClick={onPasswordVisibleClick}>
+            <IconButton
+              className={sharedAuthStyles.passwordInput}
+              onClick={onPasswordVisibleClick}
+            >
               {showPassword ? <CloseEye /> : <OpenEye />}
             </IconButton>
           }
@@ -95,8 +99,8 @@ export default function SignInForm(): React.ReactElement {
         >
           {SIGN_IN_BTN_TEXT}
         </Button>
-        <ActionBar />
         <SignInWith />
+        <ActionBar />
       </div>
     </form>
   );

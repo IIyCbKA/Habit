@@ -3,5 +3,11 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin: 24px auto 0;
+  margin-top: 24px;
+}
+
+.titleRoot {
+  margin-bottom: 16px;
+  font: var(--text-regular-small);
+  color: var(--text-color);
 }

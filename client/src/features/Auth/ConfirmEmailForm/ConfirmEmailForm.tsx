@@ -1,6 +1,5 @@
 import React from "react";
 import sharedAuthStyles from "../shared/shared.module.css";
-import Logotype from "@/assets/icons/heart_with_text_148x180.svg?react";
 import Input from "@/components/Input/Input";
 import { EMPTY_STRING } from "@/shared/shared.constants";
 import {
@@ -43,7 +42,7 @@ export default function ConfirmEmailForm(): React.ReactElement {
   return (
     <form className={sharedAuthStyles.formWrap} onSubmit={onSubmit}>
       <div className={sharedAuthStyles.formContainer}>
-        <Logotype className={sharedAuthStyles.formLogotype} />
+        text
         <Input
           fullWidth
           autoComplete={"one-time-code"}

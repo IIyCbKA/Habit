@@ -5,7 +5,8 @@
     outline: none;
     cursor: pointer;
     transition: 0.18s all ease-in-out;
-    border-radius: var(--primary-borderRadius);
+    border-radius: var(--border-radius-large);
+    font: var(--text-regular-medium);
     padding: 0 12px;
     user-select: none;
     text-align: center;
@@ -16,6 +17,7 @@
 
   .rootButton:disabled {
     cursor: not-allowed;
+    color: var(--grey-color-75);
   }
 
   .buttonWithAdornment {
@@ -28,62 +30,60 @@
 
   .containedButton {
     border: 0;
-    background-color: var(--variant-contained-bgColor);
-    color: var(--variant-contained-color);
+    background-color: var(--main-color);
+    color: var(--text-color);
     border: none;
     transition: 0.2s ease all;
   }
 
   .containedButton:hover {
-    background-color: var(--variant-containedHover-bgColor);
+    background-color: var(--main-variant-color);
   }
 
   .containedButton:active {
-    background-color: var(--variant-containedActive-bgColor);
+    background-color: var(--main-variant-color);
   }
 
   .containedButton:disabled {
-    background-color: var(--variant-containedDisabled-bgColor);
+    background-color: var(--grey-color-10);
   }
 
   .textButton {
     border: 0;
     background-color: transparent;
-    color: var(--variant-text-color);
+    color: var(--main-color);
     transition: 0.18s ease all;
   }
 
-  .textButton:hover {
-    background-color: var(--variant-textHover-bgColor);
-  }
-
+  .textButton:hover,
   .textButton:active {
-    background-color: var(--variant-textActive-bgColor);
+    background-color: color-mix(in srgb, currentColor 8%, transparent);
   }
 
   .textButton:disabled {
-    color: var(--variant-textDisabled-color);
+    background-color: transparent;
   }
 
   .outlinedButton {
-    border: 1px solid var(--variant-outlined-bColor);
-    background-color: var(--variant-outlined-bgColor);
-    color: var(--variant-outlined-color);
+    border: 1px solid var(--line-color);
+    background-color: transparent;
+    color: var(--main-color);
     transition: 0.2s ease all;
   }
 
   .outlinedButton:hover {
-    background-color: var(--variant-outlinedHover-bgColor);
+    background-color: color-mix(in srgb, var(--main-color) 8%, transparent);
+    border-color: var(--main-color);
   }
 
   .outlinedButton:active {
-    background-color: var(--variant-outlinedActive-bgColor);
-    border-color: var(--variant-outlinedActive-bColor);
+    background-color: color-mix(in srgb, var(--main-color) 8%, transparent);
+    border-color: var(--main-color);
   }
 
   .outlinedButton:disabled {
-    border-color: var(--variant-outlinedDisabled-bColor);
-    color: var(--variant-outlinedDisabled-color);
+    border-color: var(--line-color);
+    background-color: transparent;
   }
 
   .adornmentContainer {
@@ -113,7 +113,7 @@
     align-items: center;
     justify-content: center;
     inset: 0;
-    color: var(--variant-text-color);
+    color: var(--grey-color-75);
   }
 }
 

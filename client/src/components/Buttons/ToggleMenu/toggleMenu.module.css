@@ -8,7 +8,7 @@
     padding: 0;
     background: transparent;
     cursor: pointer;
-    color: var(--variant-text-color);
+    color: var(--main-color);
   }
 
   .rootLine {
@@ -56,8 +56,8 @@
     top: calc(50% - 1px);
     background: linear-gradient(
       90deg,
-      var(--variant-text-color),
-      var(--variant-outlined-color)
+      var(--main-color),
+      var(--main-variant-color)
     );
   }
 }

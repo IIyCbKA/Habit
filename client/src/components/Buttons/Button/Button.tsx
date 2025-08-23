@@ -1,15 +1,9 @@
 import React from "react";
 import styles from "./button.module.css";
-import sharedStyles from "@/shared/shared.module.css";
 import classNames from "classnames";
 import { ButtonProps } from "./Button.interface";
-import {
-  Adornment,
-  LoadingSpinnerProps,
-  PositionedAdornmentProps,
-} from "./button.types";
+import { LoadingSpinnerProps, PositionedAdornmentProps } from "./button.types";
 import CircularProgress from "@/components/Progress/CircularProgress/CircularProgress";
-import LoadingOverlay from "@/components/LoadingOverlay/LoadingOverlay";
 
 function AdornmentIcon({
   content,
@@ -54,19 +48,14 @@ function ButtonInner(
 ): React.ReactElement {
   const isDisabled = disabled || isLoading;
 
-  const buttonStyles = classNames(
-    styles.rootButton,
-    sharedStyles.defaultText,
-    className,
-    {
-      [styles.fullWidth]: fullWidth,
-      [styles.containedButton]: variant === "contained",
-      [styles.textButton]: variant === "text",
-      [styles.outlinedButton]: variant === "outlined",
-      [styles.buttonWithAdornment]: startIcon || endIcon,
-      [styles.loading]: isLoading,
-    },
-  );
+  const buttonStyles = classNames(styles.rootButton, className, {
+    [styles.fullWidth]: fullWidth,
+    [styles.containedButton]: variant === "contained",
+    [styles.textButton]: variant === "text",
+    [styles.outlinedButton]: variant === "outlined",
+    [styles.buttonWithAdornment]: startIcon || endIcon,
+    [styles.loading]: isLoading,
+  });
 
   return (
     <button

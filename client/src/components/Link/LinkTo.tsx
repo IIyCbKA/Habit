@@ -2,18 +2,13 @@ import React, { ForwardedRef } from "react";
 import { Link } from "react-router-dom";
 import { LinkToProps } from "./LinkTo.interface";
 import styles from "./linkTo.module.css";
-import sharedStyles from "@/shared/shared.module.css";
 import classNames from "classnames";
 
 function LinkToInner(
   { className, ...other }: LinkToProps,
   ref: ForwardedRef<HTMLAnchorElement>,
 ): React.ReactElement {
-  const linkStyles = classNames(
-    styles.linkToRoot,
-    sharedStyles.defaultText,
-    className,
-  );
+  const linkStyles = classNames(styles.linkToRoot, className);
 
   return <Link {...other} ref={ref} className={linkStyles} />;
 }

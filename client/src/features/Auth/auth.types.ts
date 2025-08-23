@@ -1,5 +1,5 @@
 import React from "react";
-import { Form } from "@/features/uiState/uiState.types";
+import { AuthScreen } from "@/features/uiState/uiState.types";
 
 /*
 --------------AuthStatus type--------------
@@ -25,6 +25,14 @@ email    - email of new user
 export type RegisterCreds = {
   username: string;
   password: string;
+  email: string;
+};
+
+/*
+--------------PasswordResetData type--------------
+email    - user email
+*/
+export type PasswordResetData = {
   email: string;
 };
 
@@ -63,10 +71,10 @@ export type CommonFulfilledResponse = {
 };
 
 /*
---------------EmailConfirmCreds type--------------
+--------------EmailConfirmData type--------------
 code   - verification code
 */
-export type EmailConfirmCreds = {
+export type EmailConfirmData = {
   code: string;
 };
 
@@ -75,4 +83,4 @@ export type EmailConfirmCreds = {
 key    - form type
 value  - form component
 */
-export type FormComponents = Record<Form, React.FC>;
+export type FormComponents = Record<AuthScreen, React.FC>;

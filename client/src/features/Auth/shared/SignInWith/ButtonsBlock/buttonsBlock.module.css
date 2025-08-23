@@ -1,34 +1,12 @@
 @layer utils {
   .buttonContainer {
-    margin: 0 8px;
-  }
-
-  .githubButton:hover {
-    color: #212121;
-  }
-
-  .googleButton:hover {
-    color: #DD4B39;
-  }
-
-  .facebookButton:hover {
-    color: #3B5998;
-  }
-
-  .xButton:hover {
-    color: #000000;
-  }
-
-  .buttonContainer a {
-    color: inherit;
-    display: flex;
-    text-decoration: none;
-    max-width: 100%;
-    max-height: 100%;
-    overflow: hidden;
+    flex: 1;
+    color: var(--text-color);
   }
 }
 
 .buttonsBlockContainer {
-  display: block;
+  display: flex;
+  gap: 8px;
+  width: 100%;
 }

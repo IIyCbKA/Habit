@@ -5,6 +5,7 @@ import {
   refresh as refreshAPI,
   logout as logoutAPI,
   emailConfirm as emailConfirmAPI,
+  passwordReset as passwordResetAPI,
 } from "./auth.api";
 import {
   AuthState,
@@ -30,6 +31,10 @@ export const refreshAuth = createAppAsyncThunk(
   refreshAPI,
 );
 export const logout = createAppAsyncThunk(`${SLISE_NAME}/logout`, logoutAPI);
+export const resetPassword = createAppAsyncThunk(
+  `${SLISE_NAME}/reset/password`,
+  passwordResetAPI,
+);
 
 const commonFulfilled = (
   state: AuthState,

@@ -17,14 +17,7 @@ export default function ButtonsBlock(): React.ReactElement {
 
           return (
             <IconButton key={index} className={buttonStyles}>
-              <a
-                href={item.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={item.ariaLabel}
-              >
-                <item.icon />
-              </a>
+              <item.icon />
             </IconButton>
           );
         },

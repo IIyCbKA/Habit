@@ -1,7 +1,12 @@
 /*
---------------Form type--------------
+--------------AuthScreen type--------------
 */
-export type Form = "signIn" | "signUp" | "confirmEmail";
+export type AuthScreen =
+  | "signIn"
+  | "signUp"
+  | "confirmEmail"
+  | "forgotPassword"
+  | "forgotPasswordSent";
 
 /*
 --------------NotificationID type--------------
@@ -26,6 +31,6 @@ export type NotificationData = {
 };
 
 export type UiState = {
-  authForm: Form;
+  authScreen: AuthScreen;
   notifications: NotificationData[];
 };

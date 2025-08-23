@@ -1,7 +1,10 @@
 import React from "react";
 import sharedAuthStyles from "../shared/shared.module.css";
-import Logotype from "@/assets/icons/heart_with_text_148x180.svg?react";
-import { INPUT_ELEMENTS, SIGN_UP_BUTTON_TEXT } from "./signUpForm.constants";
+import {
+  INPUT_ELEMENTS,
+  SIGN_UP_BUTTON_TEXT,
+  TITLE_SCREEN,
+} from "./signUpForm.constants";
 import { EMPTY_STRING, EMPTY_STRING_LENGTH } from "@/shared/shared.constants";
 import Input from "@/components/Input/Input";
 import Divider from "@/components/Divider/Divider";
@@ -14,6 +17,7 @@ import OpenEye from "@/assets/icons/open_eye_24x24.svg?react";
 import CloseEye from "@/assets/icons/close_eye_24x24.svg?react";
 import { registerUser } from "../auth.slice";
 import { useAppDispatch } from "@/store/hooks";
+import Typography from "@/components/Typography/Typography";
 
 export default function SignUpForm(): React.ReactElement {
   const [isProcessing, setProcessing] = React.useState<boolean>(false);
@@ -71,7 +75,7 @@ export default function SignUpForm(): React.ReactElement {
   return (
     <form className={sharedAuthStyles.formWrap} onSubmit={onSubmit}>
       <div className={sharedAuthStyles.formContainer}>
-        <Logotype className={sharedAuthStyles.formLogotype} />
+        <Typography>{TITLE_SCREEN}</Typography>
         <Input
           fullWidth
           autoComplete={"username"}
@@ -90,7 +94,10 @@ export default function SignUpForm(): React.ReactElement {
           value={form.password}
           onChange={onChangeData}
           inputAdornment={
-            <IconButton onClick={onPasswordVisibilityClick}>
+            <IconButton
+              className={sharedAuthStyles.passwordInput}
+              onClick={onPasswordVisibilityClick}
+            >
               {showPassword ? <CloseEye /> : <OpenEye />}
             </IconButton>
           }
@@ -105,7 +112,10 @@ export default function SignUpForm(): React.ReactElement {
           value={form.passwordConfirmation}
           onChange={onChangeData}
           inputAdornment={
-            <IconButton onClick={onPasswordConfirmationVisibilityClick}>
+            <IconButton
+              className={sharedAuthStyles.passwordInput}
+              onClick={onPasswordConfirmationVisibilityClick}
+            >
               {showPasswordConfirmation ? <CloseEye /> : <OpenEye />}
             </IconButton>
           }
@@ -130,8 +140,8 @@ export default function SignUpForm(): React.ReactElement {
         >
           {SIGN_UP_BUTTON_TEXT}
         </Button>
-        <ActionBar />
         <SignInWith />
+        <ActionBar />
       </div>
     </form>
   );

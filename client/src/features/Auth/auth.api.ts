@@ -1,10 +1,11 @@
 import { apiClient, refreshClient } from "@/api/clients";
 import { ENDPOINT } from "@/api/config.enums";
 import {
-  EmailConfirmCreds,
+  EmailConfirmData,
   LoginCreds,
   CommonFulfilledResponse,
   RegisterCreds,
+  PasswordResetData,
 } from "./auth.types";
 
 export async function login(
@@ -22,9 +23,9 @@ export async function register(
 }
 
 export async function emailConfirm(
-  creds: EmailConfirmCreds,
+  confirmData: EmailConfirmData,
 ): Promise<CommonFulfilledResponse> {
-  const { data } = await apiClient.post(ENDPOINT.EMAIL_CONFIRM, creds);
+  const { data } = await apiClient.post(ENDPOINT.EMAIL_CONFIRM, confirmData);
   return data;
 }
 
@@ -40,4 +41,11 @@ export async function logout(): Promise<void> {
 
 export async function resendCode(): Promise<void> {
   await apiClient.post(ENDPOINT.VERIFY_CODE_RESEND);
+}
+
+export async function passwordReset(
+  resetData: PasswordResetData,
+): Promise<void> {
+  const { data } = await apiClient.post(ENDPOINT.PASSWORD_RESET, resetData);
+  return data;
 }

@@ -2,7 +2,7 @@
   .dividerRoot {
     flex-shrink: 0;
     border-style: solid;
-    border-color: var(--commonDefault-bColor);
+    border-color: var(--line-color);
   }
 
   .dividerHorizontal {

@@ -4,12 +4,12 @@
     height: 4px;
     width: 100%;
     overflow: hidden;
-    background-color: var(--variant-textHover-bgColor);
+    background-color: var(--main-color-20);
   }
 
   .progress {
     height: 100%;
-    background-color: var(--variant-text-color);
+    background-color: var(--grey-color-50);
     transform-origin: left;
     transition: transform 0.15s linear;
   }
