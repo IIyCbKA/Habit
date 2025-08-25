@@ -6,12 +6,14 @@ import {
   CODE_LENGTH,
   CODE_PLACEHOLDER,
   CONFIRM_BTN_TEXT,
+  TITLE_SCREEN,
 } from "./confirmEmailForm.constants";
 import Button from "@/components/Buttons/Button/Button";
 import { useAppDispatch } from "@/store/hooks";
 import { emailConfirm } from "../auth.slice";
 import Divider from "@/components/Divider/Divider";
 import ActionBar from "./ActionBar/ActionBar";
+import Typography from "@/components/Typography/Typography";
 
 export default function ConfirmEmailForm(): React.ReactElement {
   const [code, setCode] = React.useState<string>(EMPTY_STRING);
@@ -42,7 +44,7 @@ export default function ConfirmEmailForm(): React.ReactElement {
   return (
     <form className={sharedAuthStyles.formWrap} onSubmit={onSubmit}>
       <div className={sharedAuthStyles.formContainer}>
-        text
+        <Typography>{TITLE_SCREEN}</Typography>
         <Input
           fullWidth
           autoComplete={"one-time-code"}

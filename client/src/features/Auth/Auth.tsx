@@ -1,11 +1,24 @@
 import React from "react";
 import styles from "./auth.module.css";
-import { FORM_COMPONENTS } from "./auth.constants";
 import { useAppSelector } from "@/store/hooks";
 import { selectAuthScreen } from "@/features/uiState/uiState.slice";
 import LinkTo from "@/components/Link/LinkTo";
 import { PUBLIC_PATHS } from "@/routes/publicRoutes.constants";
 import Logotype from "@/assets/icons/heart_128x128.svg?react";
+import { FormComponents } from "@/features/Auth/auth.types";
+import SignInForm from "./SignInForm/SignInForm";
+import SignUpForm from "./SignUpForm/SignUpForm";
+import ConfirmEmailForm from "./ConfirmEmailForm/ConfirmEmailForm";
+import ForgotPasswordForm from "./ForgotPasswordForm/ForgotPasswordForm";
+import ForgotPasswordSent from "./ForgotPasswordSent/ForgotPasswordSent";
+
+export const FORM_COMPONENTS: FormComponents = {
+  signIn: SignInForm,
+  signUp: SignUpForm,
+  confirmEmail: ConfirmEmailForm,
+  forgotPassword: ForgotPasswordForm,
+  forgotPasswordSent: ForgotPasswordSent,
+};
 
 export default function Auth(): React.ReactElement {
   const formType = useAppSelector(selectAuthScreen);

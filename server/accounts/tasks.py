@@ -1,11 +1,13 @@
 from celery import shared_task
 from django.core.mail import send_mail
+from django.core.management import call_command
 from django.conf import settings
 from django.utils import timezone
 
 from datetime import datetime, timedelta
 
 from .constants import *
+from .models import EmailVerificationCode
 
 
 def _send_email(
@@ -56,3 +58,14 @@ def send_password_reset_email(email: str, reset_link: str) -> None:
     format_kwargs={'link': reset_link},
     subject=RESET_PASSWORD_MAIL_SUBJECT,
   )
+
+
+@shared_task
+def flush_expired_jwt_tokens():
+  call_command('flushexpiredtokens')
+
+
+@shared_task
+def purge_expired_email_codes():
+  deleted, _ = EmailVerificationCode.objects.expired().delete()
+  return deleted

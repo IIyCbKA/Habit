@@ -8,7 +8,7 @@
     padding: 0;
     background: transparent;
     cursor: pointer;
-    color: var(--main-color);
+    color: inherit;
   }
 
   .rootLine {
@@ -54,10 +54,5 @@
 
   .toggleMenuWrapper.open .rootLine {
     top: calc(50% - 1px);
-    background: linear-gradient(
-      90deg,
-      var(--main-color),
-      var(--main-variant-color)
-    );
   }
 }

@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./header.module.css";
-import ProfileMenuDesktop from "./ProfileMenuDesktop/ProfileMenuDesktop";
-import ProfileMenuMobile from "./ProfileMenuMobile/ProfileMenuMobile";
+import MenuDropdown from "@/features/Layout/Header/MenuDropdown/MenuDropdown";
+import MenuDrawer from "@/features/Layout/Header/MenuDrawer/MenuDrawer";
 import { PUBLIC_PATHS } from "@/routes/publicRoutes.constants";
 import { Link } from "react-router-dom";
 import Heart from "@/assets/icons/heart_128x128.svg?react";
@@ -19,8 +19,8 @@ export default function Header(): React.ReactElement | null {
         <Link to={PUBLIC_PATHS.DEFAULT} className={styles.logotypeWrap}>
           <Heart className={styles.logotypeImg} />
         </Link>
-        <ProfileMenuDesktop />
-        <ProfileMenuMobile />
+        <MenuDropdown />
+        <MenuDrawer />
       </div>
     </div>
   );

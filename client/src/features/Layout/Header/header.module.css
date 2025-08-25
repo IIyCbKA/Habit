@@ -1,4 +1,5 @@
 .headerContainer {
+  background-color: var(--surface-color);
   position: relative;
   display: flex;
   justify-content: center;
@@ -14,20 +15,19 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  color: var(--text-color);
+  font: var(--text-semibold-medium);
 }
 
 .logotypeWrap {
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
+  z-index: var(--overlay-elem-zIndex);
 }
 
 .logotypeImg {
   width: 100%;
   height: 100%;
-}
-
-.defaultMenuBtn {
-  justify-content: flex-start;
 }
 
 @media (max-width: 600px) {
@@ -36,9 +36,5 @@
     top: 0;
     left: 0;
     right: 0;
-  }
-
-  .headerContent {
-    padding: 0 12px;
   }
 }

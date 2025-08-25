@@ -27,7 +27,7 @@ export default function ActionBar(): React.ReactElement {
       <span className={sharedStyles.actionBarQuestionWrap}>
         {HAVE_AN_ACCOUNT_QUESTION}
       </span>
-      <Button variant={"text"} type={"button"} onClick={onClick}>
+      <Button variant={"plain"} onClick={onClick}>
         {TO_SIGN_IN_BTN_TEXT}
       </Button>
     </div>

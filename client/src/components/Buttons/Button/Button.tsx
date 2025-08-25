@@ -53,6 +53,7 @@ function ButtonInner(
     [styles.containedButton]: variant === "contained",
     [styles.textButton]: variant === "text",
     [styles.outlinedButton]: variant === "outlined",
+    [styles.plainButton]: variant === "plain",
     [styles.buttonWithAdornment]: startIcon || endIcon,
     [styles.loading]: isLoading,
   });

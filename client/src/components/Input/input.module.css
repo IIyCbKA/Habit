@@ -3,18 +3,29 @@
     display: inline-block;
     position: relative;
     min-width: 64px;
+    border-radius: var(--border-radius-medium);
+    border: 1px solid var(--line-color);
+    transition: 0.25s all;
+  }
+
+  .inputWrapper:hover {
+    border-color: var(--main-color);
+  }
+
+  .inputWrapper:focus-within {
+    border-color: var(--main-color);
+    box-shadow: 0 0 0 1px var(--main-color);
   }
 
   .input {
     padding: 12px 14px;
     font: var(--text-regular-medium);
-    border-radius: var(--border-radius-medium);
     background-color: transparent;
+    border-radius: inherit;
     color: var(--text-color);
-    border: 1px solid var(--line-color);
     text-overflow: ellipsis;
-    transition: 0.4s all;
     width: 100%;
+    outline: none;
   }
 
   .inputWithAdornmentEnd {
@@ -23,15 +34,6 @@
 
   .fullWidth {
     width: 100%;
-  }
-
-  .input:hover {
-    border-color: var(--main-color);
-  }
-
-  .input:focus {
-    border-color: var(--main-color);
-    outline: none;
   }
 
   .adornmentWrap {

@@ -1,0 +1,16 @@
+@layer overrides {
+  .defaultButton {
+    justify-content: flex-start;
+    color: inherit;
+    font: var(--text-semibold-medium);
+    padding: 8px 16px;
+    border-radius: 0;
+    height: 36px;
+  }
+}
+
+@layer utils {
+  .logoutButton {
+    color: var(--text-secondary-color);
+  }
+}

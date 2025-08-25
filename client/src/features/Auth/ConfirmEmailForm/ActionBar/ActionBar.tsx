@@ -53,14 +53,13 @@ export default function ActionBar(): React.ReactElement {
 
   return (
     <div className={sharedStyles.actionBarContainer}>
-      <Button variant={"text"} type={"button"} onClick={onCancelClick}>
+      <Button variant={"plain"} onClick={onCancelClick}>
         {CANCEL_BTN_TEXT}
       </Button>
       <Button
         isLoading={isProcessing}
         disabled={isDisabledResend}
-        variant={"text"}
-        type={"button"}
+        variant={"plain"}
         onClick={onResendClick}
       >
         {resendBtnText}

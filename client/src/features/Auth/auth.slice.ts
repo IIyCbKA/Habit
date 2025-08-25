@@ -13,7 +13,7 @@ import {
   User,
   AuthStatus,
 } from "./auth.types";
-import { SLISE_NAME } from "./auth.constants";
+import { DEFAULT_USERNAME, SLISE_NAME } from "./auth.constants";
 import { RootState } from "@/store/store";
 import { createAppAsyncThunk } from "@/store/apiThunk";
 
@@ -94,5 +94,7 @@ export const selectAccessToken = (state: RootState): string | null =>
   state.auth.accessToken;
 export const selectAuthStatus = (state: RootState): AuthStatus =>
   state.auth.status;
+export const selectUsername = (state: RootState): string =>
+  state.auth.user?.username ?? DEFAULT_USERNAME;
 
 export default authSlice.reducer;

@@ -5,3 +5,4 @@ export const ROOT_TEXT = [
 ].join(" ");
 export const TO_SIGN_IN_BTN_TEXT = "Sign In";
 export const TITLE_SCREEN = "Check your email";
+export const HAVE_AN_ACCOUNT_QUESTION = "Have an account?";

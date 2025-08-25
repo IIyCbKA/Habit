@@ -5,7 +5,7 @@ import React from "react";
 The type ButtonVariant specifies variant a set of styles for button.
 By default, type is text.
 */
-export type ButtonVariant = "text" | "contained" | "outlined";
+export type ButtonVariant = "text" | "contained" | "outlined" | "plain";
 
 /*
 --------------Adornment type--------------

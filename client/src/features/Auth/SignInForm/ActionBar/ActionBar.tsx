@@ -19,10 +19,12 @@ export default function ActionBar(): React.ReactElement {
 
   return (
     <div className={sharedStyles.actionBarContainer}>
-      <Button onClick={onAuthChange("forgotPassword")}>
+      <Button variant={"plain"} onClick={onAuthChange("forgotPassword")}>
         {FORGOT_PASSWORD_TEXT}
       </Button>
-      <Button onClick={onAuthChange("signUp")}>{SIGN_UP_TEXT}</Button>
+      <Button variant={"plain"} onClick={onAuthChange("signUp")}>
+        {SIGN_UP_TEXT}
+      </Button>
     </div>
   );
 }

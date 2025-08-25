@@ -26,6 +26,12 @@ class CustomUser(AbstractUser):
     self.save(update_fields=['is_email_verified'])
 
 
+class EmailVerificationCodeQuerySet(models.QuerySet):
+  def expired(self):
+    cutoff = timezone.now() - timedelta(seconds=settings.TIMEOUTS['VERIFICATION_CODE'])
+    return self.filter(code_created_at__lt=cutoff)
+
+
 class EmailVerificationCode(models.Model):
   user = models.OneToOneField(
     settings.AUTH_USER_MODEL,
@@ -33,7 +39,9 @@ class EmailVerificationCode(models.Model):
     related_name='verification_code'
   )
   secret_code = models.CharField(max_length=255, blank=True, editable=False)
-  code_created_at = models.DateTimeField(null=True, blank=True)
+  code_created_at = models.DateTimeField(null=True, blank=True, db_index=True)
+
+  objects = EmailVerificationCodeQuerySet.as_manager()
 
   def generate_code(self) -> str:
     raw = f'{secrets.randbelow(10 ** VERIFICATION_CODE_LENGTH):0{VERIFICATION_CODE_LENGTH}d}'

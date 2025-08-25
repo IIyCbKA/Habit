@@ -2,14 +2,16 @@
   .dropdownContainer {
     max-height: calc(100dvh - 80px);
     overflow-y: auto;
-    min-width: 300px;
+    min-width: 260px;
     z-index: 1000;
     margin-top: 4px;
     position: absolute;
     border-radius: 12px;
     background-color: var(--background-color);
-    padding: 16px;
+    padding: 16px 0;
     box-shadow: var(--common-bs);
+    border: 1px solid var(--line-color);
+    color: var(--text-color);
 
     --dropdown-duration: 250ms;
   }
