@@ -71,6 +71,9 @@ AUTH_USER_MODEL = 'accounts.CustomUser'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DEFAULT_FROM_EMAIL = 'no-reply@greenhabit.ru'
 
+ERROR_DETAIL_KEY = 'detail'
+TRAILING_PUNCT_PATTERN = r'[.!?…]+$'
+
 PASSWORD_RESET_TIMEOUT = TIMEOUTS['PASSWORD_RESET_LINK']
 
 CACHES = {

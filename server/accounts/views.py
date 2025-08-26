@@ -80,7 +80,7 @@ class ResendCodeView(APIView):
 
     if user.is_email_verified:
       return Response(
-        {'detail': EMAIL_ALREADY_VERIFIED_ERROR},
+        {settings.ERROR_DETAIL_KEY: EMAIL_ALREADY_VERIFIED_ERROR},
         status=status.HTTP_400_BAD_REQUEST
       )
 
@@ -136,7 +136,7 @@ class RefreshView(APIView):
       user = User.objects.get(pk=user_id)
     except (TokenError, KeyError, User.DoesNotExist):
       return Response(
-        {'detail': INVALID_REFRESH_ERROR},
+        {settings.ERROR_DETAIL_KEY: INVALID_REFRESH_ERROR},
         status=status.HTTP_401_UNAUTHORIZED
       )
 
