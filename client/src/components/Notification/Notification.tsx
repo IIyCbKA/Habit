@@ -95,7 +95,7 @@ function Notification({
         onMouseLeave={onMouseLeave}
       >
         <span className={contentStyles}>{message}</span>
-        <IconButton className={styles.closeZone} onClick={onClose}>
+        <IconButton className={styles.closeButton} onClick={onClose}>
           <Close />
         </IconButton>
         <LinearProgress value={percent} className={styles.progressContainer} />

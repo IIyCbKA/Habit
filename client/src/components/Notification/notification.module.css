@@ -13,6 +13,7 @@
     align-items: center;
     gap: 12px;
     position: relative;
+    font: var(--text-semibold-medium);
   }
 
   .notificationRoot[data-slide="left"] {
@@ -33,19 +34,6 @@
 
   .contentZone {
     flex-grow: 1;
-  }
-
-  .closeZone {
-    flex-shrink: 0;
-    font-size: 16px;
-    padding: 0;
-    background-color: transparent;
-    color: var(--grey-color-50);
-  }
-
-  .closeZone:hover {
-    background-color: transparent;
-    color: var(--background-color);
   }
 
   .notificationAppear {
@@ -94,5 +82,18 @@
     position: absolute;
     bottom: 0;
     left: 0;
+  }
+
+  .closeButton {
+    flex-shrink: 0;
+    font-size: 16px;
+    padding: 0;
+    background-color: transparent;
+    color: var(--grey-color-50);
+  }
+
+  .closeButton:hover {
+    background-color: transparent;
+    color: var(--background-color);
   }
 }

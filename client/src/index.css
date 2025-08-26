@@ -78,10 +78,8 @@
   }
 
   body {
-    margin: 0;
     color: var(--text-color);
     background-color: var(--background-color);
     min-width: 320px;
-    font-family: var(--font-family), "sans-serif";
   }
 }
