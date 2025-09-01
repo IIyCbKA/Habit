@@ -5,7 +5,8 @@ export const enum ENDPOINT {
   REFRESH = "/auth/refresh/",
   LOGOUT = "/auth/logout/",
   VERIFY_CODE_RESEND = "/auth/code/resend/",
-  PASSWORD_RESET = "/auth/password/reset/",
+  PASSWORD_RESET_REQUEST = "/auth/password/reset/",
+  PASSWORD_RESET_VALIDATE = "/auth/password/validate/",
 }
 
 export const enum HTTP_STATUS {

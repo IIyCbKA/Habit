@@ -1,38 +1,26 @@
 import React from "react";
-import { BrowserRouter } from "react-router-dom";
-import PublicRoutes from "./PublicRoutes";
-import PrivateRoutes from "./PrivateRoutes";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { refreshAuth, selectIsAuth } from "@/features/Auth/auth.slice";
-import LoadingOverlay from "@/components/LoadingOverlay/LoadingOverlay";
+import { RouterProvider } from "react-router-dom";
+import { router } from "./router";
+import { useAppDispatch } from "@/store/hooks";
+import { refreshAuth } from "@/features/Auth/slice";
+import { LoadingOverlay } from "@/components";
 
 export default function AppRoutes(): React.ReactElement {
-  const [isWaitingAuth, setIsWaitingAuth] = React.useState(true);
-  const isAuth = useAppSelector(selectIsAuth);
+  const [booting, setBooting] = React.useState(true);
   const dispatch = useAppDispatch();
 
-  React.useEffect((): void => {
-    (async (): Promise<void> => {
+  React.useEffect(() => {
+    (async () => {
       try {
         await dispatch(refreshAuth()).unwrap();
-      } catch (err) {
+      } catch (e) {
       } finally {
-        setIsWaitingAuth(false);
+        setBooting(false);
       }
     })();
   }, [dispatch]);
 
-  const routes: React.ReactElement = React.useMemo(
-    (): React.ReactElement =>
-      isWaitingAuth ? (
-        <LoadingOverlay overlayType={"fullpage"} />
-      ) : isAuth ? (
-        <PrivateRoutes />
-      ) : (
-        <PublicRoutes />
-      ),
-    [isAuth, isWaitingAuth],
-  );
+  if (booting) return <LoadingOverlay overlayType={"fullpage"} />;
 
-  return <BrowserRouter>{routes}</BrowserRouter>;
+  return <RouterProvider router={router} />;
 }

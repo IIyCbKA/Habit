@@ -1,7 +1,7 @@
 import axios from "axios";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { OTHER_SERVER_ERROR_TEXT } from "@/shared/shared.constants";
-import { AppThunkCfg } from "./store.types";
+import { OTHER_SERVER_ERROR_TEXT } from "@/shared/constants";
+import { AppThunkCfg } from "./types";
 
 export function createAppAsyncThunk<Returned, Arg = void>(
   typePrefix: string,

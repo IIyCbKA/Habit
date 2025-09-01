@@ -1,9 +1,9 @@
-import { refreshAuth, selectAccessToken } from "@/features/Auth/auth.slice";
+import { refreshAuth, selectAccessToken } from "@/features/Auth/slice";
 import { store } from "@/store/store";
 import { apiClient } from "../clients";
 import { InternalAxiosRequestConfig } from "axios";
-import { RefreshSubscriber } from "./interceptors.types";
-import { MISSING_TOKEN_ERROR } from "./interceptors.constants";
+import { RefreshSubscriber } from "./types";
+import { MISSING_TOKEN_ERROR } from "./constants";
 
 let isRefreshing: boolean = false;
 let subscribers: RefreshSubscriber[] = [];

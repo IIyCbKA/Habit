@@ -15,6 +15,7 @@
   --notification-zIndex: 9999;
   --overlay-layer-zIndex: 10000;
   --overlay-elem-zIndex: 10001;
+  --overlay-loader-layer-zIndex: 20000;
 
   --surface-color: rgb(36, 47, 61);
   --surface-color-40: rgba(36, 47, 61, 0.4);

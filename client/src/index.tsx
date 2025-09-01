@@ -1,6 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
+import { setupNavigation } from "@/routes/navigation";
 
-const root: ReactDOM.Root = ReactDOM.createRoot(document.getElementById("root")!);
+setupNavigation();
+
+const root: ReactDOM.Root = ReactDOM.createRoot(
+  document.getElementById("root")!,
+);
 root.render(<App />);

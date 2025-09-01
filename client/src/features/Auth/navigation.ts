@@ -1,0 +1,50 @@
+import { startAppListening } from "@/store/listener";
+import {
+  emailConfirm,
+  loginUser,
+  logout,
+  registerUser,
+  resetPasswordRequest,
+} from "./slice";
+import { router } from "@/routes/router";
+import { PATHS } from "@/routes/paths";
+
+export function setupAuthNavigation() {
+  startAppListening({
+    actionCreator: logout.fulfilled,
+    effect: () => {
+      router.navigate(PATHS.SIGN_IN, { replace: true });
+    },
+  });
+
+  startAppListening({
+    actionCreator: loginUser.fulfilled,
+    effect: (action) => {
+      const verified = action.payload.user.isEmailVerified;
+      router.navigate(verified ? PATHS.DASHBOARD : PATHS.EMAIL_CONFIRM, {
+        replace: true,
+      });
+    },
+  });
+
+  startAppListening({
+    actionCreator: registerUser.fulfilled,
+    effect: () => {
+      router.navigate(PATHS.EMAIL_CONFIRM);
+    },
+  });
+
+  startAppListening({
+    actionCreator: resetPasswordRequest.fulfilled,
+    effect: () => {
+      router.navigate(PATHS.PASSWORD_FORGOT_SENT);
+    },
+  });
+
+  startAppListening({
+    actionCreator: emailConfirm.fulfilled,
+    effect: () => {
+      router.navigate(PATHS.DASHBOARD, { replace: true });
+    },
+  });
+}

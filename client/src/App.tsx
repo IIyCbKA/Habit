@@ -4,7 +4,7 @@ import "./api/interceptors/interceptors";
 import AppRoutes from "./routes/AppRoutes";
 import { Provider } from "react-redux";
 import { store } from "@/store/store";
-import NotificationStack from "@/components/NotificationStack/NotificationStack";
+import { NotificationStack } from "@/components";
 
 export default function App(): React.ReactElement {
   return (
