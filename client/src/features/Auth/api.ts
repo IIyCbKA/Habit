@@ -7,6 +7,7 @@ import {
   RegisterCreds,
   PasswordResetRequestData,
   PasswordResetValidateData,
+  PasswordResetConfirmData,
 } from "./types";
 
 export async function login(
@@ -58,4 +59,14 @@ export async function passwordResetValidate(
   validateData: PasswordResetValidateData,
 ): Promise<void> {
   await apiClient.post(ENDPOINT.PASSWORD_RESET_VALIDATE, validateData);
+}
+
+export async function passwordResetConfirm(
+  confirmData: PasswordResetConfirmData,
+): Promise<CommonFulfilledResponse> {
+  const { data } = await apiClient.post(
+    ENDPOINT.PASSWORD_RESET_CONFIRM,
+    confirmData,
+  );
+  return data;
 }

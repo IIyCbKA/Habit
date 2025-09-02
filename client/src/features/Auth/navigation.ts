@@ -4,7 +4,8 @@ import {
   loginUser,
   logout,
   registerUser,
-  resetPasswordRequest,
+  passwordResetRequest,
+  passwordResetConfirm,
 } from "./slice";
 import { router } from "@/routes/router";
 import { PATHS } from "@/routes/paths";
@@ -21,9 +22,9 @@ export function setupAuthNavigation() {
     actionCreator: loginUser.fulfilled,
     effect: (action) => {
       const verified = action.payload.user.isEmailVerified;
-      router.navigate(verified ? PATHS.DASHBOARD : PATHS.EMAIL_CONFIRM, {
-        replace: true,
-      });
+
+      if (verified) router.navigate(PATHS.DASHBOARD, { replace: true });
+      else router.navigate(PATHS.EMAIL_CONFIRM);
     },
   });
 
@@ -35,7 +36,7 @@ export function setupAuthNavigation() {
   });
 
   startAppListening({
-    actionCreator: resetPasswordRequest.fulfilled,
+    actionCreator: passwordResetRequest.fulfilled,
     effect: () => {
       router.navigate(PATHS.PASSWORD_FORGOT_SENT);
     },
@@ -43,6 +44,13 @@ export function setupAuthNavigation() {
 
   startAppListening({
     actionCreator: emailConfirm.fulfilled,
+    effect: () => {
+      router.navigate(PATHS.DASHBOARD, { replace: true });
+    },
+  });
+
+  startAppListening({
+    actionCreator: passwordResetConfirm.fulfilled,
     effect: () => {
       router.navigate(PATHS.DASHBOARD, { replace: true });
     },

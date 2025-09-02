@@ -6,6 +6,7 @@ import {
   logout as logoutAPI,
   emailConfirm as emailConfirmAPI,
   passwordResetRequest as passwordResetRequestAPI,
+  passwordResetConfirm as passwordResetConfirmAPI,
 } from "./api";
 import { AuthState, CommonFulfilledResponse, User, AuthStatus } from "./types";
 import { DEFAULT_USERNAME, SLISE_NAME } from "./constants";
@@ -26,9 +27,13 @@ export const refreshAuth = createAppAsyncThunk(
   refreshAPI,
 );
 export const logout = createAppAsyncThunk(`${SLISE_NAME}/logout`, logoutAPI);
-export const resetPasswordRequest = createAppAsyncThunk(
-  `${SLISE_NAME}/reset/password/request`,
+export const passwordResetRequest = createAppAsyncThunk(
+  `${SLISE_NAME}/password/reset/request`,
   passwordResetRequestAPI,
+);
+export const passwordResetConfirm = createAppAsyncThunk(
+  `${SLISE_NAME}/password/reset/confirm`,
+  passwordResetConfirmAPI,
 );
 
 const commonFulfilled = (
@@ -73,6 +78,7 @@ const authSlice = createSlice({
           registerUser.fulfilled,
           refreshAuth.fulfilled,
           emailConfirm.fulfilled,
+          passwordResetConfirm.fulfilled,
         ),
         commonFulfilled,
       )

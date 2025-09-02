@@ -2,7 +2,7 @@ import type { LoaderFunction } from "react-router";
 import { redirect } from "react-router";
 import { store } from "@/store/store";
 import { PATHS } from "@/routes/paths";
-import { passwordResetValidate } from "@/features/Auth/api";
+import { passwordResetValidate } from "./api";
 
 export const confirmEmailGuard: LoaderFunction = () => {
   const { user, accessToken } = store.getState().auth;
@@ -19,7 +19,7 @@ export const resetPasswordGuard: LoaderFunction = async ({ request }) => {
 
   try {
     await passwordResetValidate({ uid, token });
-    return null;
+    return { uid, token };
   } catch (e) {
     throw redirect(PATHS.PASSWORD_FORGOT);
   }

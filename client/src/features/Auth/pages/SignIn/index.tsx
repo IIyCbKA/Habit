@@ -1,5 +1,4 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import sharedAuthStyles from "@/features/Auth/shared/styles.module.css";
 import {
   LOGIN_PLACEHOLDER,
@@ -13,7 +12,6 @@ import SignInWith from "@/features/Auth/shared/SignInWith";
 import { loginUser } from "@/features/Auth/slice";
 import { useAppDispatch } from "@/store/hooks";
 import { Input, Button, Divider, Typography } from "@/components";
-import { PATHS } from "@/routes/paths";
 import PasswordAdornment from "@/features/Auth/shared/PasswordAdornment";
 
 export default function SignIn(): React.ReactElement {
@@ -24,9 +22,7 @@ export default function SignIn(): React.ReactElement {
   const [isProcessing, setProcessing] = React.useState<boolean>(false);
   const signInButtonDisabled: boolean =
     identifier.length === EMPTY_STRING_LENGTH ||
-    password.length === EMPTY_STRING_LENGTH ||
-    isProcessing;
-  const navigate = useNavigate();
+    password.length === EMPTY_STRING_LENGTH;
 
   const onLoginChange: (e: React.ChangeEvent<HTMLInputElement>) => void = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -51,10 +47,7 @@ export default function SignIn(): React.ReactElement {
 
     e.preventDefault();
     try {
-      const data = await dispatch(loginUser({ identifier, password })).unwrap();
-      if (data.user && !data.user.isEmailVerified) {
-        navigate(PATHS.EMAIL_CONFIRM);
-      }
+      await dispatch(loginUser({ identifier, password })).unwrap();
     } catch (e) {
     } finally {
       setProcessing(false);

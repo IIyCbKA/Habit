@@ -8,7 +8,7 @@ import {
 } from "./constants";
 import ActionBar from "./ActionBar";
 import { useAppDispatch } from "@/store/hooks";
-import { resetPasswordRequest } from "@/features/Auth/slice";
+import { passwordResetRequest } from "@/features/Auth/slice";
 import { Button, Divider, Input, Typography } from "@/components";
 
 export default function ForgotPassword(): React.ReactElement {
@@ -29,7 +29,7 @@ export default function ForgotPassword(): React.ReactElement {
     e.preventDefault();
     setProcessing(true);
     try {
-      await dispatch(resetPasswordRequest({ email })).unwrap();
+      await dispatch(passwordResetRequest({ email })).unwrap();
     } catch (e) {
     } finally {
       setProcessing(false);

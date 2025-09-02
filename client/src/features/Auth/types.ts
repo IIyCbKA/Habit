@@ -84,3 +84,10 @@ export type PasswordResetValidateData = {
   uid: string;
   token: string;
 };
+
+/*
+--------------PasswordResetConfirmData type--------------
+*/
+export type PasswordResetConfirmData = PasswordResetValidateData & {
+  newPassword: string;
+};
