@@ -1,28 +1,34 @@
-import { createBrowserRouter, type RouteObject } from "react-router-dom";
+import {
+  createBrowserRouter,
+  Outlet,
+  type RouteObject,
+} from "react-router-dom";
 import { PATHS } from "./paths";
-import { AnonGuard, AuthVerifiedGuard, IndexRedirect } from "./guards";
+import { AnonGuard, AuthVerifiedGuard, IndexLoader } from "./guards";
 import Layout from "@/features/Layout";
 import { authRoutes } from "@/features/Auth/routes";
-import { routes } from "@/features/Home/routes";
+import { homeRoutes } from "@/features/Home/routes";
 
 const appRoutes: RouteObject[] = [
   {
     path: PATHS.DEFAULT,
     Component: Layout,
     children: [
-      { index: true, Component: IndexRedirect },
+      { index: true, loader: IndexLoader },
 
       {
-        Component: AnonGuard,
+        loader: AnonGuard,
+        Component: Outlet,
         children: [...authRoutes],
       },
 
       {
-        Component: AuthVerifiedGuard,
-        children: [...routes],
+        loader: AuthVerifiedGuard,
+        Component: Outlet,
+        children: [...homeRoutes],
       },
 
-      { path: PATHS.OTHER_PATHS, Component: IndexRedirect },
+      { path: PATHS.OTHER_PATHS, loader: IndexLoader },
     ],
   },
 ];
