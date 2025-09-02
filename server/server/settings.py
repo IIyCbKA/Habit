@@ -122,7 +122,7 @@ if not DEBUG:
 #       WITHOUT LSLASH       #
 ##############################
 CLIENT_ENDPOINTS = {
-    'PASSWORD_RESET': f'{CLIENT_BASE_URL.rstrip('/')}/password/reset',
+    'PASSWORD_RESET': f'{CLIENT_BASE_URL.rstrip('/')}/auth/password/reset',
 }
 
 # Application definition

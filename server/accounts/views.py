@@ -191,7 +191,8 @@ class ValidatePasswordResetTokenView(APIView):
   throttle_scope = 'validate_reset_token'
 
   def post(self, request: Request) -> Response:
-    serializer = ValidatePasswordResetTokenSerializer(data=request.data)
-    serializer.is_valid(raise_exception=True)
+    with transaction.atomic():
+      serializer = ValidatePasswordResetTokenSerializer(data=request.data)
+      serializer.is_valid(raise_exception=True)
 
     return Response(status=status.HTTP_200_OK)

@@ -106,6 +106,7 @@ export default function ResetPassword(): React.ReactElement {
           fullWidth
           disabled={isButtonDisabled}
           variant={"contained"}
+          type={"submit"}
         >
           {SET_NEW_PASSWORD_BUTTON_TEXT}
         </Button>
