@@ -5,7 +5,7 @@ import styles from "./styles.module.css";
 import classNames from "classnames";
 
 function LoadingOverlayInner(
-  { overlayType = "fullparent", className, ...other }: LoadingOverlayProps,
+  { overlayType = "fullpage", className, ...other }: LoadingOverlayProps,
   ref: React.ForwardedRef<HTMLDivElement>,
 ): React.ReactElement {
   const overlayStyles = classNames(styles.loadingOverlayRoot, className, {

@@ -11,7 +11,7 @@ export default function Layout(): React.ReactElement {
   return (
     <div className={styles.rootContainer}>
       <Header />
-      {pending && <LoadingOverlay overlayType={"fullpage"} />}
+      {pending && <LoadingOverlay />}
       <div className={styles.contentWrap}>
         <Outlet />
       </div>

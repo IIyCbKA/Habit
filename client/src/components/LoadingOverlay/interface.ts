@@ -7,5 +7,5 @@ import { HTMLAttributes } from "react";
 import { LoadingOverlayVariant } from "./types";
 
 export interface LoadingOverlayProps extends HTMLAttributes<HTMLDivElement> {
-  overlayType: LoadingOverlayVariant;
+  overlayType?: LoadingOverlayVariant;
 }
