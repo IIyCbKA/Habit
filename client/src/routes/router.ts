@@ -14,7 +14,7 @@ const appRoutes: RouteObject[] = [
     path: PATHS.DEFAULT,
     Component: Layout,
     children: [
-      { index: true, loader: IndexLoader },
+      { index: true, loader: IndexLoader, Component: () => null },
 
       {
         loader: AnonGuard,
