@@ -6,13 +6,18 @@ import {
   SET_NEW_PASSWORD_BUTTON_TEXT,
   TITLE_SCREEN,
 } from "./constants";
-import { EMPTY_STRING, EMPTY_STRING_LENGTH } from "@/shared/constants";
+import { EMPTY_STRING } from "@/shared/constants";
 import { Button, Divider, Input, Typography } from "@/components";
 import PasswordAdornment from "@/features/Auth/shared/PasswordAdornment";
 import { useAppDispatch } from "@/store/hooks";
 import { passwordResetConfirm } from "@/features/Auth/slice";
 import { useLoaderData } from "react-router-dom";
 import { PasswordResetValidateData } from "@/features/Auth/types";
+import { ErrorsMap } from "./types";
+import {
+  validatePassword,
+  validatePasswordConfirmation,
+} from "@/features/Auth/validators";
 
 export default function ResetPassword(): React.ReactElement {
   const { uid, token } = useLoaderData() as PasswordResetValidateData;
@@ -25,20 +30,27 @@ export default function ResetPassword(): React.ReactElement {
   const [showPasswordConfirmation, setShowPasswordConfirmation] =
     React.useState<boolean>(false);
   const [isProcessing, setProcessing] = React.useState<boolean>(false);
-  const isButtonDisabled =
-    password !== passwordConfirmation ||
-    password.length === EMPTY_STRING_LENGTH;
+  const [errors, setErrors] = React.useState<ErrorsMap>({});
+  const passwordRef = React.useRef<HTMLInputElement | null>(null);
+  const passwordConfirmationRef = React.useRef<HTMLInputElement | null>(null);
 
   const onPasswordChange: (e: React.ChangeEvent<HTMLInputElement>) => void = (
     e: React.ChangeEvent<HTMLInputElement>,
   ): void => {
     setPassword(e.target.value);
+    if (errors.password)
+      setErrors((prev: ErrorsMap) => ({ ...prev, password: undefined }));
   };
 
   const onPasswordConfirmationChange: (
     e: React.ChangeEvent<HTMLInputElement>,
   ) => void = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setPasswordConfirmation(e.target.value);
+    if (errors.passwordConfirmation)
+      setErrors((prev: ErrorsMap) => ({
+        ...prev,
+        passwordConfirmation: undefined,
+      }));
   };
 
   const onPasswordVisibilityClick: () => void = (): void => {
@@ -49,12 +61,36 @@ export default function ResetPassword(): React.ReactElement {
     setShowPasswordConfirmation((prev: boolean): boolean => !prev);
   };
 
+  const focusFirstError: (errs: ErrorsMap) => void = (
+    errs: ErrorsMap,
+  ): void => {
+    if (errs.password) passwordRef.current?.focus();
+    else if (errs.passwordConfirmation)
+      passwordConfirmationRef.current?.focus();
+  };
+
   const onSubmit: (e: React.FormEvent) => void = async (
     e: React.FormEvent,
   ): Promise<void> => {
-    setProcessing(true);
-
     e.preventDefault();
+
+    const newErrors: ErrorsMap = {
+      password: validatePassword(password),
+      passwordConfirmation: validatePasswordConfirmation(
+        password,
+        passwordConfirmation,
+      ),
+    };
+
+    setErrors(newErrors);
+
+    const hasErrors = Object.values(newErrors).some(Boolean);
+    if (hasErrors) {
+      focusFirstError(newErrors);
+      return;
+    }
+
+    setProcessing(true);
     try {
       await dispatch(
         passwordResetConfirm({ uid, token, newPassword: password }),
@@ -66,17 +102,20 @@ export default function ResetPassword(): React.ReactElement {
   };
 
   return (
-    <form className={sharedAuthStyles.formWrap} onSubmit={onSubmit}>
+    <form className={sharedAuthStyles.formWrap} onSubmit={onSubmit} noValidate>
       <div className={sharedAuthStyles.formContainer}>
         <Typography variant={"h1"}>{TITLE_SCREEN}</Typography>
         <Input
           fullWidth
+          ref={passwordRef}
           autoComplete={"new-password"}
           type={showPassword ? "text" : "password"}
           placeholder={NEW_PASSWORD_INPUT_PLACEHOLDER}
           name={"password"}
           value={password}
           onChange={onPasswordChange}
+          error={Boolean(errors.password)}
+          helperText={errors.password}
           inputAdornment={
             <PasswordAdornment
               isShow={showPassword}
@@ -87,12 +126,15 @@ export default function ResetPassword(): React.ReactElement {
         <Divider className={sharedAuthStyles.formDivider} flexItem />
         <Input
           fullWidth
+          ref={passwordConfirmationRef}
           autoComplete={"new-password"}
           type={showPasswordConfirmation ? "text" : "password"}
           placeholder={CONFIRM_NEW_PASSWORD_INPUT_PLACEHOLDER}
-          name={"confirm-password"}
+          name={"passwordConfirmation"}
           value={passwordConfirmation}
           onChange={onPasswordConfirmationChange}
+          error={Boolean(errors.passwordConfirmation)}
+          helperText={errors.passwordConfirmation}
           inputAdornment={
             <PasswordAdornment
               isShow={showPasswordConfirmation}
@@ -104,7 +146,6 @@ export default function ResetPassword(): React.ReactElement {
         <Button
           isLoading={isProcessing}
           fullWidth
-          disabled={isButtonDisabled}
           variant={"contained"}
           type={"submit"}
         >

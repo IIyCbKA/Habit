@@ -41,6 +41,7 @@
   --secondary-variant-color: rgba(127, 145, 164, 0.7);
   --tertiary-color: rgb(36, 47, 61);
   --tertiary-variant-color: rgb(57, 73, 94);
+  --danger-color: rgb(255, 98, 112);
 
   --common-bs:
     rgba(0, 0, 0, 0) 0 0 0 0,

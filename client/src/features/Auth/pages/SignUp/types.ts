@@ -33,3 +33,13 @@ export type FieldConfig = {
 --------------FieldConfigMap type--------------
 */
 export type FieldConfigMap = Record<FormField, FieldConfig>;
+
+/*
+--------------ErrorsMap type--------------
+*/
+export type ErrorsMap = {
+  username?: string;
+  password?: string;
+  passwordConfirmation?: string;
+  email?: string;
+};
