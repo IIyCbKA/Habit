@@ -9,6 +9,9 @@ import ForgotPassword from "@/features/Auth/pages/ForgotPassword";
 import ForgotPasswordSent from "@/features/Auth/pages/ForgotPasswordSent";
 import ResetPassword from "@/features/Auth/pages/ResetPassword";
 import { confirmEmailGuard, resetPasswordGuard } from "./guards";
+import { LoadingOverlay } from "@/components";
+
+const Fallback = () => <LoadingOverlay />;
 
 export const authRoutes: RouteObject[] = [
   {
@@ -24,6 +27,7 @@ export const authRoutes: RouteObject[] = [
       { path: PATHS.SIGN_IN, Component: SignIn },
       { path: PATHS.SIGN_UP, Component: SignUp },
       {
+        HydrateFallback: Fallback,
         path: PATHS.EMAIL_CONFIRM,
         Component: ConfirmEmail,
         loader: confirmEmailGuard,
@@ -31,6 +35,7 @@ export const authRoutes: RouteObject[] = [
       { path: PATHS.PASSWORD_FORGOT, Component: ForgotPassword },
       { path: PATHS.PASSWORD_FORGOT_SENT, Component: ForgotPasswordSent },
       {
+        HydrateFallback: Fallback,
         path: PATHS.PASSWORD_RESET,
         Component: ResetPassword,
         loader: resetPasswordGuard,
