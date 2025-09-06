@@ -1,9 +1,9 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 import styles from "./styles.module.css";
-import { LinkTo } from "@/components";
 import { PATHS } from "@/routes/paths";
 import { Logotype } from "@/assets/icons";
+import { LinkTo } from "@/components";
 
 export default function Auth(): React.ReactElement {
   return (

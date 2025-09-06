@@ -5,17 +5,18 @@ import {
 } from "react-router-dom";
 import { PATHS } from "./paths";
 import { AnonGuard, AuthVerifiedGuard, IndexLoader } from "./guards";
-import Layout from "@/features/Layout";
 import { authRoutes } from "@/features/Auth/routes";
 import { homeRoutes } from "@/features/Home/routes";
 import { LoadingOverlay } from "@/components";
+import AuthVerifiedLayout from "@/features/Layouts/AuthVerifiedLayout";
+import RootLayout from "@/features/Layouts/RootLayout";
 
 const Fallback = () => <LoadingOverlay />;
 
 const appRoutes: RouteObject[] = [
   {
     path: PATHS.DEFAULT,
-    Component: Layout,
+    Component: RootLayout,
     HydrateFallback: Fallback,
     children: [
       { index: true, loader: IndexLoader, Component: () => null },
@@ -30,7 +31,7 @@ const appRoutes: RouteObject[] = [
       {
         HydrateFallback: Fallback,
         loader: AuthVerifiedGuard,
-        Component: Outlet,
+        Component: AuthVerifiedLayout,
         children: [...homeRoutes],
       },
 

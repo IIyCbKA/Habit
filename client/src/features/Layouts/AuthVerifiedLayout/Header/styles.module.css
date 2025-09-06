@@ -3,7 +3,7 @@
   position: relative;
   display: flex;
   justify-content: center;
-  height: var(--header-height);
+  height: var(--auth-verified-header-height);
   flex-shrink: 0;
   z-index: 4;
 }

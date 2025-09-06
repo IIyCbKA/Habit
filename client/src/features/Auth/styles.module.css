@@ -3,12 +3,13 @@
   flex: 1;
   justify-content: center;
   align-items: center;
+  position: relative;
 }
 
 .logo {
   position: absolute;
-  top: 30px;
-  left: var(--auth-horizontal-margin);
-  width: 36px;
-  height: 36px;
+  top: var(--auth-logo-indent);
+  left: var(--auth-logo-indent);
+  width: var(--auth-logo-size);
+  height: var(--auth-logo-size);
 }

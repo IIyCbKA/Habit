@@ -6,12 +6,13 @@
 / utils - custom classes-redefinitions */
 
 :root {
-  --header-height: 64px;
+  --auth-verified-header-height: 64px;
   --max-content-width: 1200px;
   --border-radius-small: 4px;
   --border-radius-medium: 8px;
   --border-radius-large: 12px;
-  --auth-horizontal-margin: 30px;
+  --auth-logo-indent: 30px;
+  --auth-logo-size: 36px;
   --notification-zIndex: 9999;
   --overlay-layer-zIndex: 10000;
   --overlay-elem-zIndex: 10001;
