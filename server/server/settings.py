@@ -167,6 +167,8 @@ REST_FRAMEWORK = {
         'reset_password': '5/hour',
         'password_reset_confirm': '10/hour',
         'validate_reset_token': '10/minute',
+        'oauth_start': '30/hour',
+        'oauth_callback': '60/hour',
     }
 }
 
@@ -182,6 +184,18 @@ SIMPLE_JWT = {
     'BLACKLIST_AFTER_ROTATION': False,
     'AUTH_HEADER_TYPES': ('Bearer',),
     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+}
+
+
+AUTHLIB_OAUTH_CLIENTS = {
+    'github': {
+        'client_id': os.getenv('GITHUB_CLIENT_ID'),
+        'client_secret': os.getenv('GITHUB_CLIENT_SECRET'),
+        'access_token_url': 'https://github.com/login/oauth/access_token',
+        'authorize_url': 'https://github.com/login/oauth/authorize',
+        'api_base_url': 'https://api.github.com/',
+        'client_kwargs': {'scope': 'read:user user:email'},
+    },
 }
 
 MIDDLEWARE = [

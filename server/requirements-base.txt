@@ -1,4 +1,5 @@
 asgiref==3.8.1
+authlib==1.6.3
 celery==5.5.2
 Django==5.2
 django-anymail==13.0

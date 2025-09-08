@@ -62,3 +62,23 @@ class EmailVerificationCode(models.Model):
       return True
 
     return timezone.now() - self.code_created_at > timedelta(seconds=settings.TIMEOUTS['VERIFICATION_CODE'])
+
+
+class Provider(models.TextChoices):
+  GOOGLE = 'google', 'Google'
+  GITHUB = 'github', 'GitHub'
+  FACEBOOK = 'facebook', 'Facebook'
+  X = 'x', 'X'
+
+
+class SocialAccount(models.Model):
+  provider = models.CharField(max_length=20, choices=Provider.choices)
+  provider_user_id = models.CharField(max_length=255, blank=True, editable=False)
+  user = models.ForeignKey(
+    settings.AUTH_USER_MODEL,
+    on_delete=models.CASCADE,
+    related_name='social_accounts'
+  )
+
+  class Meta:
+    unique_together = ('provider', 'provider_user_id')
