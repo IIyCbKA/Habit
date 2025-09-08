@@ -19,20 +19,20 @@ class GithubOAuthStartView(APIView):
     if provider != 'github':
       return Response(status=status.HTTP_400_BAD_REQUEST)
 
-    if not settings.GITHUB_CLIENT_ID:
+    if not settings.OAUTH_CLIENTS['github']['client_id']:
       return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     state = secrets.token_urlsafe(32)
     cache.set(f'oauth:gh:state:{state}', True, 600)
 
     params = {
-      'client_id': settings.GITHUB_CLIENT_ID,
+      'client_id': settings.OAUTH_CLIENTS['github']['client_id'],
       'redirect_uri': request.build_absolute_uri('/auth/oauth/github/callback/'),
       'state': state,
-      'scope': 'read:user user:email',
+      'scope': settings.OAUTH_CLIENTS['github']['scope'],
     }
 
-    url = f'https://github.com/login/oauth/authorize?{urlencode(params)}'
+    url = f'{settings.OAUTH_CLIENTS['github']['authorize_url']}?{urlencode(params)}'
 
     return Response(status=status.HTTP_302_FOUND, headers={'Location': url})
 
@@ -61,8 +61,8 @@ class GithubOAuthCallbackView(APIView):
     }
 
     token_payload = {
-      'client_id': settings.GITHUB_CLIENT_ID,
-      'client_secret': settings.GITHUB_CLIENT_SECRET,
+      'client_id': settings.OAUTH_CLIENTS['github']['client_id'],
+      'client_secret': settings.OAUTH_CLIENTS['github']['client_secret'],
       'code': code,
       'redirect_uri': request.build_absolute_uri('/auth/oauth/github/callback/'),
       'state': state,
@@ -70,7 +70,7 @@ class GithubOAuthCallbackView(APIView):
 
     try:
       t = requests.post(
-        'https://github.com/login/oauth/access_token',
+        settings.OAUTH_CLIENTS['github']['access_token_url'],
         data=token_payload,
         headers=token_headers,
         timeout=10
@@ -94,7 +94,11 @@ class GithubOAuthCallbackView(APIView):
       'X-GitHub-Api-Version': '2022-11-28',
     }
     try:
-      me_resp = requests.get('https://api.github.com/user', headers=api_headers, timeout=10)
+      me_resp = requests.get(
+        f'{settings.OAUTH_CLIENTS['github']['api_base_url']}/user',
+        headers=api_headers,
+        timeout=10
+      )
     except requests.RequestException as e:
       return Response(status=HTTP_502_BAD_GATEWAY)
 
@@ -105,7 +109,11 @@ class GithubOAuthCallbackView(APIView):
 
     emails_json = None
     try:
-      emails_resp = requests.get('https://api.github.com/user/emails', headers=api_headers, timeout=10)
+      emails_resp = requests.get(
+        f'{settings.OAUTH_CLIENTS['github']['api_base_url']}/user/emails',
+        headers=api_headers,
+        timeout=10
+      )
       if emails_resp.status_code == status.HTTP_200_OK:
         emails_json = emails_resp.json()
     except requests.RequestException:

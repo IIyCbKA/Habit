@@ -187,14 +187,14 @@ SIMPLE_JWT = {
 }
 
 
-AUTHLIB_OAUTH_CLIENTS = {
+OAUTH_CLIENTS = {
     'github': {
         'client_id': os.getenv('GITHUB_CLIENT_ID'),
         'client_secret': os.getenv('GITHUB_CLIENT_SECRET'),
         'access_token_url': 'https://github.com/login/oauth/access_token',
         'authorize_url': 'https://github.com/login/oauth/authorize',
-        'api_base_url': 'https://api.github.com/',
-        'client_kwargs': {'scope': 'read:user user:email'},
+        'api_base_url': 'https://api.github.com',
+        'scope': 'read:user user:email',
     },
 }
 
