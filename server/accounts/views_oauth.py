@@ -15,7 +15,10 @@ class GithubOAuthStartView(APIView):
   permission_classes = [AllowAny]
   throttle_scope = 'oauth_start'
 
-  def get(self, request: Request) -> Response:
+  def get(self, request: Request, provider: str = None) -> Response:
+    if provider != 'github':
+      return Response(status=status.HTTP_400_BAD_REQUEST)
+
     if not settings.GITHUB_CLIENT_ID:
       return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -38,7 +41,10 @@ class GithubOAuthCallbackView(APIView):
   permission_classes = [AllowAny]
   throttle_scope = 'oauth_callback'
 
-  def get(self, request: Request) -> Response:
+  def get(self, request: Request, provider: str = None) -> Response:
+    if provider != 'github':
+      return Response(status=status.HTTP_400_BAD_REQUEST)
+
     code = request.query_params.get('code')
     state = request.query_params.get('state')
 

@@ -12,6 +12,7 @@ import AuthVerifiedLayout from "@/features/Layouts/AuthVerifiedLayout";
 import RootLayout from "@/features/Layouts/RootLayout";
 
 const Fallback = () => <LoadingOverlay />;
+const Empty = () => null;
 
 const appRoutes: RouteObject[] = [
   {
@@ -19,7 +20,7 @@ const appRoutes: RouteObject[] = [
     Component: RootLayout,
     HydrateFallback: Fallback,
     children: [
-      { index: true, loader: IndexLoader, Component: () => null },
+      { index: true, loader: IndexLoader, Component: Empty },
 
       {
         HydrateFallback: Fallback,
@@ -35,7 +36,7 @@ const appRoutes: RouteObject[] = [
         children: [...homeRoutes],
       },
 
-      { path: PATHS.OTHER_PATHS, loader: IndexLoader },
+      { path: PATHS.OTHER_PATHS, loader: IndexLoader, Component: Empty },
     ],
   },
 ];
