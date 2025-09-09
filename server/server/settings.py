@@ -40,6 +40,7 @@ TIMEOUTS = {
     'VERIFICATION_CODE': 60 * 10,
     'PASSWORD_RESET_LINK': 60 * 30,
     'REDIS_CACHES': 60 * 60 * 24 * 30,
+    'OAUTH_STATE': 60 * 10,
 }
 
 ADMIN_URL = os.environ.get('DJANGO_ADMIN_URL')

@@ -1,9 +1,6 @@
-import secrets
 import requests
 
 from django.conf import settings
-from django.core.cache import cache
-from django.utils.http import urlencode
 from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework.request import Request
@@ -11,39 +8,43 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_502_BAD_GATEWAY
 from rest_framework.views import APIView
 
-class GithubOAuthStartView(APIView):
+from .oauth_helpers import (
+  get_authorize_url_with_params,
+  pop_state_data,
+  validate_redirect_uri, get_payload_for_callback, get_headers_for_callback
+)
+
+from .providers import PROVIDER_HANDLERS
+
+
+class OAuthStartView(APIView):
   permission_classes = [AllowAny]
   throttle_scope = 'oauth_start'
 
   def get(self, request: Request, provider: str = None) -> Response:
-    if provider != 'github':
+    if not provider or provider not in settings.OAUTH_CLIENTS:
       return Response(status=status.HTTP_400_BAD_REQUEST)
 
-    if not settings.OAUTH_CLIENTS['github']['client_id']:
+    provider_cfg = settings.OAUTH_CLIENTS.get(provider)
+    if not provider_cfg or not provider_cfg.get('client_id'):
       return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-    state = secrets.token_urlsafe(32)
-    cache.set(f'oauth:gh:state:{state}', True, 600)
-
-    params = {
-      'client_id': settings.OAUTH_CLIENTS['github']['client_id'],
-      'redirect_uri': request.build_absolute_uri('/auth/oauth/github/callback/'),
-      'state': state,
-      'scope': settings.OAUTH_CLIENTS['github']['scope'],
-    }
-
-    url = f'{settings.OAUTH_CLIENTS['github']['authorize_url']}?{urlencode(params)}'
-
-    return Response(status=status.HTTP_302_FOUND, headers={'Location': url})
+    authorize_url = get_authorize_url_with_params(provider, request)
+    return Response(
+      status=status.HTTP_302_FOUND,
+      headers={'Location': authorize_url}
+    )
 
 
-class GithubOAuthCallbackView(APIView):
+class OAuthCallbackView(APIView):
   permission_classes = [AllowAny]
   throttle_scope = 'oauth_callback'
 
   def get(self, request: Request, provider: str = None) -> Response:
-    if provider != 'github':
+    if not provider or provider not in settings.OAUTH_CLIENTS:
       return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    cfg = settings.OAUTH_CLIENTS[provider]
 
     code = request.query_params.get('code')
     state = request.query_params.get('state')
@@ -51,26 +52,19 @@ class GithubOAuthCallbackView(APIView):
     if not code or not state:
       return Response(status=status.HTTP_400_BAD_REQUEST)
 
-    if not cache.get(f'oauth:gh:state:{state}'):
+    state_data = pop_state_data(provider, state)
+    if not state_data:
       return Response(status=status.HTTP_400_BAD_REQUEST)
 
-    cache.delete(f'oauth:gh:state:{state}')
+    if not validate_redirect_uri(provider, request, state_data):
+      return Response(status=status.HTTP_400_BAD_REQUEST)
 
-    token_headers = {
-      'Accept': 'application/json',
-    }
-
-    token_payload = {
-      'client_id': settings.OAUTH_CLIENTS['github']['client_id'],
-      'client_secret': settings.OAUTH_CLIENTS['github']['client_secret'],
-      'code': code,
-      'redirect_uri': request.build_absolute_uri('/auth/oauth/github/callback/'),
-      'state': state,
-    }
+    token_headers = get_headers_for_callback()
+    token_payload = get_payload_for_callback(code, request, provider, state)
 
     try:
-      t = requests.post(
-        settings.OAUTH_CLIENTS['github']['access_token_url'],
+      token = requests.post(
+        cfg['access_token_url'],
         data=token_payload,
         headers=token_headers,
         timeout=10
@@ -78,50 +72,24 @@ class GithubOAuthCallbackView(APIView):
     except requests.exceptions.RequestException as e:
       return Response(status=status.HTTP_502_BAD_GATEWAY)
 
-    if t.status_code != status.HTTP_200_OK:
+    if token.status_code != status.HTTP_200_OK:
       return Response(status=HTTP_502_BAD_GATEWAY)
 
-    token_json = t.json()
+    token_json = token.json()
     access_token = token_json.get('access_token')
-    token_type = token_json.get('token_type')
 
     if not access_token:
       return Response(status=status.HTTP_502_BAD_GATEWAY)
 
-    api_headers = {
-      'Authorization': f'Bearer {access_token}',
-      'Accept': 'application/vnd.github+json',
-      'X-GitHub-Api-Version': '2022-11-28',
-    }
+    handler = PROVIDER_HANDLERS.get(provider)
+    if not handler:
+      return Response(status=status.HTTP_501_NOT_IMPLEMENTED)
+
     try:
-      me_resp = requests.get(
-        f'{settings.OAUTH_CLIENTS['github']['api_base_url']}/user',
-        headers=api_headers,
-        timeout=10
-      )
+      result = handler(cfg, access_token, token_json)
     except requests.RequestException as e:
-      return Response(status=HTTP_502_BAD_GATEWAY)
+      return Response(status=status.HTTP_502_BAD_GATEWAY)
+    except Exception:
+      return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-    if me_resp.status_code != status.HTTP_200_OK:
-      return Response(status=HTTP_502_BAD_GATEWAY)
-
-    me_json = me_resp.json()
-
-    emails_json = None
-    try:
-      emails_resp = requests.get(
-        f'{settings.OAUTH_CLIENTS['github']['api_base_url']}/user/emails',
-        headers=api_headers,
-        timeout=10
-      )
-      if emails_resp.status_code == status.HTTP_200_OK:
-        emails_json = emails_resp.json()
-    except requests.RequestException:
-      pass
-
-    return Response({
-      'provider': 'github',
-      'token_info': {'token_type': token_type, 'masked': f'***{access_token[-6:]}'},
-      'user': me_json,
-      'emails': emails_json,
-    }, status=status.HTTP_200_OK)
+    return Response(result, status=status.HTTP_200_OK)

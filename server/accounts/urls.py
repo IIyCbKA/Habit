@@ -11,7 +11,7 @@ from .views import (
   ValidatePasswordResetTokenView,
 )
 
-from .views_oauth import GithubOAuthStartView, GithubOAuthCallbackView
+from .views_oauth import OAuthStartView, OAuthCallbackView
 
 urlpatterns = [
   path('register/', PendingRegisterView.as_view(), name='register'),
@@ -23,6 +23,6 @@ urlpatterns = [
   path('login/', LoginView.as_view(), name='login'),
   path('refresh/', RefreshView.as_view(), name='token_refresh'),
   path('logout/', LogoutView.as_view(), name='logout'),
-  path('oauth/<str:provider>/start/', GithubOAuthStartView.as_view(), name='oauth_start'),
-  path('oauth/<str:provider>/callback/', GithubOAuthCallbackView.as_view(), name='oauth_callback'),
+  path('oauth/<str:provider>/start/', OAuthStartView.as_view(), name='oauth_start'),
+  path('oauth/<str:provider>/callback/', OAuthCallbackView.as_view(), name='oauth_callback'),
 ]
