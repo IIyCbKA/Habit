@@ -1,8 +1,13 @@
+from django.conf import settings
 from rest_framework import status
+
 from typing import Optional
 import requests
 
 from .models import Provider
+
+def _get_base_api_url(provider: Provider) -> str:
+  return settings.OAUTH_CLIENTS[provider]['api_base_url'].rstrip('/')
 
 
 def _github_api_headers(access_token: str) -> dict:
@@ -13,16 +18,16 @@ def _github_api_headers(access_token: str) -> dict:
   }
 
 
-def _fetch_github_user(cfg: dict, access_token: str, timeout: int = 10) -> dict:
-  base = cfg.get('api_base_url', 'https://api.github.com').rstrip('/')
+def _fetch_github_user(access_token: str, timeout: int = 10) -> dict:
+  base = _get_base_api_url(Provider.GITHUB.value)
   url = f'{base}/user'
   resp = requests.get(url, headers=_github_api_headers(access_token), timeout=timeout)
   resp.raise_for_status()
   return resp.json()
 
 
-def _fetch_github_emails(cfg: dict, access_token: str, timeout: int = 10) -> Optional[list]:
-  base = cfg.get('api_base_url', 'https://api.github.com').rstrip('/')
+def _fetch_github_emails(access_token: str, timeout: int = 10) -> Optional[list]:
+  base = _get_base_api_url(Provider.GITHUB.value)
   url = f'{base}/user/emails'
   resp = requests.get(url, headers=_github_api_headers(access_token), timeout=timeout)
   if resp.status_code == status.HTTP_200_OK:
@@ -55,14 +60,14 @@ def normalize_github_profile(user_json: dict, emails_json: Optional[list]) -> di
   }
 
 
-def fetch_profile_github(cfg: dict, access_token: str, raw_token_response: dict) -> dict:
+def fetch_profile_github(access_token: str, raw_token_response: dict) -> dict:
   try:
-    user_json = _fetch_github_user(cfg, access_token)
+    user_json = _fetch_github_user(access_token)
   except requests.HTTPError as exc:
     raise
 
   try:
-    emails_json = _fetch_github_emails(cfg, access_token)
+    emails_json = _fetch_github_emails(access_token)
   except Exception:
     emails_json = None
 

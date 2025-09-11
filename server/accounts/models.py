@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
-from django.db.models import UniqueConstraint
+from django.db.models import Q, UniqueConstraint
 from django.db.models.functions import Lower
 from django.contrib.auth.hashers import make_password
 from django.db import models
@@ -12,13 +12,17 @@ from datetime import timedelta
 import secrets
 
 class CustomUser(AbstractUser):
-  email = models.EmailField(blank=False)
+  email = models.EmailField(null=True, blank=True)
   is_email_verified = models.BooleanField(default=False)
 
   class Meta:
     constraints = [
       UniqueConstraint(Lower('username'), name='uniq_username_ci'),
-      UniqueConstraint(Lower('email'), name='uniq_email_ci'),
+      UniqueConstraint(
+        Lower('email'),
+        condition=Q(email__isnull=False) & ~Q(email=''),
+        name='uniq_email_ci',
+      ),
     ]
 
   def verify_email(self) -> None:
