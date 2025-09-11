@@ -4,22 +4,21 @@ import { ButtonElement } from "./types";
 export const ELEMENTS_LIST: ButtonElement[] = [
   {
     icon: Github,
-    link: "/",
-    ariaLabel: "Github",
+    provider: "github",
   },
   {
     icon: Google,
-    link: "/",
-    ariaLabel: "Google",
+    provider: "google",
+    disabled: true,
   },
   {
     icon: Facebook,
-    link: "/",
-    ariaLabel: "Facebook",
+    provider: "facebook",
+    disabled: true,
   },
   {
     icon: XIcon,
-    link: "/",
-    ariaLabel: "X",
+    provider: "x",
+    disabled: true,
   },
 ];

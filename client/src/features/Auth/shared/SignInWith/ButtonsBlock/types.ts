@@ -1,17 +1,22 @@
-import React from "react";
+import React, { ButtonHTMLAttributes } from "react";
 
 /*
---------------ButtonElement Interface--------------
-link        - link when clicking on button
-ariaLabel   - text hint for icon of button
-icon        - image in button
-className   - other styles
+--------------Provider type--------------
+*/
+export type Provider = "github" | "google" | "facebook" | "x";
+
+/*
+--------------IconComponent type--------------
+*/
+export type IconComponent = React.FC<React.SVGProps<SVGSVGElement>>;
+
+/*
+--------------ButtonElement type--------------
+provider    - oauth provider
+icon        - button image
 */
 
-export interface ButtonElement {
-  link: string;
-  ariaLabel: string;
-
-  icon: React.FC<React.SVGProps<SVGSVGElement>>;
-  className?: string;
-}
+export type ButtonElement = ButtonHTMLAttributes<HTMLButtonElement> & {
+  provider: Provider;
+  icon: IconComponent;
+};

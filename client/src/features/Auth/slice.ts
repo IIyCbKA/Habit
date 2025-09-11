@@ -38,11 +38,13 @@ export const passwordResetConfirm = createAppAsyncThunk(
 
 const commonFulfilled = (
   state: AuthState,
-  { payload: { user, accessToken } }: PayloadAction<CommonFulfilledResponse>,
+  {
+    payload: { user, accessToken, isAuthenticated },
+  }: PayloadAction<CommonFulfilledResponse>,
 ) => {
   state.user = user;
   state.accessToken = accessToken;
-  state.isAuth = user.isEmailVerified;
+  state.isAuth = isAuthenticated;
   state.status = "succeeded";
 };
 

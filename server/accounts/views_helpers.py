@@ -103,6 +103,7 @@ def create_response_with_tokens(
     data={
       'access_token': str(access),
       'user': UserSerializer(user).data,
+      'is_authenticated': bool(refresh),
     },
     status=http_status
   )

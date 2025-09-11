@@ -61,12 +61,14 @@ export type User = {
 
 /*
 --------------CommonFulfilledResponse type--------------
-accessToken                - access token of auth
-user                       - user data
+accessToken      - access token of auth
+user             - user data
+isAuthenticated  - server has issued valid tokens for current session
 */
 export type CommonFulfilledResponse = {
   accessToken: string;
   user: User;
+  isAuthenticated: boolean;
 };
 
 /*

@@ -26,4 +26,9 @@
   .iconButtonRoot:hover {
     background-color: var(--tertiary-variant-color);
   }
+
+  .iconButtonRoot:disabled {
+    cursor: not-allowed;
+    background-color: var(--tertiary-color);
+  }
 }
