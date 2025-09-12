@@ -53,11 +53,8 @@ def ensure_refresh_allowed(jti: str, token_str: str) -> None:
     raise TokenError
 
 
-def get_tokens_for_user(
-  user: User,
-  is_oauth: bool = False
-) -> tuple[Optional[RefreshToken], AccessToken]:
-  if not user.is_email_verified and not is_oauth:
+def get_tokens_for_user(user: User) -> tuple[Optional[RefreshToken], AccessToken]:
+  if user.email and not user.is_email_verified:
     refresh: Optional[RefreshToken] = None
     access: AccessToken = AccessToken.for_user(user)
   else:
@@ -95,9 +92,8 @@ def create_response_with_tokens(
   request: Request,
   user: User,
   http_status: int,
-  is_oauth: bool = False,
 ) -> Response:
-  refresh, access = get_tokens_for_user(user, is_oauth)
+  refresh, access = get_tokens_for_user(user)
 
   response: Response = Response(
     data={
@@ -259,7 +255,7 @@ def complete_oauth(
   ).select_related('user').first()
 
   if social_account:
-    response = create_response_with_tokens(request, social_account.user, status.HTTP_200_OK, is_oauth=True)
+    response = create_response_with_tokens(request, social_account.user, status.HTTP_200_OK)
     if next_url:
       response.status_code = status.HTTP_303_SEE_OTHER
       response['Location'] = next_url
@@ -306,7 +302,7 @@ def complete_oauth(
         )
       final_user = user
 
-  response = create_response_with_tokens(request, final_user, status.HTTP_200_OK, is_oauth=True)
+  response = create_response_with_tokens(request, final_user, status.HTTP_200_OK)
   if next_url:
     response.status_code = status.HTTP_303_SEE_OTHER
     response['Location'] = next_url
