@@ -7,7 +7,6 @@ from django.utils.http import urlsafe_base64_decode
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 
-from .constants import *
 from .models import EmailVerificationCode
 from .validators import check_deliverability, ascii_password_validator
 
@@ -18,7 +17,7 @@ class UserSerializer(serializers.ModelSerializer):
     validators=[UniqueValidator(
       queryset=User.objects.all(),
       lookup='iexact',
-      message=USERNAME_TAKEN_ERROR
+      message='Username already taken'
     )],
     allow_blank=False,
   )
@@ -27,7 +26,7 @@ class UserSerializer(serializers.ModelSerializer):
     validators=[UniqueValidator(
       queryset=User.objects.all(),
       lookup='iexact',
-      message=EMAIL_TAKEN_ERROR
+      message='Email already taken'
     )],
     allow_blank=False,
   )
@@ -68,13 +67,13 @@ class EmailVerificationSerializer(serializers.Serializer):
     try:
       verification = EmailVerificationCode.objects.select_for_update().get(user=user)
     except EmailVerificationCode.DoesNotExist:
-      raise serializers.ValidationError(VERIFICATION_CODE_AVAILABLE_ERROR)
+      raise serializers.ValidationError('No verification code available')
 
     if verification.is_expired():
-      raise serializers.ValidationError(VERIFICATION_CODE_EXPIRED_ERROR)
+      raise serializers.ValidationError('Verification code expired')
 
     if not verification.check_code(code):
-      raise serializers.ValidationError(VERIFICATION_CODE_INCORRECT_ERROR)
+      raise serializers.ValidationError('Verification code incorrect')
 
     data['verification'] = verification
     return data
@@ -107,10 +106,10 @@ class LoginSerializer(serializers.Serializer):
         Q(email__iexact=identifier)
       )
     except User.DoesNotExist:
-      raise serializers.ValidationError(INVALID_CREDENTIALS_ERROR)
+      raise serializers.ValidationError('Invalid identifier or password')
 
     if not user.check_password(password):
-      raise serializers.ValidationError(INVALID_CREDENTIALS_ERROR)
+      raise serializers.ValidationError('Invalid identifier or password')
 
     data['user'] = user
 
@@ -146,10 +145,14 @@ class BasePasswordResetTokenSerializer(serializers.Serializer):
       uid = force_str(urlsafe_base64_decode(uidb64))
       user = User.objects.select_for_update().get(pk=uid)
     except (TypeError, ValueError, OverflowError, User.DoesNotExist):
-      raise serializers.ValidationError(INVALID_RESET_LINK_ERROR)
+      raise serializers.ValidationError(
+        'Password reset link is invalid or has expired'
+      )
 
     if not default_token_generator.check_token(user, token):
-      raise serializers.ValidationError(INVALID_RESET_LINK_ERROR)
+      raise serializers.ValidationError(
+        'Password reset link is invalid or has expired'
+      )
 
     data['user'] = user
     return data
@@ -170,7 +173,9 @@ class PasswordResetConfirmSerializer(BasePasswordResetTokenSerializer):
     new_password = self.validated_data['new_password']
 
     if not default_token_generator.check_token(user, token):
-      raise serializers.ValidationError(INVALID_RESET_LINK_ERROR)
+      raise serializers.ValidationError(
+        'Password reset link is invalid or has expired'
+      )
 
     user.set_password(new_password)
     user.save(update_fields=['password'])

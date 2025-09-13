@@ -7,6 +7,7 @@ from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode, urlencode
 
 from rest_framework import status
+from rest_framework.exceptions import NotAuthenticated
 from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework_simplejwt.token_blacklist.models import (
@@ -23,12 +24,23 @@ from rest_framework_simplejwt.tokens import (
 
 from typing import Optional
 
+from .exceptions import (
+  OAuthStateError,
+  OAuthRedirectMismatch,
+  OAuthTokenExchangeError,
+  OAuthProviderError,
+  OAuthConflictError,
+)
 from .models import SocialAccount
 from .serializers import UserSerializer
+from .providers import PROVIDER_HANDLERS
 from .token_grace import put_in_grace, in_grace
+from .types import OAuthCallbackContext
 
+import requests
 import secrets
 import time
+import uuid
 
 User = get_user_model()
 
@@ -139,7 +151,7 @@ def generate_reset_link(user: User) -> str:
   return reset_link
 
 
-def _get_oauth_provider_key(provider: str, state: str) -> str:
+def _get_oauth_cache_key(provider: str, state: str) -> str:
   return f'oauth:{provider}:state:{state}'
 
 
@@ -156,14 +168,14 @@ def _set_oauth_state(provider: str, request: Request) -> str:
     'next': request.query_params.get('next'),
   }
 
-  key = _get_oauth_provider_key(provider, state)
+  key = _get_oauth_cache_key(provider, state)
   cache.set(key, payload, settings.TIMEOUTS['OAUTH_STATE'])
 
   return state
 
 
 def pop_oauth_state_data(provider: str, state: str) -> dict:
-  key = _get_oauth_provider_key(provider, state)
+  key = _get_oauth_cache_key(provider, state)
   data = cache.get(key)
   if data is not None:
     cache.delete(key)
@@ -171,7 +183,7 @@ def pop_oauth_state_data(provider: str, state: str) -> dict:
   return data
 
 
-def get_authorize_url_with_params(provider: str, request: Request) -> str:
+def build_authorization_url(provider: str, request: Request) -> str:
   state: str = _set_oauth_state(provider, request)
 
   params = {
@@ -181,131 +193,180 @@ def get_authorize_url_with_params(provider: str, request: Request) -> str:
     'scope': settings.OAUTH_CLIENTS[provider]['scope'],
   }
 
-  url = f'{settings.OAUTH_CLIENTS[provider]['authorize_url']}?{urlencode(params)}'
+  url = f'{settings.OAUTH_CLIENTS[provider]["authorize_url"]}?{urlencode(params)}'
 
   return url
 
 
-def validate_redirect_uri(
+def ensure_valid_provider(provider: Optional[str]) -> None:
+  if not provider or provider not in settings.OAUTH_CLIENTS:
+    raise OAuthStateError('Unknown provider')
+
+
+def validate_callback_redirect_uri(
   provider: str,
   request: Request,
   state_data: dict
-) -> bool:
-  expected_redirect = state_data.get('redirect_uri')
-  actual_redirect = _get_oauth_callback_redirect_uri(provider, request)
+) -> None:
+  expected = state_data.get('redirect_uri')
+  actual = _get_oauth_callback_redirect_uri(provider, request)
+  if not expected or expected != actual:
+    raise OAuthRedirectMismatch('URI does not match the request')
 
-  return expected_redirect == actual_redirect
 
-
-def get_payload_for_callback(
+def build_token_request_payload(
   code: str,
-  request: Request,
   provider: str,
+  redirect_uri: str,
   state: str,
 ) -> dict:
   return {
     'client_id': settings.OAUTH_CLIENTS[provider]['client_id'],
     'client_secret': settings.OAUTH_CLIENTS[provider]['client_secret'],
     'code': code,
-    'redirect_uri': _get_oauth_callback_redirect_uri(provider, request),
+    'redirect_uri': redirect_uri,
     'state': state,
   }
 
 
-def get_headers_for_callback() -> dict:
-  return {
-    'Accept': 'application/json',
-  }
+def token_request_headers() -> dict:
+  return { 'Accept': 'application/json' }
 
 
-def _rand_username(prefix: str = settings.DEFAULT_USERNAME_BASE) -> str:
-  return f'{prefix}_{secrets.token_hex(6)}'
+def parse_callback_context(request: Request, provider: str) -> OAuthCallbackContext:
+  code = request.query_params.get('code')
+  state = request.query_params.get('state')
+  if not code or not state:
+    raise OAuthStateError('Missing code or state')
+
+  state_data = pop_oauth_state_data(provider, state)
+  if not state_data:
+    raise OAuthStateError('OAuth state not found or expired')
+
+  validate_callback_redirect_uri(provider, request, state_data)
+
+  return OAuthCallbackContext(
+    provider=provider,
+    code=code,
+    state=state,
+    flow=state_data.get('flow', 'login'),
+    next_url=state_data.get('next'),
+    redirect_uri=_get_oauth_callback_redirect_uri(provider, request),
+  )
+
+
+def exchange_code_for_token(ctx: OAuthCallbackContext) -> dict:
+  try:
+    response = requests.post(
+      settings.OAUTH_CLIENTS[ctx.provider]['access_token_url'],
+      data=build_token_request_payload(
+        code=ctx.code,
+        provider=ctx.provider,
+        redirect_uri=ctx.redirect_uri,
+        state=ctx.state
+      ),
+      headers=token_request_headers(),
+      timeout=10,
+    )
+  except requests.RequestException:
+    raise OAuthTokenExchangeError()
+
+  if response.status_code != status.HTTP_200_OK:
+    raise OAuthTokenExchangeError()
+
+  token_json = response.json()
+  if not token_json.get('access_token'):
+    raise OAuthTokenExchangeError('No access token in response')
+
+  return token_json
+
+
+def fetch_provider_payload(provider: str, token_json: dict) -> dict:
+  access_token = token_json.get('access_token')
+  handler = PROVIDER_HANDLERS.get(provider)
+  if not handler:
+    raise OAuthProviderError('Provider handler not implemented')
+  try:
+    return handler(access_token, token_json)
+  except requests.RequestException:
+    raise OAuthProviderError('Provider API call failed')
+
+
+def find_user_by_social(provider: str, provider_uid: str) -> User | None:
+  social_account = (SocialAccount.objects
+    .filter(provider=provider, provider_user_id=provider_uid)
+    .select_related('user')
+    .first()
+  )
+
+  return social_account.user if social_account else None
+
+
+def link_social_to_current_user(current_user: User, provider: str, provider_uid: str) -> None:
+  if not current_user or not current_user.is_authenticated:
+    raise NotAuthenticated('Authentication required to link social account')
+
+  obj, created = SocialAccount.objects.get_or_create(
+    provider=provider,
+    provider_user_id=provider_uid,
+    defaults={'user': current_user},
+  )
+
+  if not created and obj.user_id != current_user.id:
+    raise OAuthConflictError()
+
+
+def _new_random_username(prefix: str = settings.DEFAULT_USERNAME_PREFIX) -> str:
+  return f'{prefix}_{uuid.uuid4().hex}'
 
 
 def _create_user_minimal() -> User:
-  for _ in range(10):
-    try:
-      with transaction.atomic():
-        user = User(username=_rand_username())
-        user.set_unusable_password()
-        user.save()
-        return user
-    except IntegrityError:
-      continue
-
-  raise IntegrityError
+  user = User(username=_new_random_username())
+  user.set_unusable_password()
+  user.save()
+  return user
 
 
-def complete_oauth(
-  request: Request,
-  provider: str,
-  provider_payload: dict,
-  flow: str,
-  next_url: Optional[str] = None,
-) -> Response:
-  profile = provider_payload.get('profile') or {}
-  provider_uid = profile.get('id')
-  if not provider_uid:
-    return Response(status=status.HTTP_502_BAD_GATEWAY)
-
-  provider_uid = str(provider_uid)
-
-  social_account = SocialAccount.objects.filter(
-    provider=provider, provider_user_id=provider_uid
-  ).select_related('user').first()
-
-  if social_account:
-    response = create_response_with_tokens(request, social_account.user, status.HTTP_200_OK)
-    if next_url:
-      response.status_code = status.HTTP_303_SEE_OTHER
-      response['Location'] = next_url
-      response.data = None
-    return response
-
-  if flow == 'link':
-    user = getattr(request, 'user', None)
-    if not user or not user.is_authenticated:
-      return Response(status=status.HTTP_401_UNAUTHORIZED)
-
-    try:
-      with transaction.atomic():
-        SocialAccount.objects.create(
-          provider=provider, provider_user_id=provider_uid, user=user
-        )
-    except IntegrityError:
-      pass
-
-    if next_url:
-      return Response(status=status.HTTP_303_SEE_OTHER, headers={'Location': next_url})
-    return Response(status=status.HTTP_204_NO_CONTENT)
-
-  user: User = _create_user_minimal()
-
-  final_user: User
+def register_user_for_social(provider: str, provider_uid: str) -> User:
   try:
     with transaction.atomic():
+      user: User = _create_user_minimal()
       SocialAccount.objects.create(
         provider=provider, provider_user_id=provider_uid, user=user
       )
-
-    final_user = user
+    return user
   except IntegrityError:
-    social_account = SocialAccount.objects.filter(
-      provider=provider, provider_user_id=provider_uid
-    ).select_related('user').first()
-    if social_account:
-      final_user = social_account.user
-    else:
-      with transaction.atomic():
-        SocialAccount.objects.create(
-          provider=provider, provider_user_id=provider_uid, user=user
-        )
-      final_user = user
+    existing = find_user_by_social(provider, provider_uid)
+    if existing:
+      return existing
+    raise
 
-  response = create_response_with_tokens(request, final_user, status.HTTP_200_OK)
+
+def issue_login_response(request: Request, user: User, next_url: Optional[str]) -> Response:
+  response = create_response_with_tokens(request, user, status.HTTP_200_OK)
   if next_url:
     response.status_code = status.HTTP_303_SEE_OTHER
     response['Location'] = next_url
     response.data = None
 
   return response
+
+
+def finalize_oauth_flow(request: Request, ctx: OAuthCallbackContext, provider_payload: dict) -> Response:
+  profile = provider_payload.get('profile') or {}
+  provider_uid = str(profile.get('id') or '')
+  if not provider_uid:
+    return Response(status=status.HTTP_502_BAD_GATEWAY)
+
+  existing = find_user_by_social(ctx.provider, provider_uid)
+  if existing:
+    return issue_login_response(request, existing, ctx.next_url)
+
+  if ctx.flow == 'link':
+    link_social_to_current_user(getattr(request, 'user', None), ctx.provider, provider_uid)
+    if ctx.next_url:
+      return Response(status=status.HTTP_303_SEE_OTHER, headers={'Location': ctx.next_url})
+    return Response(status=status.HTTP_204_NO_CONTENT)
+
+  new_user = register_user_for_social(ctx.provider, provider_uid)
+  return issue_login_response(request, new_user, ctx.next_url)

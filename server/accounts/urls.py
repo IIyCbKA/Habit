@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import (
+from .views_auth import (
   RefreshView,
   LoginView,
   PendingRegisterView,

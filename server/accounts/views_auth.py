@@ -6,9 +6,9 @@ from rest_framework import status, generics
 from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework.views import APIView
-
 from rest_framework_simplejwt.tokens import TokenError
 
+from .exceptions import EmailAlreadyVerifiedError, InvalidRefreshTokenError
 from .serializers import (
   UserSerializer,
   LoginSerializer,
@@ -22,7 +22,6 @@ from rest_framework.permissions import AllowAny
 
 from typing import Optional
 
-from .constants import *
 from .models import EmailVerificationCode
 from .tasks import send_verification_email, send_password_reset_email
 from .views_helpers import (
@@ -79,10 +78,7 @@ class ResendCodeView(APIView):
     user: User = request.user
 
     if user.is_email_verified:
-      return Response(
-        {settings.ERROR_DETAIL_KEY: EMAIL_ALREADY_VERIFIED_ERROR},
-        status=status.HTTP_400_BAD_REQUEST
-      )
+      raise EmailAlreadyVerifiedError()
 
     try:
       with transaction.atomic():
@@ -135,10 +131,7 @@ class RefreshView(APIView):
       user_id = payload['user_id']
       user = User.objects.get(pk=user_id)
     except (TokenError, KeyError, User.DoesNotExist):
-      return Response(
-        {settings.ERROR_DETAIL_KEY: INVALID_REFRESH_ERROR},
-        status=status.HTTP_401_UNAUTHORIZED
-      )
+      raise InvalidRefreshTokenError()
 
     response: Response = create_response_with_tokens(request, user, status.HTTP_200_OK)
     return response

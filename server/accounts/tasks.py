@@ -6,7 +6,12 @@ from django.utils import timezone
 
 from datetime import datetime, timedelta
 
-from .constants import *
+from .constants import (
+  VERIFICATION_MAIL_BODY,
+  VERIFICATION_MAIL_SUBJECT,
+  RESET_PASSWORD_MAIL_BODY,
+  RESET_PASSWORD_MAIL_SUBJECT
+)
 from .models import EmailVerificationCode
 
 

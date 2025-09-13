@@ -14,21 +14,11 @@ VERIFICATION_CODE_LENGTH = 6
 ######################
 #       ERRORS       #
 ######################
-EMAIL_ALREADY_VERIFIED_ERROR = 'Email already verified'
-EMAIL_TAKEN_ERROR = 'Email already taken'
-INVALID_CREDENTIALS_ERROR = 'Invalid identifier or password'
-INVALID_REFRESH_ERROR = 'Invalid or expired refresh token'
-INVALID_RESET_LINK_ERROR = 'Password reset link is invalid or has expired'
 PASSWORD_VALIDATE_ERROR = (
   'Password must be at least {min_length} characters long, '
   'contain at least one letter and one digit, '
   'and consist only of ASCII letters and digits'
 ).format(min_length=PASSWORD_MIN_LENGTH)
-REFRESH_NOT_PROVIDED_ERROR = 'Refresh token not provided'
-USERNAME_TAKEN_ERROR = 'Username already taken'
-VERIFICATION_CODE_EXPIRED_ERROR = 'Verification code expired'
-VERIFICATION_CODE_INCORRECT_ERROR = 'Verification code incorrect'
-VERIFICATION_CODE_AVAILABLE_ERROR = 'No verification code available'
 
 
 #####################

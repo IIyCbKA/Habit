@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import *
+from .models import CustomUser, EmailVerificationCode, SocialAccount
 
 
 @admin.register(CustomUser)
@@ -22,3 +22,11 @@ class EmailVerificationCodeAdmin(admin.ModelAdmin):
   search_fields = ('user__username', 'user__email')
   readonly_fields = ('secret_code', 'code_created_at')
   list_display = ('user', 'code_created_at', 'is_expired')
+
+
+@admin.register(SocialAccount)
+class SocialAccountAdmin(admin.ModelAdmin):
+  search_fields = ('user__username', 'user__email', 'provider')
+  readonly_fields = ('provider', 'provider_user_id', 'user')
+  list_display = ('user', 'provider', 'provider_user_id')
+  list_display_links = None

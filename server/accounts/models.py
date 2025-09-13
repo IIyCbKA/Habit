@@ -6,7 +6,7 @@ from django.contrib.auth.hashers import make_password
 from django.db import models
 from django.utils import timezone
 
-from .constants import *
+from .constants import VERIFICATION_CODE_LENGTH
 
 from datetime import timedelta
 import secrets
@@ -85,4 +85,9 @@ class SocialAccount(models.Model):
   )
 
   class Meta:
-    unique_together = ('provider', 'provider_user_id')
+    constraints = [
+      UniqueConstraint(
+        fields=['provider', 'provider_user_id'],
+        name='uq_provider_uid',
+      ),
+    ]
