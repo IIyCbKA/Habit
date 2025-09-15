@@ -4,7 +4,7 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .views_helpers import (
+from accounts.services.oauth import (
   build_authorization_url,
   ensure_valid_provider,
   parse_callback_context,

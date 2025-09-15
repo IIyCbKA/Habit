@@ -1,5 +1,5 @@
 from django.urls import path
-from .views_auth import (
+from .views.auth import (
   RefreshView,
   LoginView,
   PendingRegisterView,
@@ -11,7 +11,7 @@ from .views_auth import (
   ValidatePasswordResetTokenView,
 )
 
-from .views_oauth import OAuthStartView, OAuthCallbackView
+from .views.oauth import OAuthStartView, OAuthCallbackView
 
 urlpatterns = [
   path('register/', PendingRegisterView.as_view(), name='register'),

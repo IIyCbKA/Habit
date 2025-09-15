@@ -7,9 +7,12 @@ from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import TokenError
+from rest_framework.permissions import AllowAny
 
-from .exceptions import EmailAlreadyVerifiedError, InvalidRefreshTokenError
-from .serializers import (
+from accounts.exceptions import EmailAlreadyVerifiedError, InvalidRefreshTokenError
+from accounts.models import EmailVerificationCode
+from accounts.tasks import send_verification_email, send_password_reset_email
+from accounts.serializers import (
   UserSerializer,
   LoginSerializer,
   EmailVerificationSerializer,
@@ -17,14 +20,7 @@ from .serializers import (
   PasswordResetConfirmSerializer,
   ValidatePasswordResetTokenSerializer,
 )
-
-from rest_framework.permissions import AllowAny
-
-from typing import Optional
-
-from .models import EmailVerificationCode
-from .tasks import send_verification_email, send_password_reset_email
-from .views_helpers import (
+from accounts.services.auth import (
   ensure_refresh_allowed,
   decode_refresh_payload,
   blacklist_all_refresh_tokens_for_user,
@@ -33,6 +29,8 @@ from .views_helpers import (
   delete_refresh_from_cookie,
   generate_reset_link
 )
+
+from typing import Optional
 
 User = get_user_model()
 

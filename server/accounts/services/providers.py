@@ -1,6 +1,6 @@
 from django.conf import settings
 
-from .models import Provider
+from accounts.models import Provider
 
 import requests
 
