@@ -199,6 +199,14 @@ OAUTH_CLIENTS = {
         'api_base_url': 'https://api.github.com',
         'scope': 'read:user user:email',
     },
+    'x': {
+        'client_id': os.getenv('X_CLIENT_ID'),
+        'client_secret': os.getenv('X_CLIENT_SECRET'),
+        'access_token_url': 'https://api.x.com/2/oauth2/token',
+        'authorize_url': 'https://twitter.com/i/oauth2/authorize',
+        'api_base_url': 'https://api.x.com/2',
+        'scope': 'users.read',
+    },
 }
 
 MIDDLEWARE = [

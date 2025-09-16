@@ -19,6 +19,5 @@ export const ELEMENTS_LIST: ButtonElement[] = [
   {
     icon: XIcon,
     provider: "x",
-    disabled: true,
   },
 ];
