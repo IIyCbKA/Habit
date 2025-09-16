@@ -205,7 +205,7 @@ OAUTH_CLIENTS = {
         'access_token_url': 'https://api.x.com/2/oauth2/token',
         'authorize_url': 'https://x.com/i/oauth2/authorize',
         'api_base_url': 'https://api.x.com/2',
-        'scope': 'users.read',
+        'scope': 'users.read tweet.read',
     },
 }
 
