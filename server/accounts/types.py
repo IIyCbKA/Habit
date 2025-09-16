@@ -9,3 +9,4 @@ class OAuthCallbackContext:
   flow: str
   next_url: Optional[str]
   redirect_uri: str
+  code_verifier: str

@@ -203,7 +203,7 @@ OAUTH_CLIENTS = {
         'client_id': os.getenv('X_CLIENT_ID'),
         'client_secret': os.getenv('X_CLIENT_SECRET'),
         'access_token_url': 'https://api.x.com/2/oauth2/token',
-        'authorize_url': 'https://twitter.com/i/oauth2/authorize',
+        'authorize_url': 'https://x.com/i/oauth2/authorize',
         'api_base_url': 'https://api.x.com/2',
         'scope': 'users.read',
     },

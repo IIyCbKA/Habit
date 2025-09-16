@@ -1,3 +1,6 @@
+import base64
+import hashlib
+
 from django.conf import settings
 from django.core.cache import cache
 from django.db import transaction, IntegrityError
@@ -11,7 +14,7 @@ from rest_framework.request import Request
 
 from .auth import create_response_with_tokens
 from .providers import PROVIDER_HANDLERS
-from accounts.models import SocialAccount
+from accounts.models import Provider, SocialAccount
 from accounts.types import OAuthCallbackContext
 from accounts.exceptions import (
   OAuthStateError,
@@ -37,13 +40,24 @@ def _get_oauth_callback_redirect_uri(provider: str, request: Request) -> str:
   return request.build_absolute_uri(f'/auth/oauth/{provider}/callback/')
 
 
+def _generate_code_verifier() -> str:
+  return secrets.token_urlsafe(64)[:128]
+
+
+def _code_challenge_s256(verifier: str) -> str:
+  digest = hashlib.sha256(verifier.encode('ascii')).digest()
+  return base64.urlsafe_b64encode(digest).rstrip(b'=').decode('ascii')
+
+
 def _set_oauth_state(provider: str, request: Request) -> str:
   state = secrets.token_urlsafe(64)
+  code_verifier = _generate_code_verifier()
   payload = {
     'created': int(time.time()),
     'redirect_uri': _get_oauth_callback_redirect_uri(provider, request),
     'flow': request.query_params.get('flow', 'login'),
     'next': request.query_params.get('next'),
+    'pkce_verifier': code_verifier,
   }
 
   key = _get_oauth_cache_key(provider, state)
@@ -63,13 +77,21 @@ def pop_oauth_state_data(provider: str, state: str) -> dict:
 
 def build_authorization_url(provider: str, request: Request) -> str:
   state: str = _set_oauth_state(provider, request)
+  state_data = cache.get(_get_oauth_cache_key(provider, state)) or {}
+  verifier = state_data['pkce_verifier']
+  challenge = _code_challenge_s256(verifier)
 
   params = {
     'client_id': settings.OAUTH_CLIENTS[provider]['client_id'],
     'redirect_uri': _get_oauth_callback_redirect_uri(provider, request),
     'state': state,
     'scope': settings.OAUTH_CLIENTS[provider]['scope'],
+    'code_challenge': challenge,
+    'code_challenge_method': 'S256',
   }
+
+  if provider == Provider.X.value:
+    params['response_type'] = 'code'
 
   url = f'{settings.OAUTH_CLIENTS[provider]["authorize_url"]}?{urlencode(params)}'
 
@@ -92,23 +114,35 @@ def validate_callback_redirect_uri(
     raise OAuthRedirectMismatch('URI does not match the request')
 
 
-def build_token_request_payload(
-  code: str,
-  provider: str,
-  redirect_uri: str,
-  state: str,
-) -> dict:
-  return {
-    'client_id': settings.OAUTH_CLIENTS[provider]['client_id'],
-    'client_secret': settings.OAUTH_CLIENTS[provider]['client_secret'],
-    'code': code,
-    'redirect_uri': redirect_uri,
-    'state': state,
+def build_token_request_payload(ctx: OAuthCallbackContext) -> dict:
+  base = {
+    'code': ctx.code,
+    'redirect_uri': ctx.redirect_uri,
+    'code_verifier': ctx.code_verifier,
   }
 
+  if ctx.provider == Provider.X.value:
+    base['grant_type'] = 'authorization_code'
+  else:
+    base['client_id'] = settings.OAUTH_CLIENTS[ctx.provider]['client_id']
+    base['client_secret'] = settings.OAUTH_CLIENTS[ctx.provider]['client_secret']
 
-def token_request_headers() -> dict:
-  return { 'Accept': 'application/json' }
+  return base
+
+
+def token_request_headers(provider: str) -> dict:
+  headers = {
+    'Content-Type': 'application/x-www-form-urlencoded',
+    'Accept': 'application/json',
+  }
+
+  if provider == Provider.X.value:
+    cid = settings.OAUTH_CLIENTS[provider]['client_id']
+    csec = settings.OAUTH_CLIENTS[provider]['client_secret']
+    basic = base64.b64encode(f'{cid}:{csec}'.encode('ascii')).decode('ascii')
+    headers['Authorization'] = f'Basic {basic}'
+
+  return headers
 
 
 def parse_callback_context(request: Request, provider: str) -> OAuthCallbackContext:
@@ -123,6 +157,10 @@ def parse_callback_context(request: Request, provider: str) -> OAuthCallbackCont
 
   validate_callback_redirect_uri(provider, request, state_data)
 
+  verifier = state_data.get('pkce_verifier')
+  if not verifier:
+    raise OAuthStateError('PKCE verifier missing from state')
+
   return OAuthCallbackContext(
     provider=provider,
     code=code,
@@ -130,6 +168,7 @@ def parse_callback_context(request: Request, provider: str) -> OAuthCallbackCont
     flow=state_data.get('flow', 'login'),
     next_url=state_data.get('next'),
     redirect_uri=_get_oauth_callback_redirect_uri(provider, request),
+    code_verifier=verifier,
   )
 
 
@@ -137,13 +176,8 @@ def exchange_code_for_token(ctx: OAuthCallbackContext) -> dict:
   try:
     response = requests.post(
       settings.OAUTH_CLIENTS[ctx.provider]['access_token_url'],
-      data=build_token_request_payload(
-        code=ctx.code,
-        provider=ctx.provider,
-        redirect_uri=ctx.redirect_uri,
-        state=ctx.state
-      ),
-      headers=token_request_headers(),
+      data=build_token_request_payload(ctx),
+      headers=token_request_headers(ctx.provider),
       timeout=10,
     )
   except requests.RequestException:
