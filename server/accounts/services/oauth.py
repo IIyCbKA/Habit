@@ -1,6 +1,3 @@
-import base64
-import hashlib
-
 from django.conf import settings
 from django.core.cache import cache
 from django.db import transaction, IntegrityError
@@ -25,6 +22,8 @@ from accounts.exceptions import (
 )
 
 from typing import Optional
+import base64
+import hashlib
 import requests
 import secrets
 import time
@@ -92,6 +91,10 @@ def build_authorization_url(provider: str, request: Request) -> str:
 
   if provider == Provider.X.value:
     params['response_type'] = 'code'
+  elif provider == Provider.GOOGLE.value:
+    params['response_type'] = 'code'
+    params['access_type'] = 'online'
+    params['include_granted_scope'] = 'true'
 
   url = f'{settings.OAUTH_CLIENTS[provider]["authorize_url"]}?{urlencode(params)}'
 
@@ -121,9 +124,10 @@ def build_token_request_payload(ctx: OAuthCallbackContext) -> dict:
     'code_verifier': ctx.code_verifier,
   }
 
-  if ctx.provider == Provider.X.value:
+  if ctx.provider == Provider.X.value or ctx.provider == Provider.GOOGLE.value:
     base['grant_type'] = 'authorization_code'
-  else:
+
+  if ctx.provider != Provider.X.value:
     base['client_id'] = settings.OAUTH_CLIENTS[ctx.provider]['client_id']
     base['client_secret'] = settings.OAUTH_CLIENTS[ctx.provider]['client_secret']
 

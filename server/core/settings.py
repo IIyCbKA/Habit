@@ -207,6 +207,14 @@ OAUTH_CLIENTS = {
         'api_base_url': 'https://api.x.com/2',
         'scope': 'users.read tweet.read',
     },
+    'google': {
+        'client_id': os.getenv('GOOGLE_CLIENT_ID'),
+        'client_secret': os.getenv('GOOGLE_CLIENT_SECRET'),
+        'access_token_url': 'https://oauth2.googleapis.com/token',
+        'authorize_url': 'https://accounts.google.com/o/oauth2/v2/auth',
+        'api_base_url': 'https://openidconnect.googleapis.com',
+        'scope': 'openid email profile',
+    },
 }
 
 MIDDLEWARE = [

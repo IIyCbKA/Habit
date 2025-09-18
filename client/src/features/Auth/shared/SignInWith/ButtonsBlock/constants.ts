@@ -9,7 +9,6 @@ export const ELEMENTS_LIST: ButtonElement[] = [
   {
     icon: Google,
     provider: "google",
-    disabled: true,
   },
   {
     icon: Facebook,
