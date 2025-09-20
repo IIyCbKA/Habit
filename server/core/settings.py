@@ -218,8 +218,8 @@ OAUTH_CLIENTS = {
     'yandex': {
         'client_id': os.getenv('YANDEX_CLIENT_ID'),
         'client_secret': os.getenv('YANDEX_CLIENT_SECRET'),
-        'access_token_url': 'https://oauth.yandex.com/token',
-        'authorize_url': 'https://oauth.yandex.com/authorize',
+        'access_token_url': 'https://oauth.yandex.ru/token',
+        'authorize_url': 'https://oauth.yandex.ru/authorize',
         'api_base_url': 'https://login.yandex.ru',
         'scope': 'login:email login:info',
     },

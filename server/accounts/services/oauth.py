@@ -95,6 +95,8 @@ def build_authorization_url(provider: str, request: Request) -> str:
     params['response_type'] = 'code'
     params['access_type'] = 'online'
     params['include_granted_scope'] = 'true'
+  elif provider == Provider.YANDEX.value:
+    params['response_type'] = 'code'
 
   url = f'{settings.OAUTH_CLIENTS[provider]["authorize_url"]}?{urlencode(params)}'
 
