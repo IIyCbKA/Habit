@@ -3,7 +3,7 @@ import React, { ButtonHTMLAttributes } from "react";
 /*
 --------------Provider type--------------
 */
-export type Provider = "github" | "google" | "facebook" | "x";
+export type Provider = "github" | "google" | "yandex" | "x";
 
 /*
 --------------IconComponent type--------------

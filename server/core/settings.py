@@ -215,6 +215,14 @@ OAUTH_CLIENTS = {
         'api_base_url': 'https://openidconnect.googleapis.com',
         'scope': 'openid email profile',
     },
+    'yandex': {
+        'client_id': os.getenv('YANDEX_CLIENT_ID'),
+        'client_secret': os.getenv('YANDEX_CLIENT_SECRET'),
+        'access_token_url': 'https://oauth.yandex.com/token',
+        'authorize_url': 'https://oauth.yandex.com/authorize',
+        'api_base_url': 'https://login.yandex.ru',
+        'scope': 'login:email login:info',
+    },
 }
 
 MIDDLEWARE = [

@@ -145,9 +145,55 @@ def fetch_profile_google(access_token: str, raw_token_response: dict) -> dict:
     'raw_token': raw_token_response,
   }
 
+# -----------------------
+#          Yandex
+# -----------------------
+def _yandex_api_headers(access_token: str) -> dict:
+  return {
+    'Authorization': f'OAuth {access_token}',
+    'Accept': 'application/json',
+  }
+
+
+def _fetch_yandex_user(access_token: str, timeout: int = 10) -> dict:
+  base = _get_base_api_url(Provider.YANDEX.value)
+  url = f'{base}/info?format=json'
+  resp = requests.get(url, headers=_yandex_api_headers(access_token), timeout=timeout)
+  resp.raise_for_status()
+  return resp.json()
+
+
+def _normalize_yandex_profile(user_json: dict) -> dict:
+  uid = user_json.get('id') or user_json.get('uid')
+  name = user_json.get('real_name') or user_json.get('display_name') or user_json.get('login')
+  preferred_username = user_json.get('login') or user_json.get('email')
+
+  return {
+    'id': str(uid) if uid is not None else None,
+    'name': name,
+    'preferred_username': preferred_username,
+  }
+
+
+def fetch_profile_yandex(access_token: str, raw_token_response: dict) -> dict:
+  try:
+    user_json = _fetch_yandex_user(access_token)
+  except requests.HTTPError:
+    raise
+
+  profile = _normalize_yandex_profile(user_json)
+
+  return {
+    'provider': Provider.YANDEX.value,
+    'profile': profile,
+    'raw_user': user_json,
+    'raw_token': raw_token_response,
+  }
+
 
 PROVIDER_HANDLERS = {
   Provider.GITHUB.value: fetch_profile_github,
   Provider.X.value: fetch_profile_x,
   Provider.GOOGLE.value: fetch_profile_google,
+  Provider.YANDEX.value: fetch_profile_yandex,
 }

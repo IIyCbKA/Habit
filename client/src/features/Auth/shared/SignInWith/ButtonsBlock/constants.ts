@@ -1,4 +1,4 @@
-import { Github, Google, Facebook, XIcon } from "@/assets/icons";
+import { Github, Google, Yandex, XIcon } from "@/assets/icons";
 import { ButtonElement } from "./types";
 
 export const ELEMENTS_LIST: ButtonElement[] = [
@@ -11,9 +11,8 @@ export const ELEMENTS_LIST: ButtonElement[] = [
     provider: "google",
   },
   {
-    icon: Facebook,
-    provider: "facebook",
-    disabled: true,
+    icon: Yandex,
+    provider: "yandex",
   },
   {
     icon: XIcon,

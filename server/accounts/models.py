@@ -71,7 +71,7 @@ class EmailVerificationCode(models.Model):
 class Provider(models.TextChoices):
   GOOGLE = 'google', 'Google'
   GITHUB = 'github', 'GitHub'
-  FACEBOOK = 'facebook', 'Facebook'
+  YANDEX = 'yandex', 'Yandex'
   X = 'x', 'X'
 
 
