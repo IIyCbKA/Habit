@@ -149,5 +149,5 @@ def fetch_profile_google(access_token: str, raw_token_response: dict) -> dict:
 PROVIDER_HANDLERS = {
   Provider.GITHUB.value: fetch_profile_github,
   Provider.X.value: fetch_profile_x,
-  Provider.GOOGLE.value: _fetch_google_user,
+  Provider.GOOGLE.value: fetch_profile_google,
 }
