@@ -184,3 +184,20 @@ class PasswordResetConfirmSerializer(BasePasswordResetTokenSerializer):
 
 class ValidatePasswordResetTokenSerializer(BasePasswordResetTokenSerializer):
   pass
+
+
+class UpdateUsernameSerializer(serializers.Serializer):
+  new_username = serializers.CharField(
+    validators=[UniqueValidator(
+      queryset=User.objects.all(),
+      lookup='iexact',
+      message='This username already taken'
+    )],
+    allow_blank=False,
+  )
+
+  def save(self) -> User:
+    user: User = self.context['user']
+    user.username = self.validated_data['new_username']
+    user.save(update_fields=['username'])
+    return user

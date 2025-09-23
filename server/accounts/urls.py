@@ -9,6 +9,7 @@ from .views.auth import (
   PasswordResetView,
   PasswordResetConfirmView,
   ValidatePasswordResetTokenView,
+  UpdateUsernameView,
 )
 
 from .views.oauth import OAuthStartView, OAuthCallbackView
@@ -23,6 +24,7 @@ urlpatterns = [
   path('login/', LoginView.as_view(), name='login'),
   path('refresh/', RefreshView.as_view(), name='token_refresh'),
   path('logout/', LogoutView.as_view(), name='logout'),
+  path('username/update/', UpdateUsernameView.as_view(), name='update_username'),
   path('oauth/<str:provider>/start/', OAuthStartView.as_view(), name='oauth_start'),
   path('oauth/<str:provider>/callback/', OAuthCallbackView.as_view(), name='oauth_callback'),
 ]

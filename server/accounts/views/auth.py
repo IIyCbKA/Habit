@@ -19,6 +19,7 @@ from accounts.serializers import (
   PasswordResetSerializer,
   PasswordResetConfirmSerializer,
   ValidatePasswordResetTokenSerializer,
+  UpdateUsernameSerializer,
 )
 from accounts.services.auth import (
   ensure_refresh_allowed,
@@ -187,3 +188,18 @@ class ValidatePasswordResetTokenView(APIView):
       serializer.is_valid(raise_exception=True)
 
     return Response(status=status.HTTP_200_OK)
+
+
+class UpdateUsernameView(APIView):
+  throttle_scope = 'update_username'
+
+  def post(self, request: Request) -> Response:
+    serializer = UpdateUsernameSerializer(
+      data=request.data,
+      context={'user': request.user}
+    )
+    serializer.is_valid(raise_exception=True)
+    user: User = serializer.save()
+
+    response: Response = create_response_with_tokens(request, user, status.HTTP_200_OK)
+    return response

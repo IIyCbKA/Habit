@@ -172,6 +172,7 @@ REST_FRAMEWORK = {
         'validate_reset_token': '10/minute',
         'oauth_start': '30/hour',
         'oauth_callback': '60/hour',
+        'update_username': '1/minute',
     }
 }
 
