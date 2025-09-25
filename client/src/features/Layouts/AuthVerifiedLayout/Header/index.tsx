@@ -8,14 +8,17 @@ import { Logotype } from "@/assets/icons";
 
 export default function Header(): React.ReactElement {
   return (
-    <div className={styles.headerContainer}>
-      <div className={styles.headerContent}>
-        <Link to={PATHS.DASHBOARD} className={styles.logotypeWrap}>
-          <Logotype className={styles.logotypeImg} />
-        </Link>
-        <MenuDropdown />
-        <MenuDrawer />
+    <div className={styles.navbarRoot}>
+      <div className={styles.headerContainer}>
+        <div className={styles.headerContent}>
+          <Link to={PATHS.DASHBOARD} className={styles.logotypeWrap}>
+            <Logotype className={styles.logotypeImg} />
+          </Link>
+          <MenuDropdown />
+          <MenuDrawer />
+        </div>
       </div>
+      <div className={styles.headerSpace} aria-hidden={"true"} />
     </div>
   );
 }

@@ -9,7 +9,7 @@ import {
   passwordResetConfirm as passwordResetConfirmAPI,
 } from "./api";
 import { AuthState, CommonFulfilledResponse, User, AuthStatus } from "./types";
-import { DEFAULT_USERNAME, SLISE_NAME } from "./constants";
+import { DEFAULT_EMAIL, DEFAULT_USERNAME, SLISE_NAME } from "./constants";
 import { RootState } from "@/store/store";
 import { createAppAsyncThunk } from "@/store/apiThunk";
 
@@ -99,6 +99,8 @@ export const selectAuthStatus = (state: RootState): AuthStatus =>
   state.auth.status;
 export const selectUsername = (state: RootState): string =>
   state.auth.user?.username ?? DEFAULT_USERNAME;
+export const selectEmail = (state: RootState): string =>
+  state.auth.user?.email ?? DEFAULT_EMAIL;
 export const selectIsEmailVerified = (state: RootState): boolean | undefined =>
   state.auth.user?.isEmailVerified;
 

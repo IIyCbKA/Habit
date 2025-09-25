@@ -5,9 +5,16 @@ import { SETTINGS_BUTTON_TEXT, SIGN_OUT_BUTTON_TEXT } from "./constants";
 import { useAppDispatch } from "@/store/hooks";
 import { logout } from "@/features/Auth/slice";
 import { Logout, Settings } from "@/assets/icons";
+import { useNavigate } from "react-router-dom";
+import { PATHS } from "@/routes/paths";
 
 export default function ServiceBlock(): React.ReactElement {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
+  const toSettings: () => void = (): void => {
+    navigate(PATHS.ACCOUNT);
+  };
 
   const onSignOut: () => void = (): void => {
     dispatch(logout());
@@ -20,6 +27,7 @@ export default function ServiceBlock(): React.ReactElement {
         variant={"plain"}
         className={sharedDrawerStyles.defaultBlockButton}
         startIcon={{ content: <Settings /> }}
+        onClick={toSettings}
       >
         {SETTINGS_BUTTON_TEXT}
       </Button>

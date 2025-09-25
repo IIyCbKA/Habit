@@ -11,5 +11,7 @@ export const PATHS = {
 
   DASHBOARD: "/dashboard",
 
+  ACCOUNT: "/account",
+
   OTHER_PATHS: "*",
 };

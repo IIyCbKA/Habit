@@ -5,10 +5,12 @@ import ButtonsBlock from "./ButtonsBlock";
 import { useAppSelector } from "@/store/hooks";
 import { selectUsername } from "@/features/Auth/slice";
 import { Button, Dropdown, ClickAwayListener } from "@/components";
+import { useLocation } from "react-router-dom";
 
 export default function MenuDropdown(): React.ReactElement {
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
   const username = useAppSelector(selectUsername);
+  const location = useLocation();
 
   const onAvatarClick: () => void = (): void => {
     setIsOpen((prev: boolean): boolean => !prev);
@@ -17,6 +19,10 @@ export default function MenuDropdown(): React.ReactElement {
   const onCloseMenu: () => void = (): void => {
     setIsOpen(false);
   };
+
+  React.useEffect(() => {
+    setIsOpen(false);
+  }, [location.pathname]);
 
   return (
     <ClickAwayListener<HTMLDivElement> onClickAway={onCloseMenu}>

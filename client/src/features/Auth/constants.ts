@@ -1,5 +1,6 @@
 export const SLISE_NAME = "auth";
 export const DEFAULT_USERNAME = "Guest";
+export const DEFAULT_EMAIL = "-";
 export const PASSWORD_MIN_LENGTH = 8;
 
 export const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

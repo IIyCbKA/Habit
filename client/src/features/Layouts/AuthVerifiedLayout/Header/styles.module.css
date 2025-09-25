@@ -1,3 +1,11 @@
+.navbarRoot {
+  margin-bottom: 32px;
+}
+
+.headerSpace {
+  height: 0;
+}
+
 .headerContainer {
   background-color: var(--surface-color);
   position: relative;
@@ -11,7 +19,7 @@
 .headerContent {
   width: 100%;
   max-width: var(--max-content-width);
-  padding: 0 24px;
+  margin: 0 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -36,5 +44,9 @@
     top: 0;
     left: 0;
     right: 0;
+  }
+
+  .headerSpace {
+    height: var(--auth-verified-header-height);
   }
 }

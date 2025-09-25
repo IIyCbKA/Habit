@@ -1,0 +1,17 @@
+@layer utils {
+  .contentDivider {
+    margin: 16px 0;
+  }
+}
+
+.accountContentWrap {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  margin: 0 24px;
+}
+
+.accountContent {
+  width: 100%;
+  max-width: var(--max-content-width);
+}
