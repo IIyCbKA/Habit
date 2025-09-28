@@ -11,5 +11,6 @@ export { default as Logotype } from "./heart_128x128.svg?react";
 export { default as Logout } from "./logout_64x64.svg?react";
 export { default as OpenEye } from "./open_eye_24x24.svg?react";
 export { default as Settings } from "./settings_64x64.svg?react";
+export { default as User } from "./user_64x64.svg?react";
 export { default as XIcon } from "./x_64x64.svg?react";
 export { default as Yandex } from "./yandex_64x64.svg?react";

@@ -1,0 +1,11 @@
+@layer utils {
+  .titleDivider {
+    margin-bottom: 16px;
+  }
+}
+
+.title {
+  display: block;
+  margin-bottom: 16px;
+  font: var(--title-small);
+}
