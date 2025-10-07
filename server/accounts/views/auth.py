@@ -26,6 +26,7 @@ from accounts.services.auth import (
   decode_refresh_payload,
   blacklist_all_refresh_tokens_for_user,
   create_response_with_tokens,
+  create_response_only_user,
   reset_token_from_request,
   delete_refresh_from_cookie,
   generate_reset_link
@@ -201,5 +202,5 @@ class UpdateUsernameView(APIView):
     serializer.is_valid(raise_exception=True)
     user: User = serializer.save()
 
-    response: Response = create_response_with_tokens(request, user, status.HTTP_200_OK)
+    response: Response = create_response_only_user(user, status.HTTP_200_OK)
     return response

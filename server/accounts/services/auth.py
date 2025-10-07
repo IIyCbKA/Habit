@@ -102,6 +102,20 @@ def create_response_with_tokens(
   return response
 
 
+def create_response_only_user(
+  user: User,
+  http_status: int,
+):
+  response: Response = Response(
+    data={
+      'user': UserSerializer(user).data,
+    },
+    status=http_status
+  )
+
+  return response
+
+
 def delete_refresh_from_cookie(response: Response) -> None:
   response.delete_cookie(
     key=settings.SIMPLE_JWT['REFRESH_COOKIE'],
