@@ -1,6 +1,12 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import CustomUser, EmailVerificationCode, SocialAccount
+from .models import (
+  CustomUser,
+  Device,
+  EmailVerificationCode,
+  SocialAccount,
+  UserDevice,
+)
 
 
 @admin.register(CustomUser)
@@ -30,3 +36,19 @@ class SocialAccountAdmin(admin.ModelAdmin):
   readonly_fields = ('provider', 'provider_user_id', 'user')
   list_display = ('user', 'provider', 'provider_user_id')
   list_display_links = None
+
+
+@admin.register(Device)
+class DeviceAdmin(admin.ModelAdmin):
+  list_display = ('device_id', 'platform', 'last_seen', 'last_ip', 'language')
+  search_fields = ('device_id', 'user_agent', 'platform', 'last_ip', 'language')
+  list_filter = ('platform', 'language', 'cookies_enabled')
+  readonly_fields = ('created_at', 'last_seen')
+  ordering = ('-last_seen',)
+
+
+@admin.register(UserDevice)
+class UserDeviceAdmin(admin.ModelAdmin):
+  list_display = ('user', 'device')
+  search_fields = ('user__username', 'user__email', 'device__device_id')
+  list_select_related = ('user', 'device')
