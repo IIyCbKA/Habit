@@ -92,9 +92,22 @@ class EmailVerificationSerializer(serializers.Serializer):
     return user
 
 
+class DeviceInfoSerializer(serializers.Serializer):
+  device_id = serializers.CharField(max_length=64)
+  user_agent = serializers.CharField(allow_null=True, required=False, allow_blank=True)
+  language = serializers.CharField(allow_null=True, required=False, allow_blank=True)
+  screen = serializers.CharField(allow_null=True, required=False, allow_blank=True)
+  logical_processors = serializers.IntegerField(allow_null=True, required=False)
+  approx_memory = serializers.IntegerField(allow_null=True, required=False)
+  cookies_enabled = serializers.BooleanField(allow_null=True, required=False)
+  platform = serializers.CharField(allow_null=True, required=False, allow_blank=True)
+  timezone = serializers.CharField(allow_null=True, required=False, allow_blank=True)
+
+
 class LoginSerializer(serializers.Serializer):
   identifier = serializers.CharField()
   password = serializers.CharField(write_only=True)
+  device = DeviceInfoSerializer(required=False)
 
   def validate(self, data):
     identifier = data['identifier']
@@ -112,7 +125,6 @@ class LoginSerializer(serializers.Serializer):
       raise serializers.ValidationError('Invalid identifier or password')
 
     data['user'] = user
-
     return data
 
   def save(self) -> User:

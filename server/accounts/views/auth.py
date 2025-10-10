@@ -10,8 +10,12 @@ from rest_framework_simplejwt.tokens import TokenError
 from rest_framework.permissions import AllowAny
 
 from accounts.exceptions import EmailAlreadyVerifiedError, InvalidRefreshTokenError
-from accounts.models import EmailVerificationCode
-from accounts.tasks import send_verification_email, send_password_reset_email
+from accounts.models import Device, EmailVerificationCode, UserDevice
+from accounts.tasks import (
+  send_verification_email,
+  send_password_reset_email,
+  send_new_device_email,
+)
 from accounts.serializers import (
   UserSerializer,
   LoginSerializer,
@@ -31,6 +35,7 @@ from accounts.services.auth import (
   delete_refresh_from_cookie,
   generate_reset_link
 )
+from core.utils import get_client_ip
 
 from typing import Optional
 
@@ -106,13 +111,37 @@ class LoginView(APIView):
     user: User = serializer.save()
 
     if not user.is_email_verified:
-      with transaction.atomic():
-        verification, _ = EmailVerificationCode.objects.get_or_create(user=user)
-        raw_code = verification.regenerate_code()
-        send_verification_email.delay_on_commit(user.email, raw_code)
+      self._send_verification_email(user)
+    else:
+      device_payload = serializer.validated_data.get('device')
+      ip = get_client_ip(request)
+      self._record_device(user, device_payload, ip)
 
     response: Response = create_response_with_tokens(request, user, status.HTTP_200_OK)
     return response
+
+  def _send_verification_email(self, user: User) -> None:
+    with transaction.atomic():
+      verification, _ = EmailVerificationCode.objects.get_or_create(user=user)
+      raw_code = verification.regenerate_code()
+      send_verification_email.delay_on_commit(user.email, raw_code)
+
+  def _record_device(self, user: User, payload: dict, ip: Optional[str]) -> None:
+    if not payload:
+      return
+
+    with transaction.atomic():
+      device, _ = Device.objects.update_or_create(
+        device_id=payload['device_id'],
+        defaults={k: v for k, v in payload.items() if v is not None and k != 'device_id'},
+      )
+      device.update_last_seen(payload, ip)
+
+      _, link_created = UserDevice.objects.get_or_create(user=user, device=device)
+
+      if link_created:
+        platform: Optional[str] = payload.get('platform')
+        send_new_device_email.delay_on_commit(user.email, platform, ip)
 
 
 class RefreshView(APIView):

@@ -15,6 +15,7 @@ import { useAppDispatch } from "@/store/hooks";
 import { Input, Button, Divider, Typography } from "@/components";
 import PasswordAdornment from "@/features/Auth/shared/PasswordAdornment";
 import { validateNonEmpty } from "@/features/Auth/validators";
+import { collectDeviceInfo } from "@/shared/utils";
 
 export default function SignIn(): React.ReactElement {
   const dispatch = useAppDispatch();
@@ -73,7 +74,8 @@ export default function SignIn(): React.ReactElement {
 
     setProcessing(true);
     try {
-      await dispatch(loginUser({ identifier, password })).unwrap();
+      const device = collectDeviceInfo();
+      await dispatch(loginUser({ identifier, password, device })).unwrap();
     } catch (e) {
     } finally {
       setProcessing(false);

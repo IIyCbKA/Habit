@@ -1,4 +1,4 @@
-import React from "react";
+import { DeviceInfo } from "@/shared/types";
 
 /*
 --------------AuthStatus type--------------
@@ -13,6 +13,7 @@ password   - password of user
 export type LoginCreds = {
   identifier: string;
   password: string;
+  device?: DeviceInfo;
 };
 
 /*
