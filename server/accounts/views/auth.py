@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.db import transaction, IntegrityError
 from django.contrib.auth import get_user_model
+from django.utils import timezone
 
 from rest_framework import status, generics
 from rest_framework.response import Response
@@ -113,8 +114,8 @@ class LoginView(APIView):
     if not user.is_email_verified:
       self._send_verification_email(user)
     else:
-      device_payload = serializer.validated_data.get('device')
-      ip = get_client_ip(request)
+      device_payload: Optional[dict] = serializer.validated_data.get('device')
+      ip: Optional[str] = get_client_ip(request)
       self._record_device(user, device_payload, ip)
 
     response: Response = create_response_with_tokens(request, user, status.HTTP_200_OK)
@@ -126,38 +127,50 @@ class LoginView(APIView):
       raw_code = verification.regenerate_code()
       send_verification_email.delay_on_commit(user.email, raw_code)
 
-  def _record_device(self, user: User, payload: dict, ip: Optional[str]) -> None:
-    if not payload:
+  def _record_device(
+    self,
+    user: User,
+    payload: Optional[dict],
+    ip: Optional[str],
+  ) -> None:
+    if payload is None:
       return
 
-    if ip:
+    if ip is not None:
       payload['last_ip'] = ip
 
+    payload['last_seen'] = timezone.now()
     defaults = self.get_device_defaults(payload)
-    with transaction.atomic():
-      device, created = Device.objects.get_or_create(
-        device_id=payload['device_id'],
-        defaults=defaults,
-      )
 
-      if not created:
-        device.update_last_seen(payload)
+    try:
+      with transaction.atomic():
+        device, _ = Device.objects.update_or_create(
+          device_id=payload['device_id'],
+          defaults=defaults,
+        )
+    except IntegrityError:
+      device = Device.objects.get(device_id=payload['device_id'])
+      for key, value in defaults.items():
+        setattr(device, key, value)
+      device.save(update_fields=list(defaults.keys()))
 
-      _, link_created = UserDevice.objects.get_or_create(user=user, device=device)
+    try:
+      with transaction.atomic():
+        _, link_created = UserDevice.objects.get_or_create(user=user, device=device)
+    except IntegrityError:
+      link_created = False
 
-      if link_created:
-        platform: Optional[str] = payload.get('platform')
-        send_new_device_email.delay_on_commit(user.email, platform, ip)
+    if link_created:
+      platform: Optional[str] = payload.get('platform')
+      send_new_device_email.delay_on_commit(user.email, platform, ip)
 
   def get_device_defaults(self, payload: dict) -> dict:
-    default_keys = Device.get_updatable_fields()
+    updatable = Device.get_updatable_fields()
     defaults: dict = {}
 
-    for key in payload.keys():
-      if key in default_keys:
-        value = payload.get(key)
-        if value is not None:
-          defaults[key] = value
+    for key, value in payload.items():
+      if key in updatable and value is not None:
+        defaults[key] = value
 
     return defaults
 

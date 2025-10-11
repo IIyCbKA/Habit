@@ -116,26 +116,6 @@ class Device(models.Model):
     names = {f.name for f in cls._meta.concrete_fields}
     return names - immutable
 
-  def update_last_seen(self, payload: dict) -> None:
-    updatable = self.get_updatable_fields()
-    fields_to_update = []
-
-    self.last_seen = timezone.now()
-    fields_to_update.append('last_seen')
-
-    for key, val in payload.items():
-      if key not in updatable:
-        continue
-
-      if val is None:
-        continue
-
-      if getattr(self, key, None) != val:
-        setattr(self, key, val)
-        fields_to_update.append(key)
-
-    self.save(update_fields=fields_to_update)
-
   def __str__(self) -> str:
     return self.device_id or f'Device {self.pk}'
 
