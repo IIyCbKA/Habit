@@ -10,7 +10,6 @@ from .constants import VERIFICATION_CODE_LENGTH
 
 from datetime import timedelta
 from functools import lru_cache
-from typing import Optional
 import secrets
 
 class CustomUser(AbstractUser):
@@ -98,7 +97,7 @@ class SocialAccount(models.Model):
 class Device(models.Model):
   device_id = models.CharField(max_length=64, unique=True, db_index=True)
   created_at = models.DateTimeField(auto_now_add=True)
-  last_seen = models.DateTimeField(null=True, blank=True, db_index=True)
+  last_seen = models.DateTimeField(default=timezone.now, db_index=True)
   last_ip = models.GenericIPAddressField(null=True, blank=True)
 
   user_agent = models.TextField(null=True, blank=True)
@@ -117,18 +116,12 @@ class Device(models.Model):
     names = {f.name for f in cls._meta.concrete_fields}
     return names - immutable
 
-  def update_last_seen(self, payload: dict, ip: Optional[str]) -> None:
+  def update_last_seen(self, payload: dict) -> None:
     updatable = self.get_updatable_fields()
     fields_to_update = []
-    now = timezone.now()
 
-    if self.last_seen != now:
-      self.last_seen = now
-      fields_to_update.append('last_seen')
-
-    if ip and ip != self.last_ip:
-      self.last_ip = ip
-      fields_to_update.append('last_ip')
+    self.last_seen = timezone.now()
+    fields_to_update.append('last_seen')
 
     for key, val in payload.items():
       if key not in updatable:
@@ -142,6 +135,9 @@ class Device(models.Model):
         fields_to_update.append(key)
 
     self.save(update_fields=fields_to_update)
+
+  def __str__(self) -> str:
+    return self.device_id or f'Device {self.pk}'
 
 
 class UserDevice(models.Model):

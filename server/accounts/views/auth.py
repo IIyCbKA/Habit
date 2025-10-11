@@ -130,18 +130,36 @@ class LoginView(APIView):
     if not payload:
       return
 
+    if ip:
+      payload['last_ip'] = ip
+
+    defaults = self.get_device_defaults(payload)
     with transaction.atomic():
-      device, _ = Device.objects.update_or_create(
+      device, created = Device.objects.get_or_create(
         device_id=payload['device_id'],
-        defaults={k: v for k, v in payload.items() if v is not None and k != 'device_id'},
+        defaults=defaults,
       )
-      device.update_last_seen(payload, ip)
+
+      if not created:
+        device.update_last_seen(payload)
 
       _, link_created = UserDevice.objects.get_or_create(user=user, device=device)
 
       if link_created:
         platform: Optional[str] = payload.get('platform')
         send_new_device_email.delay_on_commit(user.email, platform, ip)
+
+  def get_device_defaults(self, payload: dict) -> dict:
+    default_keys = Device.get_updatable_fields()
+    defaults: dict = {}
+
+    for key in payload.keys():
+      if key in default_keys:
+        value = payload.get(key)
+        if value is not None:
+          defaults[key] = value
+
+    return defaults
 
 
 class RefreshView(APIView):
