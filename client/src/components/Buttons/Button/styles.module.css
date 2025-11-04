@@ -6,7 +6,7 @@
     cursor: pointer;
     transition: 0.18s all ease-in-out;
     border-radius: var(--border-radius-large);
-    font: var(--text-regular-medium);
+    font: var(--text-semibold-medium);
     padding: 0 12px;
     user-select: none;
     text-align: center;

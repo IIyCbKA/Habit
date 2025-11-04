@@ -199,7 +199,7 @@ class ValidatePasswordResetTokenSerializer(BasePasswordResetTokenSerializer):
 
 
 class UpdateUsernameSerializer(serializers.Serializer):
-  new_username = serializers.CharField(
+  username = serializers.CharField(
     validators=[UniqueValidator(
       queryset=User.objects.all(),
       lookup='iexact',
@@ -210,6 +210,6 @@ class UpdateUsernameSerializer(serializers.Serializer):
 
   def save(self) -> User:
     user: User = self.context['user']
-    user.username = self.validated_data['new_username']
+    user.username = self.validated_data['username']
     user.save(update_fields=['username'])
     return user

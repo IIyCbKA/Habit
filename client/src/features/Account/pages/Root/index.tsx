@@ -9,9 +9,11 @@ import ControlRow from "@/features/Account/components/ControlRow";
 import { User } from "@/assets/icons";
 import { useAppSelector } from "@/store/hooks";
 import { selectUsername } from "@/features/Auth/slice";
+import UsernameModal from "./UsernameModal";
 
 export default function RootAccount(): React.ReactElement {
   const username = useAppSelector(selectUsername);
+  const [isUsernameOpen, setUsernameOpen] = React.useState(false);
 
   return (
     <>
@@ -20,7 +22,14 @@ export default function RootAccount(): React.ReactElement {
         title={USERNAME_ROW_TITLE}
         info={username}
         iconProps={{ children: <User /> }}
-        buttonProps={{ children: CHANGE_BUTTON_TEXT }}
+        buttonProps={{
+          children: CHANGE_BUTTON_TEXT,
+          onClick: (): void => setUsernameOpen(true),
+        }}
+      />
+      <UsernameModal
+        isOpen={isUsernameOpen}
+        onClose={(): void => setUsernameOpen(false)}
       />
     </>
   );

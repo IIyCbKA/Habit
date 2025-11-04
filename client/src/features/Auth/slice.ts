@@ -7,6 +7,7 @@ import {
   emailConfirm as emailConfirmAPI,
   passwordResetRequest as passwordResetRequestAPI,
   passwordResetConfirm as passwordResetConfirmAPI,
+  usernameUpdate as usernameUpdateAPI,
 } from "./api";
 import { AuthState, CommonFulfilledResponse, User, AuthStatus } from "./types";
 import { DEFAULT_EMAIL, DEFAULT_USERNAME, SLISE_NAME } from "./constants";
@@ -34,6 +35,10 @@ export const passwordResetRequest = createAppAsyncThunk(
 export const passwordResetConfirm = createAppAsyncThunk(
   `${SLISE_NAME}/password/reset/confirm`,
   passwordResetConfirmAPI,
+);
+export const usernameUpdate = createAppAsyncThunk(
+  `${SLISE_NAME}/username/update`,
+  usernameUpdateAPI,
 );
 
 const commonFulfilled = (
@@ -71,6 +76,9 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.rejected, (state) => {
         state.status = "failed";
+      })
+      .addCase(usernameUpdate.fulfilled, (state, action) => {
+        state.user = action.payload.user;
       });
 
     builder

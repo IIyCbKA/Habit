@@ -59,3 +59,15 @@
     color: var(--danger-color);
   }
 }
+
+@layer overrides {
+  .onlyDisabledWrapper {
+    border: 1px solid var(--line-color);
+    box-shadow: none;
+  }
+
+  .onlyDisabled {
+    color: var(--text-secondary-color);
+    background-color: var(--surface-color);
+  }
+}

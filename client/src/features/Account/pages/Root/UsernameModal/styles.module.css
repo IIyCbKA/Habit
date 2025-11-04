@@ -1,0 +1,11 @@
+@layer utils {
+  .titleModal {
+    margin-bottom: 0;
+  }
+}
+
+.modalContent {
+  gap: 20px;
+  display: flex;
+  flex-direction: column;
+}

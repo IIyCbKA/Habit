@@ -1,7 +1,6 @@
 @layer overrides {
   .button {
     background-color: var(--dark-grey-color);
-    font: var(--text-semibold-medium);
     flex-shrink: 0;
     margin-left: 16px;
   }

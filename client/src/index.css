@@ -36,6 +36,8 @@
   --grey-color-50: rgba(127, 145, 164, 0.5);
   --grey-color-10: rgba(127, 145, 164, 0.1);
   --dark-grey-color: rgb(74, 88, 103);
+  --dark-color: rgb(38, 50, 92);
+  --dark-color-50: rgba(38, 50, 92, 0.5);
   --main-color: rgb(113, 119, 248);
   --main-color-20: rgba(113, 119, 248, 0.2);
   --main-variant-color: rgb(82, 90, 255);

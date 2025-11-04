@@ -8,6 +8,8 @@ import {
   PasswordResetRequestData,
   PasswordResetValidateData,
   PasswordResetConfirmData,
+  UsernameUpdateData,
+  UsernameUpdateResponse,
 } from "./types";
 
 export async function login(
@@ -68,5 +70,12 @@ export async function passwordResetConfirm(
     ENDPOINT.PASSWORD_RESET_CONFIRM,
     confirmData,
   );
+  return data;
+}
+
+export async function usernameUpdate(
+  updateData: UsernameUpdateData,
+): Promise<UsernameUpdateResponse> {
+  const { data } = await apiClient.post(ENDPOINT.USERNAME_UPDATE, updateData);
   return data;
 }

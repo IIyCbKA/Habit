@@ -12,6 +12,7 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   error?: boolean;
   fullWidth?: boolean;
   helperText?: string;
+  onlyDisabled?: boolean;
 
   inputAdornment?: React.ReactNode;
 }

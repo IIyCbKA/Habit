@@ -94,3 +94,18 @@ export type PasswordResetValidateData = {
 export type PasswordResetConfirmData = PasswordResetValidateData & {
   newPassword: string;
 };
+
+/*
+--------------UsernameUpdateCreds type--------------
+*/
+export type UsernameUpdateData = {
+  username: string;
+};
+
+/*
+--------------UpdateUsernameResponse type--------------
+user             - user data
+*/
+export type UsernameUpdateResponse = {
+  user: User;
+};

@@ -8,6 +8,7 @@ export const enum ENDPOINT {
   PASSWORD_RESET_REQUEST = "/auth/password/reset/",
   PASSWORD_RESET_VALIDATE = "/auth/password/reset/validate/",
   PASSWORD_RESET_CONFIRM = "/auth/password/reset/confirm/",
+  USERNAME_UPDATE = "/auth/username/update/",
 }
 
 export const enum HTTP_STATUS {

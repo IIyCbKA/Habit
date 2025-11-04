@@ -28,6 +28,7 @@ function InputInner(
     error,
     fullWidth,
     helperText,
+    onlyDisabled,
     className,
     inputAdornment,
     id,
@@ -39,10 +40,12 @@ function InputInner(
   const inputWrapperStyles = classNames(styles.inputWrapper, {
     [styles.fullWidth]: fullWidth,
     [styles.error]: error,
+    [styles.onlyDisabledWrapper]: onlyDisabled,
   });
 
   const inputStyles = classNames(styles.input, className, {
     [styles.inputWithAdornmentEnd]: inputAdornment,
+    [styles.onlyDisabled]: onlyDisabled,
   });
 
   const helperId = helperText ? `${id ?? name}-helper` : undefined;
