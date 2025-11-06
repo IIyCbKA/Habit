@@ -26,7 +26,15 @@ export default function UsernameModal({
     setNewUsername(e.target.value);
   };
 
-  const onClick: () => void = async (): Promise<void> => {
+  const cleanNewUsername: () => void = (): void => {
+    setNewUsername(EMPTY_STRING);
+  };
+
+  const onSubmit: (e: React.FormEvent) => void = async (
+    e: React.FormEvent,
+  ): Promise<void> => {
+    e.preventDefault();
+
     setProcessing(true);
     try {
       await dispatch(usernameUpdate({ username: newUsername })).unwrap();
@@ -38,8 +46,13 @@ export default function UsernameModal({
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} withCloseButton>
-      <form className={styles.modalContent} noValidate>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      onExited={cleanNewUsername}
+      withCloseButton
+    >
+      <form className={styles.modalContent} onSubmit={onSubmit} noValidate>
         <Typography className={styles.titleModal}>{MODAL_TITLE}</Typography>
         <Input fullWidth disabled onlyDisabled value={username} />
         <Input
@@ -53,7 +66,6 @@ export default function UsernameModal({
           type={"submit"}
           variant={"contained"}
           isLoading={isProcessing}
-          onClick={onClick}
         >
           {CONTINUE_BUTTON_TEXT}
         </Button>

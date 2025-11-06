@@ -11,12 +11,21 @@ import { Close } from "@/assets/icons";
 function CloseButton({
   isShow,
   onClick,
+  closeButtonProps,
 }: CloseButtonProps): React.ReactElement | null {
   if (!isShow) return null;
 
+  const {
+    className: className,
+    children: children,
+    ...otherProps
+  } = closeButtonProps || {};
+
+  const buttonStyles = classNames(styles.closeButton, className);
+
   return (
-    <IconButton className={styles.closeButton} onClick={onClick}>
-      <Close />
+    <IconButton className={buttonStyles} onClick={onClick} {...otherProps}>
+      {children ?? <Close />}
     </IconButton>
   );
 }
@@ -25,15 +34,28 @@ function ModalInner(
   {
     animationDuration = 250,
     withCloseButton = false,
-    children,
-    className,
+    closeButtonProps,
+    rootProps,
     isOpen,
     onClose,
-    ...other
+    onExited,
+    ...wrapProps
   }: ModalProps,
   ref: React.ForwardedRef<HTMLDivElement>,
 ): React.ReactElement {
   const innerRef = React.useRef<HTMLDivElement>(null);
+  const {
+    children: content,
+    className: wrapClassName,
+    onPointerDown: wrapPointerDown,
+    ...otherWrapProps
+  } = wrapProps;
+
+  const {
+    className: rootClassName,
+    onPointerDown: rootPointerDown,
+    ...otherRootProps
+  } = rootProps || {};
 
   React.useImperativeHandle(
     ref,
@@ -44,7 +66,8 @@ function ModalInner(
     "--modal-duration": `${animationDuration}ms`,
   } as React.CSSProperties;
 
-  const modalStyles = classNames(styles.modalWrap, className);
+  const wrapStyles = classNames(styles.modalWrap, wrapClassName);
+  const rootStyles = classNames(styles.modalRoot, rootClassName);
 
   const stop: (e: React.PointerEvent) => void = (
     e: React.PointerEvent,
@@ -65,20 +88,29 @@ function ModalInner(
         exitActive: styles.exitActive,
         exitDone: styles.exitDone,
       }}
+      onExited={() => onExited?.()}
       unmountOnExit
     >
       <div
         ref={innerRef}
         style={styleAnimation}
-        className={modalStyles}
-        onPointerDown={onClose}
+        className={wrapStyles}
+        onPointerDown={wrapPointerDown ?? onClose}
         role="dialog"
         aria-modal="true"
-        {...other}
+        {...otherWrapProps}
       >
-        <div className={styles.modalRoot} onPointerDown={stop}>
-          <CloseButton isShow={withCloseButton} onClick={onClose} />
-          {children}
+        <div
+          className={rootStyles}
+          onPointerDown={rootPointerDown ?? stop}
+          {...otherRootProps}
+        >
+          <CloseButton
+            isShow={withCloseButton}
+            onClick={onClose}
+            closeButtonProps={closeButtonProps}
+          />
+          {content}
         </div>
       </div>
     </CSSTransition>,

@@ -17,6 +17,7 @@ import {
   loginUser,
   registerUser,
   passwordResetRequest,
+  usernameUpdate,
 } from "@/features/Auth/slice";
 import { RootState } from "@/store/store";
 import { RejectedPayload } from "@/store/types";
@@ -64,6 +65,7 @@ const uiSlice = createSlice({
         registerUser,
         emailConfirm,
         passwordResetRequest,
+        usernameUpdate,
       ),
       commonAuthRejected,
     );
