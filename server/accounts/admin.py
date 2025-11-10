@@ -6,6 +6,7 @@ from .models import (
   EmailVerificationCode,
   SocialAccount,
   UserDevice,
+  UsernameChange,
 )
 
 
@@ -52,3 +53,11 @@ class UserDeviceAdmin(admin.ModelAdmin):
   list_display = ('user', 'device')
   search_fields = ('user__username', 'user__email', 'device__device_id')
   list_select_related = ('user', 'device')
+
+
+@admin.register(UsernameChange)
+class UsernameChangeAdmin(admin.ModelAdmin):
+    list_display = ('user', 'old_username', 'new_username', 'changed_at')
+    list_filter = ('changed_at',)
+    search_fields = ('user__username', 'old_username', 'new_username')
+    readonly_fields = ('user', 'old_username', 'new_username', 'changed_at')

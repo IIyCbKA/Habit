@@ -12,7 +12,7 @@ from .constants import (
   NEW_DEVICE_LOGIN_BODY,
   NEW_DEVICE_LOGIN_SUBJECT,
 )
-from .models import EmailVerificationCode
+from .models import EmailVerificationCode, UsernameChange
 
 from datetime import datetime, timedelta
 from typing import Optional
@@ -105,4 +105,10 @@ def flush_expired_jwt_tokens():
 @shared_task
 def purge_expired_email_codes():
   deleted, _ = EmailVerificationCode.objects.expired().delete()
+  return deleted
+
+
+@shared_task
+def purge_old_username_changes():
+  deleted, _ = UsernameChange.objects.old().delete()
   return deleted

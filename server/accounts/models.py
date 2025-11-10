@@ -3,12 +3,12 @@ from django.contrib.auth.models import AbstractUser
 from django.db.models import Q, UniqueConstraint
 from django.db.models.functions import Lower
 from django.contrib.auth.hashers import make_password
-from django.db import models
+from django.db import models, transaction
 from django.utils import timezone
 
 from .constants import VERIFICATION_CODE_LENGTH
 
-from datetime import timedelta
+from datetime import datetime, timedelta
 from functools import lru_cache
 import secrets
 
@@ -29,6 +29,17 @@ class CustomUser(AbstractUser):
   def verify_email(self) -> None:
     self.is_email_verified = True
     self.save(update_fields=['is_email_verified'])
+
+  def change_username(self, new_username: str) -> None:
+    old = self.username
+    with transaction.atomic():
+      self.username = new_username
+      self.save(update_fields=['username'])
+      UsernameChange.objects.create(
+        user=self,
+        old_username=old,
+        new_username=new_username
+      )
 
 
 class EmailVerificationCodeQuerySet(models.QuerySet):
@@ -134,3 +145,41 @@ class UserDevice(models.Model):
 
   class Meta:
     unique_together = ('user', 'device')
+
+
+class UsernameChangeQuerySet(models.QuerySet):
+  def old(self):
+    cutoff = timezone.now() - timedelta(days=settings.USERNAME_CHANGE_WINDOW_DAYS)
+    return self.filter(changed_at__lt=cutoff)
+
+
+class UsernameChange(models.Model):
+  user = models.ForeignKey(
+    settings.AUTH_USER_MODEL,
+    on_delete=models.CASCADE,
+    related_name='username_changes'
+  )
+  old_username = models.CharField(max_length=150)
+  new_username = models.CharField(max_length=150)
+  changed_at = models.DateTimeField(auto_now_add=True, db_index=True)
+
+  objects = UsernameChangeQuerySet.as_manager()
+
+  @staticmethod
+  def get_window() -> timedelta:
+    return timedelta(days=settings.USERNAME_CHANGE_WINDOW_DAYS)
+
+  @classmethod
+  def get_cutoff(cls) -> datetime:
+    return timezone.now() - cls.get_window()
+
+  def time_until_next_change(self) -> timedelta:
+    next_allowed_at: datetime = self.changed_at + self.get_window()
+    remaining: timedelta = next_allowed_at - timezone.now()
+
+    if remaining.total_seconds() < 0:
+      return timedelta(0)
+    return remaining
+
+  def __str__(self):
+    return f'{self.user} {self.old_username} → {self.new_username} @ {self.changed_at}'

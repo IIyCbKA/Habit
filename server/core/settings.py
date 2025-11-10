@@ -88,6 +88,9 @@ REFRESH_GRACE_SECRET = os.environ.get('REFRESH_GRACE_SECRET')
 
 DEFAULT_USERNAME_PREFIX = 'user'
 
+USERNAME_CHANGE_LIMIT = 3
+USERNAME_CHANGE_WINDOW_DAYS = 30
+
 if not DEBUG:
     CLIENT_BASE_URL = os.environ.get('CLIENT_URL')
     CORS_ALLOWED_ORIGINS.append(CLIENT_BASE_URL)
@@ -172,7 +175,7 @@ REST_FRAMEWORK = {
         'validate_reset_token': '10/minute',
         'oauth_start': '30/hour',
         'oauth_callback': '60/hour',
-        'update_username': '1/minute',
+        'update_username': '20/minute',
     }
 }
 

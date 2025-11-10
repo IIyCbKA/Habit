@@ -19,6 +19,10 @@ PASSWORD_VALIDATE_ERROR = (
   'contain at least one letter and one digit, '
   'and consist only of ASCII letters and digits'
 ).format(min_length=PASSWORD_MIN_LENGTH)
+USERNAME_CHANGE_LIMIT_ERROR = (
+  'Username change limit ({limit}) for {window_days} days has been reached. '
+  'The next change will be available in {human}.'
+)
 
 
 #####################

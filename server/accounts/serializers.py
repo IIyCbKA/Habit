@@ -8,7 +8,11 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 
 from .models import EmailVerificationCode
-from .validators import check_deliverability, ascii_password_validator
+from .validators import (
+  check_deliverability,
+  check_username_change_limit,
+  ascii_password_validator,
+)
 
 User = get_user_model()
 
@@ -208,8 +212,13 @@ class UpdateUsernameSerializer(serializers.Serializer):
     allow_blank=False,
   )
 
+  def validate(self, data):
+    user: User = self.context['user']
+    check_username_change_limit(user)
+
+    return data
+
   def save(self) -> User:
     user: User = self.context['user']
-    user.username = self.validated_data['username']
-    user.save(update_fields=['username'])
+    user.change_username(self.validated_data['username'])
     return user

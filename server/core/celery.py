@@ -22,4 +22,9 @@ app.conf.beat_schedule = {
     'task': 'accounts.tasks.purge_expired_email_codes',
     'schedule': crontab(hour=15, minute=10),
   },
+
+  'purge-old-username-changes-daily': {
+    'task': 'accounts.tasks.purge_old_username_changes',
+    'schedule': crontab(hour=15, minute=20),
+  },
 }

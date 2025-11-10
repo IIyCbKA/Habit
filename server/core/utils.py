@@ -26,8 +26,27 @@ def get_client_ip(request) -> Optional[str]:
       if not _is_trusted(str(ip)):
         return str(ip)
 
-  remote = request.META.get("REMOTE_ADDR")
+  remote = request.META.get('REMOTE_ADDR')
   try:
     return str(ip_address(remote)) if remote else None
   except ValueError:
     return None
+
+
+def seconds2dhms(seconds: int) -> str:
+  if seconds < 0:
+    return '0 seconds'
+
+  days, rem = divmod(seconds, 86400)
+  hours, rem = divmod(rem, 3600)
+  minutes, seconds = divmod(rem, 60)
+
+  parts = []
+  if days:
+    parts.append(f'{days} days')
+  if hours or (days and (minutes or seconds)):
+    parts.append(f'{hours} hours')
+  if minutes or (hours and seconds):
+    parts.append(f'{minutes} minutes')
+  parts.append(f'{seconds} seconds')
+  return ', '.join(parts)
