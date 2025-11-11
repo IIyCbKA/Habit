@@ -26,10 +26,10 @@ export default function ButtonsBlock(): React.ReactElement {
 
   return (
     <>
-      <Button fullWidth className={styles.defaultButton}>
+      <Button fullWidth disabled className={styles.defaultButton}>
         {PATTERN_BUTTON_TEXT}
       </Button>
-      <Button fullWidth className={styles.defaultButton}>
+      <Button fullWidth disabled className={styles.defaultButton}>
         {PATTERN_BUTTON_TEXT}
       </Button>
       <Button fullWidth className={styles.defaultButton} onClick={toSettings}>

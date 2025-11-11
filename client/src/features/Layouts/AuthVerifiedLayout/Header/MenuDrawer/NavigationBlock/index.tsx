@@ -9,6 +9,7 @@ export default function NavigationBlock(): React.ReactElement {
     <div className={sharedDrawerStyles.blockContainer}>
       <Button
         fullWidth
+        disabled
         variant={"plain"}
         className={sharedDrawerStyles.defaultBlockButton}
         startIcon={{ content: <Grid /> }}
@@ -17,6 +18,7 @@ export default function NavigationBlock(): React.ReactElement {
       </Button>
       <Button
         fullWidth
+        disabled
         variant={"plain"}
         className={sharedDrawerStyles.defaultBlockButton}
         startIcon={{ content: <Grid /> }}
