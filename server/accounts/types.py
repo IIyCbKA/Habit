@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from typing import Optional
 
 @dataclass(frozen=True)
 class OAuthCallbackContext:
@@ -7,6 +6,6 @@ class OAuthCallbackContext:
   code: str
   state: str
   flow: str
-  next_url: Optional[str]
+  next_url: str | None
   redirect_uri: str
   code_verifier: str

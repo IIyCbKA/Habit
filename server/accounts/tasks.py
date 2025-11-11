@@ -15,7 +15,6 @@ from .constants import (
 from .models import EmailVerificationCode, UsernameChange
 
 from datetime import datetime, timedelta
-from typing import Optional
 
 
 def _send_secure_email(
@@ -71,8 +70,8 @@ def send_password_reset_email(email: str, reset_link: str) -> None:
 @shared_task
 def send_new_device_email(
   email: str,
-  platform: Optional[str],
-  ip: Optional[str],
+  platform: str | None,
+  ip: str | None,
 ) -> None:
   def safe(value: str, fallback='None') -> str:
     if value is None:

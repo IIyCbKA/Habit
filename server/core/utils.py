@@ -1,5 +1,5 @@
 from ipaddress import ip_address, ip_network
-from typing import Optional
+from datetime import timedelta
 
 TRUSTED_PROXIES = [
   ip_network('127.0.0.1'),
@@ -14,7 +14,7 @@ def _is_trusted(ip_str: str) -> bool:
   return any(ip in net for net in TRUSTED_PROXIES)
 
 
-def get_client_ip(request) -> Optional[str]:
+def get_client_ip(request) -> str | None:
   xff = request.META.get('HTTP_X_FORWARDED_FOR')
   if xff:
     chain = [ip.strip() for ip in xff.split(',') if ip.strip()]
@@ -33,11 +33,16 @@ def get_client_ip(request) -> Optional[str]:
     return None
 
 
-def seconds2dhms(seconds: int) -> str:
-  if seconds < 0:
+def seconds2dhms(value: int | float | timedelta) -> str:
+  if isinstance(value, timedelta):
+    total = int(value.total_seconds())
+  else:
+    total = int(value)
+
+  if total <= 0:
     return '0 seconds'
 
-  days, rem = divmod(seconds, 86400)
+  days, rem = divmod(total, 86400)
   hours, rem = divmod(rem, 3600)
   minutes, seconds = divmod(rem, 60)
 

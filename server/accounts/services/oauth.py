@@ -21,7 +21,6 @@ from accounts.exceptions import (
   OAuthConflictError,
 )
 
-from typing import Optional
 import base64
 import hashlib
 import requests
@@ -103,7 +102,7 @@ def build_authorization_url(provider: str, request: Request) -> str:
   return url
 
 
-def ensure_valid_provider(provider: Optional[str]) -> None:
+def ensure_valid_provider(provider: str | None) -> None:
   if not provider or provider not in settings.OAUTH_CLIENTS:
     raise OAuthStateError('Unknown provider')
 
@@ -260,7 +259,7 @@ def register_user_for_social(provider: str, provider_uid: str) -> User:
     raise
 
 
-def issue_login_response(request: Request, user: User, next_url: Optional[str]) -> Response:
+def issue_login_response(request: Request, user: User, next_url: str | None) -> Response:
   response = create_response_with_tokens(request, user, status.HTTP_200_OK)
   if next_url:
     response.status_code = status.HTTP_303_SEE_OTHER

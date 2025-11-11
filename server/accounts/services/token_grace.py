@@ -2,8 +2,6 @@ from django.core.cache import cache
 from django.conf import settings
 from django.utils.crypto import salted_hmac, constant_time_compare
 
-from typing import Optional
-
 _GRACE = settings.REFRESH_ROTATION_GRACE_SECONDS
 
 def _gkey(jti: str) -> str:
@@ -18,11 +16,11 @@ def _fp(token_str: str) -> str:
   ).hexdigest()
 
 
-def put_in_grace(jti: str, token_str: str, seconds: Optional[int] = None) -> None:
+def put_in_grace(jti: str, token_str: str, seconds: int | None = None) -> None:
   cache.set(_gkey(jti), _fp(token_str), timeout=seconds or _GRACE)
 
 
-def in_grace(jti: str, token_str: Optional[str] = None) -> bool:
+def in_grace(jti: str, token_str: str | None = None) -> bool:
   val = cache.get(_gkey(jti))
   if not val:
     return False

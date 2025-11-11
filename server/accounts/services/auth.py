@@ -20,8 +20,6 @@ from rest_framework_simplejwt.tokens import (
 from .token_grace import put_in_grace, in_grace
 from accounts.serializers import UserSerializer
 
-from typing import Optional
-
 User = get_user_model()
 
 def decode_refresh_payload(raw_refresh: str) -> dict:
@@ -45,9 +43,9 @@ def ensure_refresh_allowed(jti: str, token_str: str) -> None:
     raise TokenError
 
 
-def get_tokens_for_user(user: User) -> tuple[Optional[RefreshToken], AccessToken]:
+def get_tokens_for_user(user: User) -> tuple[RefreshToken | None, AccessToken]:
   if user.email and not user.is_email_verified:
-    refresh: Optional[RefreshToken] = None
+    refresh: RefreshToken | None = None
     access: AccessToken = AccessToken.for_user(user)
   else:
     refresh: RefreshToken = RefreshToken.for_user(user)
@@ -58,7 +56,7 @@ def get_tokens_for_user(user: User) -> tuple[Optional[RefreshToken], AccessToken
 
 def reset_token_from_request(request: Request) -> None:
   cookie_name: str = settings.SIMPLE_JWT['REFRESH_COOKIE']
-  raw_refresh: Optional[str] = request.COOKIES.get(cookie_name)
+  raw_refresh: str | None = request.COOKIES.get(cookie_name)
 
   if not raw_refresh:
     return
@@ -123,7 +121,7 @@ def delete_refresh_from_cookie(response: Response) -> None:
   )
 
 
-def set_refresh_to_cookie(response: Response, refresh: Optional[RefreshToken]) -> None:
+def set_refresh_to_cookie(response: Response, refresh: RefreshToken | None) -> None:
   if refresh is None:
     return
 

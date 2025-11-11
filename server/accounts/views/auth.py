@@ -38,8 +38,6 @@ from accounts.services.auth import (
 )
 from core.utils import get_client_ip
 
-from typing import Optional
-
 User = get_user_model()
 
 class PendingRegisterView(generics.CreateAPIView):
@@ -114,8 +112,8 @@ class LoginView(APIView):
     if not user.is_email_verified:
       self._send_verification_email(user)
     else:
-      device_payload: Optional[dict] = serializer.validated_data.get('device')
-      ip: Optional[str] = get_client_ip(request)
+      device_payload: dict | None = serializer.validated_data.get('device')
+      ip: str | None = get_client_ip(request)
       self._record_device(user, device_payload, ip)
 
     response: Response = create_response_with_tokens(request, user, status.HTTP_200_OK)
@@ -130,8 +128,8 @@ class LoginView(APIView):
   def _record_device(
     self,
     user: User,
-    payload: Optional[dict],
-    ip: Optional[str],
+    payload: dict | None,
+    ip: str | None,
   ) -> None:
     if payload is None:
       return
@@ -161,7 +159,7 @@ class LoginView(APIView):
       link_created = False
 
     if link_created:
-      platform: Optional[str] = payload.get('platform')
+      platform: str | None = payload.get('platform')
       send_new_device_email.delay_on_commit(user.email, platform, ip)
 
   def get_device_defaults(self, payload: dict) -> dict:
@@ -181,7 +179,7 @@ class RefreshView(APIView):
 
   def post(self, request: Request) -> Response:
     cookie_name: str = settings.SIMPLE_JWT['REFRESH_COOKIE']
-    raw_refresh: Optional[str] = request.COOKIES.get(cookie_name)
+    raw_refresh: str | None = request.COOKIES.get(cookie_name)
 
     try:
       payload = decode_refresh_payload(raw_refresh)
