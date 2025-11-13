@@ -8,8 +8,8 @@ import { AnonGuard, AuthVerifiedGuard, IndexLoader } from "./guards";
 import { authRoutes } from "@/features/Auth/routes";
 import { homeRoutes } from "@/features/Home/routes";
 import { LoadingOverlay } from "@/components";
-import AuthVerifiedLayout from "@/features/Layouts/AuthVerifiedLayout";
-import RootLayout from "@/features/Layouts/RootLayout";
+import AuthVerifiedLayout from "@/layouts/AuthVerifiedLayout";
+import RootLayout from "@/layouts/RootLayout";
 import { accountRoutes } from "@/features/Account/routes";
 
 const Fallback = () => <LoadingOverlay />;
